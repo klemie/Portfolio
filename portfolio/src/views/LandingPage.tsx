@@ -1,46 +1,90 @@
-import React from "react";
-import { AbsoluteCenter,  Container, Flex, Stack, useDisclosure, Button, Box, Spacer } from "@chakra-ui/react";
-import NameCard from "./NameCard";
-import TitleBar from "../components/Titlebar";
+import React, { useState } from "react";
+import { AbsoluteCenter, Container, Flex, Heading, Spacer, Stack, Text } from "@chakra-ui/react";
+import NameCard from "../components/NameCard";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import { AiFillContacts, AiFillProject, AiFillInfoCircle } from "react-icons/ai";
+import { MdWork } from "react-icons/md";
+import { IconContext } from "react-icons";
 
 const LandingPage: React.FC = () => {
-
+    const [hoveredBar, setHoveredBar] = useState<number | null>(null);
+    const [showTitleCard, setShowTitleCard] = useState<boolean>(true);
+    const handleHover = (barId:number) => {
+      setHoveredBar(barId);
+    };
+  
+    const handleLeave = () => {
+      setHoveredBar(null);
+    };
     const sections = [
-        { color: '#005EB8', title: 'About', active: true, disclosure: useDisclosure(), margin: "5" },
-        { color: '#4588C9', title: 'Project', active: true, disclosure: useDisclosure(), margin: "25%" },
-        { color: '#D65B4F', title: 'Experience', active: true, disclosure: useDisclosure(), margin: "50%" },
-        { color: '#FFC557', title: 'Contacts', active: true, disclosure: useDisclosure(), margin: "75%" }
+        { id: 0, color: '#005EB8', title: 'About', icon: styled(AiFillInfoCircle)`color: #F8F3EE` },
+        { id: 1, color: '#4588C9', title: 'Project', icon: styled(AiFillProject)`color: #F8F3EE` },
+        { id: 2, color: '#D65B4F', title: 'Experience', icon: styled(MdWork)`color: #F8F3EE`  },
+        { id: 3, color: '#FFC557', title: 'Contacts', icon: styled(AiFillContacts)`color: #F8F3EE`  }
     ];
-    return (
-        <Container w={'100vw'} h={'100vh'} bg={'#F8F3EE'} margin={0} padding={0}>
-            <AbsoluteCenter>
-                {/* <NameCard /> */}
-            </AbsoluteCenter>
-            <Button onClick={sections[0].disclosure.onToggle}>About</Button>
-            <Button onClick={sections[1].disclosure.onToggle}>Project</Button>
-            <Button onClick={sections[2].disclosure.onToggle}>Experience</Button>
-            <Button onClick={sections[3].disclosure.onToggle}>Contacts</Button>
 
-            <AbsoluteCenter>    
-                <Box w={'100vw'} h={'400'} alignItems={'center'} bg={'#F8F3EE'}>
-                    <TitleBar color={sections[0].color} title={sections[0].title} disclosure={sections[0].disclosure} margin={sections[0].margin} />
-                    <Spacer />
-                    <TitleBar color={sections[1].color} title={sections[1].title} disclosure={sections[1].disclosure} margin={sections[1].margin} />
-                    <Spacer />
-                    <TitleBar color={sections[2].color} title={sections[2].title} disclosure={sections[2].disclosure} margin={sections[2].margin} />
-                    <Spacer />
-                    <TitleBar color={sections[3].color} title={sections[3].title} disclosure={sections[3].disclosure} margin={sections[3].margin} />
-                </Box>
-                    {/* <Flex direction={"column"} gap={5}>
-                        {sections.map((section, index) => {
-                            return (
-                                <>
-                                    <TitleBar key={index} color={section.color} title={section.title} disclosure={section.disclosure} margin={section.margin} />
+    const TitleContainer = styled(motion.div)`
+        cursor: pointer;
+        z-index: 2;
+    `;
+
+    const textMotion = {
+        hidden: {
+            opacity: 0,
+            x: -100
+        },
+        visible: {
+            opacity: 1,
+            x: 0,
+            margin: 0,
+            transition: {
+                duration: 0.5,
+                delay: 0.5
+            }
+        }
+    };
+
+    return (
+        <Container margin={0} padding={0}>
+            {/* <Grid/> */}
+            <AbsoluteCenter zIndex={2}>
+                { showTitleCard && <NameCard close={() => setShowTitleCard(false)} /> }
+            </AbsoluteCenter>
+            <AbsoluteCenter>
+                <div style={{ width: "100vw", margin: "none" }}>
+                    {sections.map((bar) => (
+                        <motion.div
+                            key={bar.id}
+                            style={{
+                                backgroundColor: bar.color,
+                                width: !showTitleCard && hoveredBar !== null && hoveredBar !== bar.id ? '10vw' : '100vw',
+                                height: '80px',
+                                transition: 'width 1s ease',
+                                marginTop: '20px'
+                            }}
+                            onMouseEnter={() => handleHover(bar.id)}
+                            onMouseLeave={handleLeave}
+                        >
+                            <TitleContainer 
+                                key="animation-on-state" 
+                                variants={textMotion} 
+                                initial="hidden" 
+                                animate={hoveredBar === bar.id && !showTitleCard ? 'visible' : 'hidden'} 
+                            >   
+                                <Flex direction={'row'} alignItems={'center'} justifyItems={'center'} marginX={5}>
+                                    <Heading as={'b'} fontSize={'5xl'} color={"#F8F3EE"}>
+                                        {bar.title}
+                                    </Heading>
                                     <Spacer />
-                                </>
-                            )
-                        })}
-                    </Flex> */}
+                                    <IconContext.Provider value={{ size: "40", color: "#F8F3EE" }}>
+                                        {<bar.icon />}
+                                    </IconContext.Provider>
+                                </Flex>
+                            </TitleContainer>
+                        </motion.div>
+                    ))}
+                </div>
             </AbsoluteCenter>
         </Container>
     
