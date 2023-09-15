@@ -30,6 +30,7 @@ type PageAction =
     | { type: Pages.TITLE, payload: string };
 
 function pageReducer (state: JSX.Element, action: PageAction): JSX.Element {
+    console.log(state);
     switch (action.type) {
         case Pages.ABOUT:
             return <About />;

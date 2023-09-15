@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AbsoluteCenter, Container, Flex, Heading, Spacer, Stack, Text } from "@chakra-ui/react";
+import { AbsoluteCenter, Container, Flex, Heading, Spacer } from "@chakra-ui/react";
 import NameCard from "../../components/NameCard";
 import styled from "styled-components";
 import { motion } from "framer-motion";

@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 import { ChakraProvider, Container, extendTheme } from '@chakra-ui/react'
 import '@fontsource/merriweather';
 import '@fontsource-variable/karla';
