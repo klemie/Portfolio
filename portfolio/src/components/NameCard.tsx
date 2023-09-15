@@ -7,6 +7,8 @@ import { AiOutlineClose } from "react-icons/ai";
 import styled from "styled-components";
 import Kris from "../assets/Kris.png";
 
+import resume from "../assets/Resume 2023.pdf";
+
 const Minimize = styled(AiOutlineClose)`
     &:hover {
         cursor: pointer;
@@ -30,7 +32,13 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
             onTap={() => setInfo(!info)}
             transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
         >
-            <Box bg={'#383838'} p={[10, 10, 10, 10]} borderRadius={20} textAlign={!info ? 'center' : 'start'} boxShadow={'xl'}>
+            <Box 
+                bg={'#383838'} 
+                p={[10, 10, 10, 10]} 
+                borderRadius={20} 
+                textAlign={!info ? 'center' : 'start'} 
+                boxShadow={'xl'}
+            >
                 {info && <IconContext.Provider value={{ size: "25" }}>
                     <Minimize onClick={() => props.close()} />
                 </IconContext.Provider>}
@@ -52,7 +60,7 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                                     </Tooltip> in British Columbia, Canada.
                                 </Text> 
                             </>
-                        ) }
+                        )}
                     </Stack>
                     {!info && <Center>
                         <Stack direction={'row'} gap={4}>
@@ -63,7 +71,13 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                                 <a target="_blank" href="https://www.linkedin.com/in/krislemie/">
                                     <FiLinkedin />
                                 </a>
-                                <FiDownload />
+                                <a 
+                                    target="_blank" 
+                                    href={resume} 
+                                    download
+                                >
+                                    <FiDownload />
+                                </a>
                             </IconContext.Provider>
                         </Stack>
                     </Center>}
