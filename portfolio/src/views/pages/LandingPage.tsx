@@ -94,13 +94,13 @@ const LandingPage: React.FC = () => {
                                 variants={textMotion} 
                                 initial="hidden" 
                                 animate={hoveredBar === bar.id && !showTitleCard ? 'visible' : 'hidden'} 
-                               
                             >   
                                 <Flex 
                                     direction={'row'} 
                                     alignItems={'center'} 
+                                    textAlign={'center'}
                                     justifyItems={'center'} 
-                                    marginX={5} 
+                                    marginX={5}
                                     onClick={() => handleBarClick(bar.title)}
                                 >
                                     <Heading as={'b'} fontSize={'5xl'} color={"#F8F3EE"}>

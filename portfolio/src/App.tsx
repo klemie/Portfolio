@@ -5,6 +5,8 @@ import { ViewProvider } from './utils/ViewContext';
 import PageRender from './views/PageRender';
 
 function App() {
+
+  
   const theme = extendTheme({
     fonts: {
       heading: `'Merriweather'`,

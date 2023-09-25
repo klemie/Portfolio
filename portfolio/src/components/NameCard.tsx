@@ -35,19 +35,22 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
             <Box 
                 bg={'#383838'} 
                 p={[10, 10, 10, 10]} 
-                borderRadius={20} 
-                textAlign={!info ? 'center' : 'start'} 
-                boxShadow={'xl'}
+                borderRadius={0} 
+                textAlign={!info ? 'center' : 'start'}
+                minWidth={900}
+                sx={{ 
+                    'box-shadow': '10px 10px 1px 0px rgba(72, 72, 72, 0.80)'
+                }}
             >
                 {info && <IconContext.Provider value={{ size: "25" }}>
                     <Minimize onClick={() => props.close()} />
                 </IconContext.Provider>}
 
                 <Stack direction={!info ? 'column' : 'row'} spacing={4}>
-                    {info && <Image src={Kris} height={'380'} borderRadius={20} boxShadow={'2xl'}/>}
+                    {info && <Image src={Kris} height={'380'} borderRadius={0} boxShadow={'2xl'}/>}
                     <Stack direction={'column'} spacing={4} padding={[0,0,2,2]}>
                         <Heading fontSize={!info ? '9xl' : '7xl'} color={'#F4EEE9'} as={'b'} >
-                            Kristopher Lemieux
+                        <Tooltip label="Click to see more" aria-label="A tooltip" placement={'top'} bg={'red.500'}>Kristopher Lemieux</Tooltip>
                         </Heading>
                         {info && (
                             <>
