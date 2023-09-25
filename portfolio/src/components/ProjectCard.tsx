@@ -3,6 +3,7 @@ import { StyledBox } from './StyledComponent';
 import { Box, Button, Center, Heading, Image, Stack, Text, useBreakpointValue } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import ProjectModal from './ProjectModal';
+import { useBreakpointCheckerDesktop } from '../utils/breakpointChecker';
 
 interface ProjectCardProps {
     color: string;
@@ -15,13 +16,8 @@ const ProjectCard: React.FC<ProjectCardProps> = (props: ProjectCardProps) => {
     const { title, color } = props;
     const [info, setInfo] = useState<boolean>(true);
     const [open, setOpen] = useState<boolean>(false);
-    const bp = useBreakpointValue({
-        base: 'base',
-        sm: 'sm',
-        md: 'md',
-        lg: 'lg',
-        xl: 'xl',
-      });
+
+    const isDesktop = useBreakpointCheckerDesktop();
     
     return (
         <>
@@ -50,7 +46,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props: ProjectCardProps) => {
                             />
                         </Box>
                         {info && (
-                            <Text fontSize={'xl'} noOfLines={bp === 'xl' ? 5 : 2}>
+                            <Text fontSize={'xl'} noOfLines={isDesktop ? 5 : 2}>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                                 Nulla euismod, nisl vitae aliquam ultricies, nunc nisl
                                 ultricies nunc, vitae aliquam nisl nisl vitae aliquam
