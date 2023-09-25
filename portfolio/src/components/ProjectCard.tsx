@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { StyledBox } from './StyledComponent';
-import { Box, Button, Center, Heading, Image, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Heading, Image, Stack, Text, useBreakpointValue } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { Pages, useViewContext } from '../utils/ViewContext';
 import ProjectModal from './ProjectModal';
 
 interface ProjectCardProps {
@@ -16,6 +15,14 @@ const ProjectCard: React.FC<ProjectCardProps> = (props: ProjectCardProps) => {
     const { title, color } = props;
     const [info, setInfo] = useState<boolean>(true);
     const [open, setOpen] = useState<boolean>(false);
+    const bp = useBreakpointValue({
+        base: 'base',
+        sm: 'sm',
+        md: 'md',
+        lg: 'lg',
+        xl: 'xl',
+      });
+    
     return (
         <>
         <motion.div
@@ -23,7 +30,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props: ProjectCardProps) => {
             onTap={() => setInfo(!info)}
             transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
         >
-            <StyledBox maxWidth={500} minWidth={300} minHeight={300}>
+            <StyledBox maxWidth={500} minWidth={300} minHeight={200}>
                 <Center>
                     <Stack justifyContent={'center'} padding={10} gap={20}>
                         <Box textAlign={'center'}>
@@ -43,7 +50,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props: ProjectCardProps) => {
                             />
                         </Box>
                         {info && (
-                            <Text fontSize={'xl'} noOfLines={5}>
+                            <Text fontSize={'xl'} noOfLines={bp === 'xl' ? 5 : 2}>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                                 Nulla euismod, nisl vitae aliquam ultricies, nunc nisl
                                 ultricies nunc, vitae aliquam nisl nisl vitae aliquam

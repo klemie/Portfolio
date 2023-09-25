@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AbsoluteCenter, Container, Flex, Heading, Spacer } from "@chakra-ui/react";
+import { AbsoluteCenter, Container, Flex, Heading, Spacer, useBreakpointValue } from "@chakra-ui/react";
 import NameCard from "../../components/NameCard";
 import styled from "styled-components";
 import { motion } from "framer-motion";
@@ -69,6 +69,14 @@ const LandingPage: React.FC = () => {
         }
     }
 
+    const bp = useBreakpointValue({
+        base: 'base',
+        sm: 'sm',
+        md: 'md',
+        lg: 'lg',
+        xl: 'xl',
+    });
+
     return (
         <Container margin={0} padding={0}>
             <AbsoluteCenter zIndex={2}>
@@ -82,9 +90,9 @@ const LandingPage: React.FC = () => {
                             style={{
                                 backgroundColor: bar.color,
                                 width: !showTitleCard && hoveredBar !== null && hoveredBar !== bar.id ? '10vw' : '100vw',
-                                height: '80px',
+                                height: bp === 'base' || bp === 'sm' || bp === 'md' ? '25vh': '80px',
                                 transition: 'width 1s ease',
-                                marginTop: '20px'
+                                marginTop: bp === 'base' || bp === 'sm' || bp === 'md' ? 0 : '20px'
                             }}
                             onMouseEnter={() => handleHover(bar.id)}
                             onMouseLeave={handleLeave}

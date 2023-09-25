@@ -1,5 +1,5 @@
-import React from 'react';
-import { Container, Flex, Spacer, Stack } from '@chakra-ui/react';
+import React, { useEffect } from 'react';
+import { Container, Flex, Spacer, Stack, useBreakpointValue } from '@chakra-ui/react';
 import Header from '../../components/Header';
 import ProjectCard from '../../components/ProjectCard';
 import Lines from '../../components/Lines';
@@ -11,6 +11,17 @@ const Projects: React.FC = () => {
       viewContext.setPage(Pages.TITLE);
   }
 
+  const bp = useBreakpointValue({
+    base: 'base',
+    sm: 'sm',
+    md: 'md',
+    lg: 'lg',
+    xl: 'xl',
+  });
+
+  useEffect(() => {
+    console.log(bp);
+  }, [bp]);
   return (
     <Container maxW={"100vm"} h={"100%"} m={0} p={0}>
       <Flex padding={10} direction={'column'} height={"100%"}>
@@ -24,7 +35,7 @@ const Projects: React.FC = () => {
           <ProjectCard color='projects' title='Project 5' />
         </Stack>
         <Spacer />
-        <Lines hiddenIndex={1} />
+        {(bp === 'lg' || bp === 'xl') && <Lines hiddenIndex={1} />}
       </Flex>
     </Container>
   );
