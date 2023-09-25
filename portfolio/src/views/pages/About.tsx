@@ -6,17 +6,15 @@ import { Pages, useViewContext } from '../../utils/ViewContext';
 const About: React.FC = () => {
   const viewContext = useViewContext();
   return (
-    <Container maxW={"100vm"} h={"100%"} m={0} p={0}>
-        <Flex padding={10} direction={'column'} height={"100%"}>
-          <Header 
-            color='about' 
-            title='About' 
-            close={() => {
-              viewContext.setPage(Pages.TITLE);
-            }} />
+    <Flex padding={10} direction={'column'} height={"100%"}>
+      <Header 
+        color='about' 
+        title='About' 
+        close={() => {
+          viewContext.setPage(Pages.TITLE);
+        }} />
 
-        </Flex>
-    </Container>
+    </Flex>
   );
 };
 

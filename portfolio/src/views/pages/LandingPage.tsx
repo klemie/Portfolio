@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AbsoluteCenter, Container, Flex, Heading, Spacer, useBreakpointValue } from "@chakra-ui/react";
+import { AbsoluteCenter, Container, Box, Flex, Heading, Spacer, useBreakpointValue } from "@chakra-ui/react";
 import NameCard from "../../components/NameCard";
 import styled from "styled-components";
 import { motion } from "framer-motion";
@@ -7,6 +7,7 @@ import { AiFillContacts, AiFillProject, AiFillInfoCircle } from "react-icons/ai"
 import { MdWork } from "react-icons/md";
 import { IconContext } from "react-icons";
 import { Pages, useViewContext } from "../../utils/ViewContext";
+import { useBreakpointCheckerMobile } from "../../utils/breakpointChecker";
 
 const LandingPage: React.FC = () => {
   
@@ -69,30 +70,24 @@ const LandingPage: React.FC = () => {
         }
     }
 
-    const bp = useBreakpointValue({
-        base: 'base',
-        sm: 'sm',
-        md: 'md',
-        lg: 'lg',
-        xl: 'xl',
-    });
+    const isMobile = useBreakpointCheckerMobile();
 
     return (
-        <Container margin={0} padding={0}>
+        <Box margin={0} padding={0}>
             <AbsoluteCenter zIndex={2}>
                 { showTitleCard && <NameCard close={() => setShowTitleCard(false)} /> }
             </AbsoluteCenter>
             <AbsoluteCenter>
-                <div style={{ width: "100vw", margin: "none" }}>
+                <div style={{ width: "100vw", margin: 0 }}>
                     {sections.map((bar) => (
                         <motion.div
                             key={bar.id}
                             style={{
                                 backgroundColor: bar.color,
                                 width: !showTitleCard && hoveredBar !== null && hoveredBar !== bar.id ? '10vw' : '100vw',
-                                height: bp === 'base' || bp === 'sm' || bp === 'md' ? '25vh': '80px',
+                                height: isMobile ? '25vh': '80px',
                                 transition: 'width 1s ease',
-                                marginTop: bp === 'base' || bp === 'sm' || bp === 'md' ? 0 : '20px'
+                                marginTop: isMobile ? 0 : '20px'
                             }}
                             onMouseEnter={() => handleHover(bar.id)}
                             onMouseLeave={handleLeave}
@@ -108,7 +103,6 @@ const LandingPage: React.FC = () => {
                                     alignItems={'center'} 
                                     textAlign={'center'}
                                     justifyItems={'center'} 
-                                    marginX={5}
                                     onClick={() => handleBarClick(bar.title)}
                                 >
                                     <Heading as={'b'} fontSize={'5xl'} color={"#F8F3EE"}>
@@ -124,7 +118,7 @@ const LandingPage: React.FC = () => {
                     ))}
                 </div>
             </AbsoluteCenter>
-        </Container>
+        </Box>
     
     );
 }

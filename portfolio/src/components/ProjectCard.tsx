@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyledBox } from './StyledComponent';
-import { Box, Button, Center, Heading, Image, Stack, Text, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Button, Center, Heading, Image, Stack, Text } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import ProjectModal from './ProjectModal';
 import { useBreakpointCheckerDesktop } from '../utils/breakpointChecker';
@@ -26,9 +26,9 @@ const ProjectCard: React.FC<ProjectCardProps> = (props: ProjectCardProps) => {
             onTap={() => setInfo(!info)}
             transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
         >
-            <StyledBox maxWidth={500} minWidth={300} minHeight={200}>
+            <StyledBox maxWidth={500} minWidth={300} minH={'fit-content'} height={'auto'}>
                 <Center>
-                    <Stack justifyContent={'center'} padding={10} gap={20}>
+                    <Stack justifyContent={'center'} padding={10} gap={5}>
                         <Box textAlign={'center'}>
                             <Heading
                                 fontSize={"4xl"} 

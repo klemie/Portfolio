@@ -21,7 +21,7 @@ function App() {
   });
 
   return (
-    <Container w={'100vw'} h={'100vh'} bg={'#F8F3EE'} margin={0} padding={0}>
+    <Container w={'100vw'} h={'100vh'} bg={'#F8F3EE'} margin={0} padding={0} overflow={'hidden'}>
       <ChakraProvider theme={theme}>
         <ViewProvider>
           <PageRender />
