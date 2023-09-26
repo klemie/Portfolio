@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Flex } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import Header from '../../components/Header';
 import { Pages, useViewContext } from '../../utils/ViewContext';
 

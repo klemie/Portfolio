@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AbsoluteCenter, Container, Box, Flex, Heading, Spacer, useBreakpointValue, useToast } from "@chakra-ui/react";
+import { AbsoluteCenter, Box, Flex, Heading, Spacer, useToast } from "@chakra-ui/react";
 import NameCard from "../../components/NameCard";
 import styled from "styled-components";
 import { motion } from "framer-motion";
@@ -74,17 +74,15 @@ const LandingPage: React.FC = () => {
     const toast = useToast();
 
     useEffect(() => {
-        if (isMobile) {
-            toast({
-                title: "IN DEVELOPMENT",
-                description: "Some features are not available & Content maybe missing",
-                status: "warning",
-                duration: 9000,
-                isClosable: true,
-                position: 'top'
-            })
-        }
-    }, [isMobile]);
+        toast({
+            title: "IN DEVELOPMENT",
+            description: "Some features are not available & Content maybe missing",
+            status: "warning",
+            duration: 9000,
+            isClosable: true,
+            position: 'top'
+        });
+    }, []);
 
     return (
         <Box margin={0} padding={0}>

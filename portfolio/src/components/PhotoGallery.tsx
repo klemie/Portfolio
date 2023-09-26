@@ -1,4 +1,4 @@
-import { Box, Image, Flex, IconButton, Spacer, Stack, ScaleFade, useDisclosure } from '@chakra-ui/react';
+import { Image, IconButton, Stack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
@@ -10,12 +10,11 @@ interface PhotoGalleryProps {
 const PhotoGallery: React.FC<PhotoGalleryProps> = (props: PhotoGalleryProps) => {
     const { photoUrls } = props;
     const [ currentPhotoIndex, setCurrentPhotoIndex ] = useState<number>(0);
-    const { isOpen, onToggle, onOpen } = useDisclosure();
-    const [ transition, setTransition ] = useState<boolean>(false);
+    // const [ transition, setTransition ] = useState<boolean>(false);
 
 
     const handleNextIndex = () => {
-        setTransition(true);
+        // setTransition(true);
         if (currentPhotoIndex === photoUrls.length - 1) {
             setCurrentPhotoIndex(0);
         } else {
@@ -24,7 +23,6 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = (props: PhotoGalleryProps) => 
     };
 
     const handlePreviousIndex = () => {
-        onToggle();
         if (currentPhotoIndex === 0) {
             setCurrentPhotoIndex(photoUrls.length - 1);
         } else {

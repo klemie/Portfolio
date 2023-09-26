@@ -24,7 +24,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
                 <CloseBtn 
                     aria-label='close' 
                     bg={color} 
-                    color={'white'} 
+                    color={'#1a202c'} 
                     onClick={close} 
                     borderRadius={0} 
                     size={'lg'}

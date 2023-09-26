@@ -1,6 +1,6 @@
-import { Box, Center, Heading, Image, Stack, Text, Tooltip, useBreakpointValue, AbsoluteCenter } from "@chakra-ui/react";
+import { Box, Center, Heading, Image, Stack, Text, Tooltip, AbsoluteCenter } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { IconContext } from "react-icons";
 import { FiLinkedin, FiGithub, FiDownload } from "react-icons/fi";
 import { AiOutlineClose } from "react-icons/ai";
