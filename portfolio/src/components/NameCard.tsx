@@ -52,14 +52,14 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
 
                 <AbsoluteCenter>    
                     <Stack direction={!info ? 'column' : 'row'} spacing={4}>
-                        {info && <Image src={Kris} height={'380'} borderRadius={0} boxShadow={'2xl'}/>}
+                        {info && !isMobile && <Image src={Kris} height={'380'} borderRadius={0} boxShadow={'2xl'}/>}
                             <Stack direction={'column'} spacing={4} padding={[0,0,2,2]}>
-                                <Heading fontSize={!info ? isMobile ? '6xl' : '9xl' : '7xl'} color={'#F4EEE9'} as={'b'} >
-                                <Tooltip label="Click to see more" aria-label="A tooltip" placement={'top'} bg={'red.500'}>Kristopher Lemieux</Tooltip>
-                                </Heading>
+                                {!info && <Heading fontSize={!info ? isMobile ? '6xl' : '9xl' : '7xl'} color={'#F4EEE9'} as={'b'} >
+                                    <Tooltip label="Click to see more" aria-label="A tooltip" placement={'top'} bg={'red.500'}>Kristopher Lemieux</Tooltip>
+                                </Heading>}
                                 {info && (
                                     <>
-                                        <Heading fontSize={'2xl'} color={'#F4EEE9'} as={'b'}>
+                                        <Heading fontSize={'3xl'} color={'#F4EEE9'} as={'b'}>
                                             Software Engineer
                                         </Heading>    
                                         <Text fontSize={'Body'} color={'#F4EEE9'} as={'b'}>

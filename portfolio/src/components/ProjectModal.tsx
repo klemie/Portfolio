@@ -1,47 +1,123 @@
-import { Button, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from '@chakra-ui/react';
+import { AbsoluteCenter, Box, Flex, Heading, IconButton, ListItem, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Stack, Tag, Text, UnorderedList } from '@chakra-ui/react';
 import React from 'react';
+import { CloseBtn } from './StyledComponent';
+import { FiGithub, FiLinkedin } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import PhotoGallery from './PhotoGallery';
+import { useBreakpointCheckerMobile } from '../utils/breakpointChecker';
 
-interface ProjectModalProps {
+export interface ProjectModalProps {
     open: boolean;
     close: () => void;
+    photos: string[];
+    title: string;
+    overview: string;
+    skills: string[];
+    competencies: string[];
+    skillsDescription: string;
+    githubLink?: string;
+    linkedinLink?: string;
 }
 
-
-
 const ProjectModal: React.FC<ProjectModalProps> = (props: ProjectModalProps) => {
-    const { open, close } = props;
-
+    const { open, close, title, photos, overview, skills, skillsDescription, githubLink, linkedinLink, competencies } = props;
+    const isMobile = useBreakpointCheckerMobile();
     return (
         <Modal isOpen={open} onClose={close} isCentered size={'full'}>
             <ModalOverlay />
             <ModalContent bg={'#E3D1AB'} borderRadius={0}>
-                <ModalHeader>
-                    <Heading>Modal Title</Heading>
+                <ModalHeader textAlign={'center'} paddingTop={5}>
+                    <Box width={'100%'} height={2} border={"3px solid #1a202c"} />
+                    <Heading fontSize={!isMobile ? '7xl' : '5xl'}>{title}</Heading>
+                    <Box width={'100%'} height={2} border={"3px solid #1a202c"} />
                  </ModalHeader>
-                <ModalCloseButton />
                 <ModalBody>
-                    <Stack direction={'row'}>
-                        <Stack direction={'column'} >
-                            <Image alignSelf={'center'} src={'https://media.licdn.com/dms/image/D5622AQF4vne1wTtN-g/feedshare-shrink_2048_1536/0/1693875912928?e=1698278400&v=beta&t=8BnW14NvMG0aer-Wrurfc1tdQ9l7LmgCc8mNi03nt2M'}/>
-                        </Stack>
-                        <Stack direction={'row'} >
-                            <Text>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                Nulla euismod, nisl vitae aliquam ultricies, nunc nisl
-                                ultricies nunc, vitae aliquam nisl nisl vitae aliquam
-                                ultricies, nunc nisl ultricies nunc, vitae aliquam nisl
-                            </Text>  
-                            <Text>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                Nulla euismod, nisl vitae aliquam ultricies, nunc nisl
-                                ultricies nunc, vitae aliquam nisl nisl vitae aliquam
-                                ultricies, nunc nisl ultricies nunc, vitae aliquam nisl
-                            </Text>                             
-                        </Stack>
-                    </Stack>
+                    <AbsoluteCenter>
+                        <Stack direction={'column'} gap={5} minWidth={500} maxWidth={600}>
+                            <PhotoGallery photoUrls={photos} />
+                            <Stack>
+                                <Flex>
+                                    <Heading fontSize={'3xl'}>Overview</Heading>
+                                    <Spacer />
+                                    <Stack gap={2} direction={'row'}>
+                                        <motion.div
+                                            whileHover={{ scale: 1.07 }}
+                                            transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
+                                        >
+                                            <a target="_blank" href={githubLink ?? ''}>
+                                                <IconButton 
+                                                    aria-label='github' 
+                                                    icon={<FiGithub />} 
+                                                    size={'sm'} 
+                                                    bg={"#1a202c"} 
+                                                    _hover={{ bg: "#1a202c" }}
+                                                    color={'whiteAlpha.800'} 
+                                                    borderRadius={0}
+                                                    boxShadow={'sm'}
+                                                />
+                                            </a>
+
+                                        </motion.div>
+                                        <motion.div
+                                            whileHover={{ scale: 1.07 }}
+                                            transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
+                                        >
+                                            <a target="_blank" href={linkedinLink ?? ''}>
+                                                <IconButton 
+                                                    aria-label='linkedin-post' 
+                                                    icon={<FiLinkedin />} 
+                                                    size={'sm'} 
+                                                    bg={"#1a202c"}
+                                                    _hover={{ bg: "#1a202c" }} 
+                                                    color={'whiteAlpha.800'} 
+                                                    borderRadius={0}
+                                                    boxShadow={'lg'}
+                                                />
+                                            </a>
+                                        </motion.div>
+                                    </Stack>
+                                </Flex> 
+                                <Text>
+                                    {overview}
+                                </Text>
+                            </Stack>
+                            <Stack>
+                                <Heading fontSize={'3xl'}>Skills</Heading>
+                                <Stack direction={'row'}>
+                                    {skills.map((skill: string) => (
+                                        <Tag 
+                                            borderRadius={0}
+                                            width={'fit-content'} 
+                                            size={'md'} 
+                                            variant='solid' 
+                                            bg={'#1a202c'}
+                                            color={'whiteAlpha.800'}
+                                        >
+                                            {skill}
+                                        </Tag>
+                                    ))}
+                                </Stack>
+                                <Text>
+                                    {skillsDescription}
+                                </Text>
+                                <UnorderedList>
+                                    {
+                                        competencies.map((competency: string) => (
+                                            <ListItem>{competency}</ListItem>
+                                        ))
+                                    }
+                                </UnorderedList>
+                            </Stack>
+                        </Stack>                          
+                    </AbsoluteCenter>
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={close}>Close</Button>
+                    <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
+                    >
+                        <CloseBtn size={'lg'} bg={"#1a202c"} color={'whiteAlpha.800'} borderRadius={0} onClick={close}></CloseBtn>
+                    </motion.div>
                 </ModalFooter>
             </ModalContent>
         </Modal>

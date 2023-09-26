@@ -1,9 +1,10 @@
-import React, { ForwardedRef, RefObject } from 'react';
+import React, { RefObject } from 'react';
 import Header from '../../components/Header';
 import { Pages, useViewContext } from '../../utils/ViewContext';
-import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Container, Flex, Tabs, TabList, TabPanels, TabPanel } from '@chakra-ui/react';
+import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Flex, Tabs, TabList, TabPanels, TabPanel } from '@chakra-ui/react';
 import { useBreakpointCheckerMobile } from '../../utils/breakpointChecker';
 import { motion } from 'framer-motion';
+import { StyledBox } from '../../components/StyledComponent';
 
 const Experience: React.FC = () => {
   const viewContext = useViewContext();
@@ -15,8 +16,8 @@ const Experience: React.FC = () => {
 
     return (
       <motion.div
-        whileHover={{ scale: 1.02 }}
-        transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
+        whileHover={{ scale: 1.01 }}
+        transition={{ type: "spring", stiffness: 100, damping: 10, bounce: 0 }}
       >
         <Button 
           __css={styles.tab} 
@@ -43,28 +44,45 @@ const Experience: React.FC = () => {
             viewContext.setPage(Pages.TITLE);
           }} />
           <Tabs py={5} variant='unstyled' orientation={'horizontal'}>
-            <TabList >
+            <TabList gap={5}>
               <CustomTab  
                 bg={'projects'} 
                 color="white" 
-                _selected={{ transition: 'all .4s ease-in-out', transform:'scale(1.2)', marginLeft: 4, marginRight: 10 }}
-              >Helm Operations</CustomTab>
+                _selected={{ transition: 'all .4s ease-in-out', transform:'scale(1.1)' }}
+              >
+              Helm Operations
+              </CustomTab>
               <CustomTab 
                 bg={'contact'} 
                 color="white" 
-                _selected={{ transition: 'all .4s ease-in-out', transform:'scale(1.2)', marginX: 5 }}
-              >UVic Rocketry
+                _selected={{ transition: 'all .4s ease-in-out', transform:'scale(1.1)' }}
+              >
+                UVic Rocketry
               </CustomTab>
               <CustomTab 
                 bg={'about'} 
                 color="white" 
-                _selected={{ transition: 'all .4s ease-in-out', transform:'scale(1.2)', marginX: 10 }}
-              >Island Temperature Controls</CustomTab>
+                _selected={{ transition: 'all .4s ease-in-out', transform:'scale(1.1)' }}
+              >
+                Island Temperature Controls
+              </CustomTab>
             </TabList>
             <TabPanels>
-              <TabPanel>1</TabPanel>
-              <TabPanel>2</TabPanel>
-              <TabPanel>3</TabPanel>
+              <TabPanel p={10} margin={0}>
+                <StyledBox maxWidth={1000} minWidth={300} minH={'fit-content'} height={'50vh'}>
+                  Helm
+                </StyledBox>
+              </TabPanel>
+              <TabPanel p={10}>
+              <StyledBox maxWidth={1000} minWidth={300} minH={'fit-content'} height={'50vh'}>
+                  UVR
+                </StyledBox>
+              </TabPanel>
+              <TabPanel p={10}>
+                <StyledBox maxWidth={1000} minWidth={300} minH={'fit-content'} height={'50vh'}>
+                  ITC
+                </StyledBox>
+              </TabPanel>
             </TabPanels>
           </Tabs>
 
