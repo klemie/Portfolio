@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { AbsoluteCenter, Box, Center, Flex, Heading, Spacer, useToast } from "@chakra-ui/react";
+import { AbsoluteCenter, Box, Center, Flex, Heading,  useToast } from "@chakra-ui/react";
 import NameCard from "../../components/NameCard";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { AiFillContacts, AiFillProject, AiFillInfoCircle } from "react-icons/ai";
 import { MdWork } from "react-icons/md";
-import { IconContext } from "react-icons";
 import { Pages, useViewContext } from "../../utils/ViewContext";
 import { useBreakpointCheckerMobile } from "../../utils/breakpointChecker";
 
