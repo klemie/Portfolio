@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { AbsoluteCenter, Box, Flex, Heading, Spacer, useToast } from "@chakra-ui/react";
+import { AbsoluteCenter, Box, Center, Flex, Heading,  useToast } from "@chakra-ui/react";
 import NameCard from "../../components/NameCard";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { AiFillContacts, AiFillProject, AiFillInfoCircle } from "react-icons/ai";
 import { MdWork } from "react-icons/md";
-import { IconContext } from "react-icons";
 import { Pages, useViewContext } from "../../utils/ViewContext";
 import { useBreakpointCheckerMobile } from "../../utils/breakpointChecker";
 
@@ -33,6 +32,7 @@ const LandingPage: React.FC = () => {
     const TitleContainer = styled(motion.div)`
         cursor: pointer;
         z-index: 2;
+        height: 100%;
     `;
 
     const textMotion = {
@@ -111,19 +111,16 @@ const LandingPage: React.FC = () => {
                                 animate={hoveredBar === bar.id && !showTitleCard ? 'visible' : 'hidden'} 
                             >   
                                 <Flex 
-                                    direction={'row'} 
-                                    alignItems={'center'} 
-                                    textAlign={'center'}
-                                    justifyItems={'center'} 
+                                    alignContent={"center"} 
+                                    justifyContent={"center"}
                                     onClick={() => handleBarClick(bar.title)}
+                                    height={'100%'}
                                 >
-                                    <Heading as={'b'} fontSize={'5xl'} color={"#F8F3EE"}>
-                                        {bar.title}
-                                    </Heading>
-                                    <Spacer />
-                                    <IconContext.Provider value={{ size: "40", color: "#F8F3EE" }}>
-                                        {<bar.icon />}
-                                    </IconContext.Provider>
+                                    <Center>
+                                        <Heading as={'b'} fontSize={'5xl'} color={"#F8F3EE"}>
+                                            {bar.title}
+                                        </Heading>
+                                    </Center>
                                 </Flex>
                             </TitleContainer>
                         </motion.div>

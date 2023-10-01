@@ -1,4 +1,4 @@
-import { AbsoluteCenter, Box, Flex, Heading, IconButton, ListItem, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Stack, Tag, Text, UnorderedList } from '@chakra-ui/react';
+import { Box, Center, Flex, Heading, IconButton, ListItem, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Stack, Tag, Text, UnorderedList } from '@chakra-ui/react';
 import React from 'react';
 import { CloseBtn } from './StyledComponent';
 import { FiGithub, FiLinkedin } from 'react-icons/fi';
@@ -25,15 +25,15 @@ const ProjectModal: React.FC<ProjectModalProps> = (props: ProjectModalProps) => 
     return (
         <Modal isOpen={open} onClose={close} isCentered size={'full'}>
             <ModalOverlay />
-            <ModalContent bg={'#E3D1AB'} borderRadius={0}>
-                <ModalHeader textAlign={'center'} paddingTop={5}>
+            <ModalContent bg={'#E3D1AB'} borderRadius={0} overflowY={'scroll'} height={'100vh'}>
+                <ModalHeader textAlign={'center'} paddingTop={5} position={'fixed'} bg={'#E3D1AB'} zIndex={2} width={'100%'}>
                     <Box width={'100%'} height={2} border={"3px solid #1a202c"} />
                     <Heading fontSize={!isMobile ? '7xl' : '5xl'}>{title}</Heading>
                     <Box width={'100%'} height={2} border={"3px solid #1a202c"} />
                  </ModalHeader>
-                <ModalBody>
-                    <AbsoluteCenter>
-                        <Stack direction={'column'} gap={5} minWidth={500} maxWidth={600}>
+                <ModalBody marginTop={150}>
+                    <Center>
+                        <Stack direction={'column'} gap={5} minWidth={isMobile ? 200 : 500} maxWidth={isMobile ? 'auto' : 600}>
                             <PhotoGallery photoUrls={photos} />
                             <Stack>
                                 <Flex>
@@ -56,7 +56,6 @@ const ProjectModal: React.FC<ProjectModalProps> = (props: ProjectModalProps) => 
                                                     boxShadow={'sm'}
                                                 />
                                             </a>
-
                                         </motion.div>
                                         <motion.div
                                             whileHover={{ scale: 1.07 }}
@@ -109,7 +108,7 @@ const ProjectModal: React.FC<ProjectModalProps> = (props: ProjectModalProps) => 
                                 </UnorderedList>
                             </Stack>
                         </Stack>                          
-                    </AbsoluteCenter>
+                    </Center>
                 </ModalBody>
                 <ModalFooter>
                     <motion.div
