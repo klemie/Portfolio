@@ -62,15 +62,17 @@ const ProjectCard: React.FC<ProjectCardProps> = (props: ProjectCardProps) => {
             </StyledBox>
         </motion.div>
         <Center>
-            <ProjectModal 
+            <ProjectModal
                 open={open} 
-                close={() => setOpen(false)} 
+                close={() => setOpen(false)}
+                timeline={projects[projectIndex].timeline} 
                 title={projects[projectIndex].title}
                 overview={projects[projectIndex].overview}
                 photos={projects[projectIndex].photos}
                 skillsDescription={projects[projectIndex].skillsDescription}
                 githubLink={projects[projectIndex].githubLink}
                 linkedinLink={projects[projectIndex].linkedinLink}
+                websiteLink={projects[projectIndex].websiteLink}
                 competencies={projects[projectIndex].competencies}
                 skills={projects[projectIndex].skills}
             />

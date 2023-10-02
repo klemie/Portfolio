@@ -5,6 +5,7 @@ import { FiGithub, FiLinkedin } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import PhotoGallery from './PhotoGallery';
 import { useBreakpointCheckerMobile } from '../utils/breakpointChecker';
+import { CgWebsite } from 'react-icons/cg';
 
 export interface ProjectModalProps {
     open: boolean;
@@ -15,12 +16,27 @@ export interface ProjectModalProps {
     skills: string[];
     competencies: string[];
     skillsDescription: string;
+    timeline: string;
     githubLink?: string;
     linkedinLink?: string;
+    websiteLink?: string;
 }
 
 const ProjectModal: React.FC<ProjectModalProps> = (props: ProjectModalProps) => {
-    const { open, close, title, photos, overview, skills, skillsDescription, githubLink, linkedinLink, competencies } = props;
+    const { 
+        open, 
+        close, 
+        title, 
+        photos, 
+        overview, 
+        skills, 
+        skillsDescription,
+        timeline,
+        githubLink, 
+        linkedinLink, 
+        websiteLink, 
+        competencies 
+    } = props;
     const isMobile = useBreakpointCheckerMobile();
     return (
         <Modal isOpen={open} onClose={close} isCentered size={'full'}>
@@ -40,7 +56,7 @@ const ProjectModal: React.FC<ProjectModalProps> = (props: ProjectModalProps) => 
                                     <Heading fontSize={'3xl'}>Overview</Heading>
                                     <Spacer />
                                     <Stack gap={2} direction={'row'}>
-                                        <motion.div
+                                        {githubLink && <motion.div
                                             whileHover={{ scale: 1.07 }}
                                             transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
                                         >
@@ -56,8 +72,8 @@ const ProjectModal: React.FC<ProjectModalProps> = (props: ProjectModalProps) => 
                                                     boxShadow={'sm'}
                                                 />
                                             </a>
-                                        </motion.div>
-                                        <motion.div
+                                        </motion.div>}
+                                        {linkedinLink && <motion.div
                                             whileHover={{ scale: 1.07 }}
                                             transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
                                         >
@@ -73,9 +89,36 @@ const ProjectModal: React.FC<ProjectModalProps> = (props: ProjectModalProps) => 
                                                     boxShadow={'lg'}
                                                 />
                                             </a>
-                                        </motion.div>
+                                        </motion.div>}
+                                        {websiteLink && <motion.div
+                                            whileHover={{ scale: 1.07 }}
+                                            transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
+                                        >
+                                            <a target="_blank" href={websiteLink ?? ''}>
+                                                <IconButton 
+                                                    aria-label='project-website' 
+                                                    icon={<CgWebsite />} 
+                                                    size={'sm'} 
+                                                    bg={"#1a202c"}
+                                                    _hover={{ bg: "#1a202c" }} 
+                                                    color={'whiteAlpha.800'} 
+                                                    borderRadius={0}
+                                                    boxShadow={'lg'}
+                                                />
+                                            </a>
+                                        </motion.div>}
                                     </Stack>
-                                </Flex> 
+                                </Flex>
+                                <Tag 
+                                    borderRadius={0}
+                                    width={'fit-content'} 
+                                    size={'md'} 
+                                    variant='solid' 
+                                    bg={'#1a202c'}
+                                    color={'whiteAlpha.800'}
+                                >
+                                    {timeline}
+                                </Tag> 
                                 <Text>
                                     {overview}
                                 </Text>
@@ -115,7 +158,7 @@ const ProjectModal: React.FC<ProjectModalProps> = (props: ProjectModalProps) => 
                         whileHover={{ scale: 1.1 }}
                         transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
                     >
-                        <CloseBtn size={'lg'} bg={"#1a202c"} color={'whiteAlpha.800'} borderRadius={0} onClick={close}></CloseBtn>
+                        <CloseBtn size={'lg'} bg={"#1a202c"} color={'whiteAlpha.800'} borderRadius={0} onClick={close} />
                     </motion.div>
                 </ModalFooter>
             </ModalContent>

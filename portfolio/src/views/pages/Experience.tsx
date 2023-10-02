@@ -90,6 +90,7 @@ const Experience: React.FC = () => {
                         company={experience.company}
                         startDate={experience.startDate}
                         endDate={experience.endDate}
+                        duration={experience.duration}
                         points={experience.points}
                       />
                     )
@@ -108,12 +109,13 @@ const Experience: React.FC = () => {
                   {experiences.map((experience) => {
                     if (experience.company === 'UVic Rocketry') {  
                       return (
-                        <ExperienceCard 
+                        <ExperienceCard
                           coop={experience.coop} 
                           position={experience.position}
                           company={experience.company}
                           startDate={experience.startDate}
                           endDate={experience.endDate}
+                          duration={experience.duration}
                           points={experience.points}
                         />
                       )
@@ -138,6 +140,7 @@ const Experience: React.FC = () => {
                           company={experience.company}
                           startDate={experience.startDate}
                           endDate={experience.endDate}
+                          duration={experience.duration}
                           points={experience.points}
                         />
                       )

@@ -7,10 +7,12 @@ import { AiFillContacts, AiFillProject, AiFillInfoCircle } from "react-icons/ai"
 import { MdWork } from "react-icons/md";
 import { Pages, useViewContext } from "../../utils/ViewContext";
 import { useBreakpointCheckerMobile } from "../../utils/breakpointChecker";
+import { useIsFirstRender } from 'usehooks-ts'
 
 const LandingPage: React.FC = () => {
   
     const pageContext = useViewContext();
+    const isFirstRender = useIsFirstRender();
 
     const [hoveredBar, setHoveredBar] = useState<number | null>(null);
     const [showTitleCard, setShowTitleCard] = useState<boolean>(true);
@@ -74,15 +76,17 @@ const LandingPage: React.FC = () => {
     const toast = useToast();
 
     useEffect(() => {
-        toast({
-            title: "IN DEVELOPMENT",
-            description: "Some features are not available & Content maybe missing",
-            status: "warning",
-            duration: 9000,
-            isClosable: true,
-            position: 'top'
-        });
-    }, []);
+        if (isFirstRender) {
+            toast({
+                title: "IN DEVELOPMENT",
+                description: "Some features are not available & Content maybe missing",
+                status: "warning",
+                duration: 1500,
+                isClosable: true,
+                position: 'top'
+            });
+        }
+    }, [isFirstRender]);
 
     return (
         <Box margin={0} padding={0}>
