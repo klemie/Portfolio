@@ -18,7 +18,6 @@ const LandingPage: React.FC = () => {
     const isFirstRender = useIsFirstRender();
 
     const [hoveredBar, setHoveredBar] = useState<number | null>(null);
-    const [showTitleCard, setShowTitleCard] = useState<boolean>(pageContext.showTitle);
     const handleHover = (barId:number) => {
       setHoveredBar(barId);
     };
@@ -107,7 +106,7 @@ const LandingPage: React.FC = () => {
                             key={bar.id}
                             style={{
                                 backgroundColor: bar.color,
-                                width: !showTitleCard && hoveredBar !== null && hoveredBar !== bar.id ? '10vw' : '100vw',
+                                width: !pageContext.showTitle && hoveredBar !== null && hoveredBar !== bar.id ? '10vw' : '100vw',
                                 height: isMobile ? '25vh': '80px',
                                 transition: 'width 1s ease',
                                 marginTop: isMobile ? 0 : '20px'
@@ -119,7 +118,7 @@ const LandingPage: React.FC = () => {
                                 key="animation-on-state" 
                                 variants={textMotion} 
                                 initial="hidden" 
-                                animate={hoveredBar === bar.id && !showTitleCard ? 'visible' : 'hidden'} 
+                                animate={hoveredBar === bar.id && !pageContext.showTitle ? 'visible' : 'hidden'} 
                             >   
                                 <Flex 
                                     alignContent={"center"} 
