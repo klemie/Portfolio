@@ -74,14 +74,14 @@ const LandingPage: React.FC = () => {
     const toast = useToast();
 
     useEffect(() => {
-        // toast({
-        //     title: "IN DEVELOPMENT",
-        //     description: "Some features are not available & Content maybe missing",
-        //     status: "warning",
-        //     duration: 9000,
-        //     isClosable: true,
-        //     position: 'top'
-        // });
+        toast({
+            title: "IN DEVELOPMENT",
+            description: "Some features are not available & Content maybe missing",
+            status: "warning",
+            duration: 9000,
+            isClosable: true,
+            position: 'top'
+        });
     }, []);
 
     return (

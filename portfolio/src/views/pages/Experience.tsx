@@ -1,11 +1,11 @@
 import React, { RefObject } from 'react';
 import Header from '../../components/Header';
 import { Pages, useViewContext } from '../../utils/ViewContext';
-import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Flex, Tabs, TabList, TabPanels, TabPanel, Stack, Heading, Text, List, ListItem, ListIcon, SimpleGrid, Center } from '@chakra-ui/react';
+import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Flex, Tabs, TabList, TabPanels, TabPanel, SimpleGrid, Center } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import ExperienceCard from '../../components/ExperienceCard';
 import { experiences } from '../../utils/content';
-import { useBreakpointCheckerDesktop, useBreakpointCheckerMobile, useBreakpointCheckerTablet } from '../../utils/breakpointChecker';
+import { useBreakpointCheckerMobile, useBreakpointCheckerTablet } from '../../utils/breakpointChecker';
 import Close from '../../components/CloseButton';
 
 const Experience: React.FC = () => {
