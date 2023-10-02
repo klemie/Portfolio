@@ -8,6 +8,9 @@ import { MdWork } from "react-icons/md";
 import { Pages, useViewContext } from "../../utils/ViewContext";
 import { useBreakpointCheckerMobile } from "../../utils/breakpointChecker";
 import { useIsFirstRender } from 'usehooks-ts'
+import AboutModal from "../../components/AboutModal";
+import { about } from "../../utils/content";
+
 
 const LandingPage: React.FC = () => {
   
@@ -15,7 +18,7 @@ const LandingPage: React.FC = () => {
     const isFirstRender = useIsFirstRender();
 
     const [hoveredBar, setHoveredBar] = useState<number | null>(null);
-    const [showTitleCard, setShowTitleCard] = useState<boolean>(true);
+    const [showTitleCard, setShowTitleCard] = useState<boolean>(pageContext.showTitle);
     const handleHover = (barId:number) => {
       setHoveredBar(barId);
     };
@@ -56,42 +59,46 @@ const LandingPage: React.FC = () => {
     const handleBarClick = (barTitle: string) => {
         switch (barTitle) {
             case 'About':
-                pageContext.setPage(Pages.ABOUT);
+                setAboutOpen(true);
                 break;
             case 'Project':
                 pageContext.setPage(Pages.PROJECTS);
+                pageContext.setTitle(false);
                 break;
             case 'Experience':
                 pageContext.setPage(Pages.EXPERIENCE);
+                pageContext.setTitle(false);
                 break;
             case 'Contacts':
                 pageContext.setPage(Pages.CONTACT);
+                pageContext.setTitle(false);
                 break;
             default:
                 break;
         }
-    }
+    };
 
+    const [aboutOpen, setAboutOpen] = useState<boolean>(false);
     const isMobile = useBreakpointCheckerMobile();
     const toast = useToast();
 
     useEffect(() => {
-        if (isFirstRender) {
+        if (pageContext.showTitle) {
             toast({
                 title: "IN DEVELOPMENT",
                 description: "Some features are not available & Content maybe missing",
                 status: "warning",
-                duration: 1500,
+                duration: 4000,
                 isClosable: true,
                 position: 'top'
             });
         }
-    }, [isFirstRender]);
+    }, [isFirstRender, toast]);
 
     return (
         <Box margin={0} padding={0}>
             <AbsoluteCenter zIndex={2}>
-                { showTitleCard && <NameCard close={() => setShowTitleCard(false)} /> }
+                { pageContext.showTitle && <NameCard close={() => pageContext.setTitle(false)} /> }
             </AbsoluteCenter>
             <AbsoluteCenter>
                 <div style={{ width: "100vw", margin: 0 }}>
@@ -131,8 +138,19 @@ const LandingPage: React.FC = () => {
                     ))}
                 </div>
             </AbsoluteCenter>
+            <Center>
+                <AboutModal 
+                    open={aboutOpen} 
+                    close={() => setAboutOpen(false)}
+                    skills={about.skills}
+                    skillsDescription={about.skillsDescription}
+                    overview={about.overview}
+                    githubLink={about.githubLink}
+                    gmailLink={about.gmailLink}
+                    linkedinLink={about.linkedinLink}
+                />
+            </Center>
         </Box>
-    
     );
 }
 

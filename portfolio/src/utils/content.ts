@@ -28,6 +28,15 @@ type experience = {
     points: string[];
 };
 
+type about = {
+    gmailLink: string;
+    overview: string[];
+    skills: string[];
+    skillsDescription: string;
+    githubLink?: string;
+    linkedinLink?: string;
+};
+
 export const projects: project[] = [
     {
         title: 'Ground Support',
@@ -39,7 +48,7 @@ export const projects: project[] = [
             'https://media.licdn.com/dms/image/D5622AQEFr7C3q54NHQ/feedshare-shrink_2048_1536/0/1693875912637?e=1698883200&v=beta&t=hQ3xQRvtyjPq6eQFSGlK9_y2WqiO1HD61aSLCSUCB8o'
         ],
         timeline: 'Sep 2022 - present',
-        skillsDescription: 'This project was built using Typescript React . It is hosted on Netlify.',
+        skillsDescription: 'This project was built on a micro service architecture with three services, frontend (Typescript React), telemetry (rust and python) and server (MongooseJs). ',
         githubLink: 'https://github.com/UVicRocketry/Ground-Support',
         linkedinLink: 'https://www.linkedin.com/feed/update/urn:li:activity:7104630524907855873/',
         skills: ['TypeScript', 'React', 'Rust', 'MongooseJS', 'MUI', 'REST'],
@@ -92,15 +101,31 @@ export const projects: project[] = [
         photos: [
             ''
         ],
-        skillsDescription: 'This project was built using React and Chakra UI. It is hosted on Netlify.',
+        skillsDescription: 'This project was built Rust and C, using STM32 on a custom PCB. ',
         githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
         linkedinLink: '',
-        skills: ['Python', 'Embedded Systems'],
+        skills: ['Rust', 'Embedded Systems', 'HIL Testing'],
+        competencies: [''],
+    },
+    {
+        title: 'Software Process',
+        color: 'experience',
+        overview: `In my almost 2 years a Avionics software Lead I developed a Agile software process for the team. 
+            Voluntary positions are hard to manage inside cross-functional teams, with that in mind I developed a process
+            to encourage participation, and accountability using scrum techniques.`,
+        timeline: 'Sep 2021 - Aug 2022',
+        photos: [
+            ''
+        ],
+        skillsDescription: 'The process was built using integrations between Trello and Monday.com.',
+        githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
+        websiteLink: 'https://docs.google.com/presentation/d/1gkJjfWnc6jsr0PQ29cYPVdIOYFZum4SubFt4X8ovL-o/edit#slide=id.g15242db26bd_0_4',
+        skills: ['Agile', 'Scrum', 'Monday.com', 'Trello', 'Github'],
         competencies: [''],
     },
     {
         title: 'Xenia-1 Flight Computer',
-        color: 'experience',
+        color: 'about',
         overview: 'Flight Computer is ',
         timeline: 'Sep 2021 - Aug 2022',
         photos: [
@@ -108,10 +133,10 @@ export const projects: project[] = [
         ],
         skillsDescription: 'This project was built using React and Chakra UI. It is hosted on Netlify.',
         githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
-        linkedinLink: '',
         skills: ['Python', 'Embedded Systems'],
         competencies: [''],
     },
+
     {
         title: 'Hybrid Controls System',
         color: 'projects',
@@ -120,7 +145,7 @@ export const projects: project[] = [
         photos: [
             ''
         ],
-        skillsDescription: 'This project was built using React and Chakra UI. It is hosted on Netlify.',
+        skillsDescription: '',
         githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
         linkedinLink: '',
         skills: ['Python', 'Embedded Systems'],
@@ -209,3 +234,22 @@ export const experiences: experience[] = [
         ]
     },
 ];
+
+export const about: about = {
+    overview: [
+        `Hello my name is Kris and I . My interest in software development, specifically web development, 
+        began in high school when I attempted to create a cool math games clone for all of my friends projects.
+        Being able to combine my creative mind along with my new found passion for programming gave me a keen 
+        interest in UI/UX design.`,
+        `Today, I am a fifth-year Computer Engineering student at UVic. I've been involved in a range of projects, from 
+        web development to embedded systems, with a majority of them within the UVic Rocketry Team.Alongside my 
+        technical skills, I've developed a liking for project management and optimizing administrative processes.`,
+        `I am currently looking for a 4 month co-op position for the starting May 2024. If you are interested in working with me 
+        please feel free to contact me through email or linkedin.`
+    ],
+    skillsDescription: 'Here are a few technologies I\'ve been working with recently:',
+    skills: ['TypeScript', 'React', 'MongooseJS', 'Rust', 'STM32'],
+    githubLink: 'https://github.com/klemie',
+    gmailLink: 'mailto: lemieuxkristopher@gmail.com',
+    linkedinLink: 'https://www.linkedin.com/in/klemie/'
+};

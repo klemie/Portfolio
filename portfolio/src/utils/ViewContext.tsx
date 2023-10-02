@@ -2,11 +2,11 @@ import {
     PropsWithChildren, 
     createContext, 
     useContext, 
-    useReducer 
+    useReducer, 
+    useState
 } from "react";
 
 // Pages
-import About from "../views/pages/About";
 import Projects from "../views/pages/Projects";
 import Experience from "../views/pages/Experience";
 import Contact from "../views/pages/Contact";
@@ -20,7 +20,13 @@ export enum Pages {
     TITLE = "title"
 }
 
-type PageState = Pages.ABOUT | Pages.CONTACT | Pages.CONTACT | Pages.EXPERIENCE | Pages.PROJECTS | Pages.TITLE;
+type PageState = 
+    Pages.ABOUT | 
+    Pages.CONTACT | 
+    Pages.CONTACT | 
+    Pages.EXPERIENCE | 
+    Pages.PROJECTS | 
+    Pages.TITLE;
 
 type PageAction =
     | { type: Pages.ABOUT, payload: string }
@@ -30,10 +36,7 @@ type PageAction =
     | { type: Pages.TITLE, payload: string };
 
 function pageReducer (state: JSX.Element, action: PageAction): JSX.Element {
-    console.log(state);
     switch (action.type) {
-        case Pages.ABOUT:
-            return <About />;
         case Pages.PROJECTS:
             return <Projects />;
         case Pages.EXPERIENCE:
@@ -49,24 +52,27 @@ function pageReducer (state: JSX.Element, action: PageAction): JSX.Element {
 
 export interface IViewContext {
     page: JSX.Element;
+    showTitle: boolean;
+    setTitle: (showTitle: boolean) => void;
     setPage: (page: PageState) => void;
 }
 
 const ViewContext = createContext<IViewContext>({
     page: <LandingPage />,
+    showTitle: true,
+    setTitle: () => {},
     setPage: () => {}
 });
 
 export const ViewProvider = ({ children }: PropsWithChildren) => {
     const [page, pageDispatch] = useReducer(pageReducer, <LandingPage />); 
-
+    const [showTitle, setShowTitle] = useState<boolean>(true);
+    const setTitle = (show: boolean) => setShowTitle(show);
     const setPage = (page: PageState) => {
-        console.log('clicked')
         pageDispatch({ type: page, payload: page});
-        console.log(typeof page)
     };
     return (
-        <ViewContext.Provider value={{ page, setPage }}>
+        <ViewContext.Provider value={{ page, setPage, showTitle, setTitle }}>
             {children}
         </ViewContext.Provider>
     );

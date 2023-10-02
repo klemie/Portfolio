@@ -25,7 +25,7 @@ const Projects: React.FC = () => {
         <Spacer />
         <Center>
           <Stack 
-            padding={isMobile ? 5 : 20} 
+            padding={isMobile ? 5 : 5} 
             direction={isMobile ? 'column' : 'row'} 
             spacing={5} 
             scrollBehavior={"smooth"} 
