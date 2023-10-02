@@ -1,15 +1,20 @@
 import React, { RefObject } from 'react';
 import Header from '../../components/Header';
 import { Pages, useViewContext } from '../../utils/ViewContext';
-import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Flex, Tabs, TabList, TabPanels, TabPanel } from '@chakra-ui/react';
+import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Flex, Tabs, TabList, TabPanels, TabPanel, Stack, Heading, Text, List, ListItem, ListIcon, SimpleGrid, Center } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { StyledBox } from '../../components/StyledComponent';
+import ExperienceCard from '../../components/ExperienceCard';
+import { experiences } from '../../utils/content';
+import { useBreakpointCheckerDesktop, useBreakpointCheckerMobile, useBreakpointCheckerTablet } from '../../utils/breakpointChecker';
+import Close from '../../components/CloseButton';
 
 const Experience: React.FC = () => {
   const viewContext = useViewContext();
+
   interface CustomTabProps extends Omit<UseTabProps, 'bg'> {
     bg: string;
   }
+
   const CustomTab = React.forwardRef<HTMLButtonElement, CustomTabProps>((props, ref) => {
     const styles = useMultiStyleConfig('Tabs', props)
     const tabProps = useTab({ ...props, ref: ref as RefObject<HTMLElement> })
@@ -36,7 +41,11 @@ const Experience: React.FC = () => {
         </Button>
       </motion.div>
     )
-  })
+  });
+
+  const isTablet = useBreakpointCheckerTablet();
+  const isMobile = useBreakpointCheckerMobile();
+
   return (
     <Flex padding={10} direction={'column'} height={"100%"}>
       <Header 
@@ -45,43 +54,112 @@ const Experience: React.FC = () => {
         close={() => {
           viewContext.setPage(Pages.TITLE);
         }} />
-        <Tabs py={5} variant='unstyled' orientation={'horizontal'}>
-          <TabList gap={5}>
+        <Tabs py={5} variant='unstyled' orientation={'horizontal'} >
+          <TabList gap={5} justifyContent={isMobile ? 'center' : 'left'}>
             <CustomTab  
               bg={'projects'} 
-             
             >
-            Helm Operations
+              { !isMobile ? 'Helm Operations' : 'Helm' }
             </CustomTab>
             <CustomTab 
               bg={'contact'} 
             >
-              UVic Rocketry
+              { !isMobile ? 'UVic Rocketry' : 'UVR' }
             </CustomTab>
             <CustomTab 
               bg={'about'} 
             >
-              Island Temperature Controls
+              { !isMobile ? 'Island Temperature Controls' : 'ITC' }
             </CustomTab>
           </TabList>
           <TabPanels>
-            <TabPanel p={10} margin={0}>
-              <StyledBox maxWidth={1000} minWidth={300} minH={'fit-content'} height={'50vh'}>
-                Helm
-              </StyledBox>
+            <TabPanel p={isMobile ? 0 : 10} paddingTop={10}>
+              <SimpleGrid 
+                columns={ isMobile || isTablet ? 1 : 2 } 
+                spacing={10}    
+                scrollBehavior={"smooth"} 
+                overflow={'scroll'} 
+                padding={5}
+              >  
+                {experiences.map((experience) => {
+                  if (experience.company === 'Helm Operations') {  
+                    return (
+                      <ExperienceCard
+                        coop={experience.coop} 
+                        position={experience.position}
+                        company={experience.company}
+                        startDate={experience.startDate}
+                        endDate={experience.endDate}
+                        points={experience.points}
+                      />
+                    )
+                  }
+                })}
+              </SimpleGrid>
             </TabPanel>
-            <TabPanel p={10}>
-            <StyledBox maxWidth={1000} minWidth={300} minH={'fit-content'} height={'50vh'}>
-                UVR
-              </StyledBox>
+            <TabPanel p={isMobile ? 0 : 10} paddingTop={10}>
+                <SimpleGrid 
+                  columns={ isMobile || isTablet ? 1 : 2 } 
+                  spacing={10}    
+                  scrollBehavior={"smooth"} 
+                  overflow={'scroll'} 
+                  padding={5}
+                >
+                  {experiences.map((experience) => {
+                    if (experience.company === 'UVic Rocketry') {  
+                      return (
+                        <ExperienceCard 
+                          coop={experience.coop} 
+                          position={experience.position}
+                          company={experience.company}
+                          startDate={experience.startDate}
+                          endDate={experience.endDate}
+                          points={experience.points}
+                        />
+                      )
+                    }
+                  })}
+                </SimpleGrid >
             </TabPanel>
-            <TabPanel p={10}>
-              <StyledBox maxWidth={1000} minWidth={300} minH={'fit-content'} height={'50vh'}>
-                ITC
-              </StyledBox>
+            <TabPanel p={isMobile ? 0 : 10} paddingTop={10} overflow={'scroll'}>
+                <SimpleGrid 
+                  columns={ isMobile || isTablet ? 1 : 2 } 
+                  spacing={10}    
+                  scrollBehavior={"smooth"} 
+                  overflow={'scroll'} 
+                  padding={5}
+                >
+                  {experiences.map((experience) => {
+                    if (experience.company === 'Island Temperature Controls') {  
+                      return (
+                        <ExperienceCard 
+                          coop={experience.coop} 
+                          position={experience.position}
+                          company={experience.company}
+                          startDate={experience.startDate}
+                          endDate={experience.endDate}
+                          points={experience.points}
+                        />
+                      )
+                    }
+                })}
+                </SimpleGrid>
+               
             </TabPanel>
           </TabPanels>
         </Tabs>
+        {isMobile && <Center
+            position={'fixed'}
+            bottom={10}
+            zIndex={2}
+          >
+            <Close
+              close={() => {
+                viewContext.setPage(Pages.TITLE);
+              }} 
+              color={'experience'} 
+            />
+          </Center>}
     </Flex>
   );
 };

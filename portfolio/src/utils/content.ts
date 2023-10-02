@@ -10,6 +10,16 @@ type project = {
     linkedinLink?: string;
 };
 
+type experience = {
+    position: string;
+    company: string;
+    duration : string;
+    startDate: string;
+    endDate: string;
+    coop: boolean;
+    points: string[];
+};
+
 export const projects: project[] = [
     {
         title: 'Ground Support',
@@ -38,5 +48,87 @@ export const projects: project[] = [
         linkedinLink: 'https://www.linkedin.com/feed/update/urn:li:activity:7104630524907855873/',
         skills: ['TypeScript', 'React', 'MongooseJS', 'ChakraUI', 'REST'],
         competencies: ['Web Development', 'UI/UX Design', 'API Design']
+    },
+];
+
+export const experiences: experience[] = [
+    {
+        company: 'UVic Rocketry',
+        position: 'Technical Coordinator',
+        startDate: 'Sep 2022',
+        endDate: 'Present',
+        duration: '1 yr 2 months',
+        coop: false,
+        points: [
+            'Led a team of 5 software developers to create a web application for the UVic Rocketry team',
+            'Designed and implemented a REST API to allow the web application to communicate with the rocket and launch site',
+            'Designed and implemented a UI/UX for the web application'
+        ]
+    },
+    {
+        company: 'UVic Rocketry',
+        position: 'Avionics co-lead',
+        startDate: 'Mar 2021',
+        coop: false,
+        endDate: 'Sep 2022',
+        duration: '1 yr 7 months',
+        points: [
+            ''
+        ]
+    },
+    {
+        company: 'UVic Rocketry',
+        position: 'Media Lead',
+        startDate: 'Mar 2021',
+        endDate: 'Sep 2022',
+        duration: '1 yr 7 months',
+        coop: false,
+        points: [
+            ''
+        ]
+    },
+    {
+        company: 'UVic Rocketry',
+        position: 'Propulsion Member',
+        coop: false,
+        startDate: 'Dec 2019',
+        endDate: 'Mar 2021',
+        duration: '1 yr 4 months',
+        points: [
+            ''
+        ]
+    },
+    {
+        company: 'Helm Operations',
+        position: 'Full Stack Developer',
+        coop: true,
+        startDate: 'Jan 2020',
+        endDate: 'Apr 2020',
+        duration: '9 months',
+        points: [
+            ''
+        ]
+    },
+    {
+        company: 'Helm Operations',
+        position: 'Contract Software Engineer',
+        coop: false,
+        startDate: 'Sep 2022',
+        endDate: 'Jan 2023',
+        duration: '5 months',
+        points: [
+            ''
+        ]
+    },
+    {
+        company: 'Island Temperature Controls',
+        position: 'Graphics Developer DDC',
+        coop: true,
+        startDate: 'Sep 2022',
+        endDate: 'Jan 2023',
+        duration: '4 months',
+        points: [
+            ''
+        ]
     },
 ];

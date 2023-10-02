@@ -1,11 +1,12 @@
 import React from 'react';
-import { Container, Flex, Spacer, Stack } from '@chakra-ui/react';
+import { Center, Container, Flex, Spacer, Stack } from '@chakra-ui/react';
 import Header from '../../components/Header';
 import ProjectCard from '../../components/ProjectCard';
 import Lines from '../../components/Lines';
 import { Pages, useViewContext } from '../../utils/ViewContext';
 import { useBreakpointCheckerDesktop, useBreakpointCheckerMobile } from '../../utils/breakpointChecker';
 import { projects } from '../../utils/content';
+import Close from '../../components/CloseButton';
 
 const Projects: React.FC = () => {
   const viewContext = useViewContext();
@@ -22,28 +23,42 @@ const Projects: React.FC = () => {
       <Flex padding={10} direction={'column'} height={"100%"}>
         <Header color='projects' title='Projects' close={backToTitle} />
         <Spacer />
-        <Stack 
-          padding={isMobile ? 5 : 20} 
-          direction={isMobile ? 'column' : 'row'} 
-          spacing={5} 
-          scrollBehavior={"smooth"} 
-          overflow={'scroll'}
-        >
-          {
-            projects.map((project, index) => {
-                return (
-                  <ProjectCard 
-                    color={project.color} 
-                    title={project.title} 
-                    overview={project.overview} 
-                    projectIndex={index} 
-                  />
-                );
-            })
-          }
-        </Stack>
+        <Center>
+          <Stack 
+            padding={isMobile ? 5 : 20} 
+            direction={isMobile ? 'column' : 'row'} 
+            spacing={5} 
+            scrollBehavior={"smooth"} 
+            overflow={'scroll'}
+          >
+              {
+                projects.map((project, index) => {
+                    return (
+                      <ProjectCard 
+                        color={project.color} 
+                        title={project.title} 
+                        overview={project.overview} 
+                        projectIndex={index} 
+                      />
+                    );
+                })
+              }
+          </Stack>
+        </Center>
         <Spacer />
         {isDesktop && <Lines hiddenIndex={1} />}
+        {isMobile && <Center
+            position={'fixed'}
+            bottom={10}
+            zIndex={2}
+          >
+            <Close
+              close={() => {
+                viewContext.setPage(Pages.TITLE);
+              }} 
+              color={'projects'} 
+            />
+          </Center>}
       </Flex>
     </Container>
   );
