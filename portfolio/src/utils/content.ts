@@ -175,7 +175,7 @@ export const experiences: experience[] = [
         endDate: 'Sep 2022',
         duration: '1 yr 7 months',
         points: [
-            ''
+            'Standardized a agile software process for the team',
         ]
     },
     {
@@ -230,6 +230,8 @@ export const experiences: experience[] = [
         endDate: 'Jan 2023',
         duration: '4 months',
         points: [
+            'Worked with a small to develop a web application for a local HVAC company',
+            'Elicited requirements from other teams and validated designs with HVAC technicians to ensure accuracy of the user experience',
             ''
         ]
     },
@@ -237,13 +239,14 @@ export const experiences: experience[] = [
 
 export const about: about = {
     overview: [
-        `Hello my name is Kris and I . My interest in software development, specifically web development, 
-        began in high school when I attempted to create a cool math games clone for all of my friends projects.
-        Being able to combine my creative mind along with my new found passion for programming gave me a keen 
-        interest in UI/UX design.`,
+        `Hello my name is Kris, and I am an anomaly. I am a technically trained hardware engineer that loves UX/UI.
+        I aspire to create visually pleasing and hopefully functional usually web applications.My interest in software 
+        development, specifically web development, began in high school when I attempted to create a cool math games 
+        clone for a variety of P5JS 2D games developed by my peers.`,
         `Today, I am a fifth-year Computer Engineering student at UVic. I've been involved in a range of projects, from 
-        web development to embedded systems, with a majority of them within the UVic Rocketry Team.Alongside my 
-        technical skills, I've developed a liking for project management and optimizing administrative processes.`,
+        web development to embedded systems, with a majority of them within the UVic Rocketry Team. Along side my 
+        technical skills, I've developed a liking for project management and optimizing administrative processes, to the extent 
+        that I kanban my day to day life.`,
         `I am currently looking for a 4 month co-op position for the starting May 2024. If you are interested in working with me 
         please feel free to contact me through email or linkedin.`
     ],

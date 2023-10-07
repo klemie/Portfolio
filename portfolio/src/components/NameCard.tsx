@@ -54,7 +54,14 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                         {info && !isMobile && <Image src={Kris} height={'380'} borderRadius={0} boxShadow={'2xl'}/>}
                             <Stack direction={'column'} spacing={4} padding={[0,0,2,2]}>
                                 {!info && <Heading fontSize={!info ? isMobile ? '6xl' : '9xl' : '7xl'} color={'#F4EEE9'} as={'b'} >
-                                    <Tooltip label="Click to see more" aria-label="A tooltip" placement={'top'} bg={'red.500'}>Kristopher Lemieux</Tooltip>
+                                    <Tooltip 
+                                        label="Click to see more" 
+                                        aria-label="A tooltip" 
+                                        placement={'top'} 
+                                        bg={'red.500'}
+                                    >
+                                        Kristopher Lemieux
+                                    </Tooltip>
                                 </Heading>}
                                 {info && (
                                     <>
