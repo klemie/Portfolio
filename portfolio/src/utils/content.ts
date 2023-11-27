@@ -4,6 +4,14 @@ import tableTappCustomer from '../../public/assets/TableTapp - Customer.png';
 import tableTappSetup from '../../public/assets/TableTapp - Table Setup.png';
 import tableTappRestaurant from '../../public/assets/TableTapp - restraunt.png';
 
+import X1FC1 from '../../public/assets/Xenia1-FC-1.png';
+import X1FC2 from '../../public/assets/Xenia1-FC-2.png';
+import X1FC3 from '../../public/assets/Xenia1-FC-3.png';
+import X1FC4 from '../../public/assets/Xenia1-FC-4.png';
+
+import HBC1 from '../../public/assets/HBC-1.png';
+import HBC2 from '../../public/assets/HBC-2.png'
+
 type project = {
     photos: string[] | [];
     color: string;
@@ -66,7 +74,7 @@ export const projects: project[] = [
             tableTappRestaurant
         ],
         timeline: 'May 2023 - Aug 2023',
-        skillsDescription: 'This project was built using React and Chakra UI. It is hosted on Netlify.',
+        skillsDescription: 'This project was built with the MERN stack using React and Chakra UI. With a backend in ExpressJS and MongoDB.',
         githubLink: 'https://github.com/UVicRocketry/Ground-Support',
         websiteLink: 'https://tabletapp.github.io/TableTapp/',
         linkedinLink: 'https://www.linkedin.com/feed/update/urn:li:activity:7104630524907855873/',
@@ -88,24 +96,53 @@ export const projects: project[] = [
         photos: [
             ''
         ],
-        skillsDescription: 'sadas',
+        skillsDescription: 'This Project is in the planning phase. Will be completed winter/spring 2024',
         githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
-        skills: ['Rust', 'Embedded Systems'],
+        skills: ['Ethernet Protocol', 'Full stack'],
         competencies: [''],
     },
     {
         title: 'AndÚril Flight Computer',
         color: 'contact',
-        overview: 'Flight Computer is ',
+        overview: `This Project is rocketry's first attempt at a developing a rust based 
+        flight computer system. My contribution to the project was do an investigation and report 
+        into the viability of rust in embedded systems.`,
         timeline: 'Sep 2023 - present',
         photos: [
             ''
         ],
-        skillsDescription: 'This project was built Rust and C, using STM32 on a custom PCB. ',
-        githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
+        skillsDescription: ``,
+        githubLink: '',
         linkedinLink: '',
-        skills: ['Rust', 'Embedded Systems', 'HIL Testing'],
-        competencies: [''],
+        websiteLink: 'https://drive.google.com/drive/folders/1HmbC9vWZxt-nJ8LGUyFYhisnisMbH3kO?usp=share_link',
+        skills: ['Rust', 'Embedded Systems', 'HIL Testing', 'STM32'],
+        competencies: [
+            'Developed series of technical report focusing on evaluating rusts viability in embedded systems using quantifiable metrics',
+            'Migrated Xenia-2 C++ codebase to rust, validated system through HIL testing. Plan to fly in on a L1 certification flight Feb 2024.',
+            'Wrote guide on how to use rust in embedded systems to help onboard new members.'
+        ],
+    },
+    {
+        title: 'Xenia-1 Flight Computer',
+        color: 'about',
+        overview: `Xenia-1 was the first rocket that UVR developed coming out of covid-19. Due to the pandemic restrictions the team lost mass of members, 
+        therefore the avionics team simplified the system to operate off of a raspberry pi using python. Though the avionics system was simplifed the rocket itself was
+        contained some of the most ambition projects, such as airbrakes and a deployable payload. Avionics was tasked with developing a control system for airbrakes `,
+        timeline: 'Sep 2021 - Aug 2022',
+        photos: [
+            X1FC1,
+            X1FC2,
+            X1FC3,
+            X1FC4
+        ],
+        skillsDescription: 'This project was built using python ',
+        githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
+        skills: ['Python', 'Embedded Systems'],
+        competencies: [
+            'Use Object Oriented principles to ',
+            'Taught ',
+            ''
+        ],
     },
     {
         title: 'Software Process',
@@ -123,32 +160,21 @@ export const projects: project[] = [
         skills: ['Agile', 'Scrum', 'Monday.com', 'Trello', 'Github'],
         competencies: [''],
     },
-    {
-        title: 'Xenia-1 Flight Computer',
-        color: 'about',
-        overview: 'Flight Computer is ',
-        timeline: 'Sep 2021 - Aug 2022',
-        photos: [
-            ''
-        ],
-        skillsDescription: 'This project was built using React and Chakra UI. It is hosted on Netlify.',
-        githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
-        skills: ['Python', 'Embedded Systems'],
-        competencies: [''],
-    },
 
     {
         title: 'Hybrid Controls System',
         color: 'projects',
-        overview: 'Flight Computer is ',
+        overview: `For my first project in the rocketry club I developed multiple iterations of a GUI to 
+        interface with and control valves`,
         timeline: 'Dec 2019 - Mar 2021',
         photos: [
-            ''
+            HBC1,
+            HBC2
         ],
         skillsDescription: '',
         githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
         linkedinLink: '',
-        skills: ['Python', 'Embedded Systems'],
+        skills: ['Python', 'Socket', 'C++', 'Qt'],
         competencies: [''],
     }
 ];
@@ -162,8 +188,10 @@ export const experiences: experience[] = [
         duration: '1 yr 2 months',
         coop: false,
         points: [
-            'Led a team of 5 software developers to create a web application for the UVic Rocketry team',
-            'Designed and implemented a REST API to allow the web application to communicate with the rocket and launch site',
+            'Oversee a backlog, and assigned tasks through an 3 week sprint to ensure member participation',
+            'Ran full stack skilldevs to onboard new members and ensure members are comfortable with the MERN stack',
+            'Developed a mirco service based system to allow for open source the project for other rocketry teams to use',
+            'Designed and implemented a REST API to allow ',
             'Designed and implemented a UI/UX for the web application'
         ]
     },
@@ -176,6 +204,7 @@ export const experiences: experience[] = [
         duration: '1 yr 7 months',
         points: [
             'Standardized a agile software process for the team',
+            'Created series of presentations '
         ]
     },
     {
@@ -186,7 +215,9 @@ export const experiences: experience[] = [
         duration: '1 yr 7 months',
         coop: false,
         points: [
-            ''
+            'Organized fundraisers ',
+            'Developed sponsorship packages and reached out to potential sponsors, landing sponsorship from Lockheed Martian and other aerospace companies',
+            'Maintained a social media presence on Instagram and LinkedIn',
         ]
     },
     {
@@ -197,6 +228,7 @@ export const experiences: experience[] = [
         endDate: 'Mar 2021',
         duration: '1 yr 4 months',
         points: [
+            'Developed a GUI to interface with and control valves',
             ''
         ]
     },
@@ -219,6 +251,8 @@ export const experiences: experience[] = [
         endDate: 'Jan 2023',
         duration: '5 months',
         points: [
+            'Bridged the technical barrier between the development team and product team by developing prototypes',
+            'Prototyped client requested features used to win bids for __ clients',
             ''
         ]
     },
@@ -239,8 +273,8 @@ export const experiences: experience[] = [
 
 export const about: about = {
     overview: [
-        `Hello my name is Kris, and I am an anomaly. I am a technically trained hardware engineer that loves UX/UI.
-        I aspire to create visually pleasing and hopefully functional usually web applications.My interest in software 
+        `Hello my name is Kris, I am a technically trained hardware engineer that loves UX/UI.
+        I aspire to create visually pleasing usually web applications. My interest in software 
         development, specifically web development, began in high school when I attempted to create a cool math games 
         clone for a variety of P5JS 2D games developed by my peers.`,
         `Today, I am a fifth-year Computer Engineering student at UVic. I've been involved in a range of projects, from 

@@ -1,7 +1,7 @@
 import React, { RefObject } from 'react';
 import Header from '../../components/Header';
 import { Pages, useViewContext } from '../../utils/ViewContext';
-import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Flex, Tabs, TabList, TabPanels, TabPanel, SimpleGrid, Center } from '@chakra-ui/react';
+import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Flex, Tabs, TabList, TabPanels, TabPanel, SimpleGrid, Center, Container } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import ExperienceCard from '../../components/ExperienceCard';
 import { experiences } from '../../utils/content';
@@ -80,6 +80,7 @@ const Experience: React.FC = () => {
                 scrollBehavior={"smooth"} 
                 overflow={'scroll'} 
                 padding={5}
+                h={'100%'}
               >  
                 {experiences.map((experience) => {
                   if (experience.company === 'Helm Operations') {  
@@ -103,8 +104,9 @@ const Experience: React.FC = () => {
                   columns={ isMobile || isTablet ? 1 : 2 } 
                   spacing={10}    
                   scrollBehavior={"smooth"} 
-                  overflow={'scroll'} 
+                  overflowY={'scroll'} 
                   padding={5}
+                  h={'100vh'}
                 >
                   {experiences.map((experience) => {
                     if (experience.company === 'UVic Rocketry') {  
@@ -123,13 +125,14 @@ const Experience: React.FC = () => {
                   })}
                 </SimpleGrid >
             </TabPanel>
-            <TabPanel p={isMobile ? 0 : 10} paddingTop={10} overflow={'scroll'}>
+            <TabPanel p={isMobile ? 0 : 10} paddingTop={10}>
                 <SimpleGrid 
                   columns={ isMobile || isTablet ? 1 : 2 } 
                   spacing={10}    
-                  scrollBehavior={"smooth"} 
-                  overflow={'scroll'} 
+                  scrollBehavior={"smooth"}
+                  overflowY={'scroll'} 
                   padding={5}
+                  h={'90%'}
                 >
                   {experiences.map((experience) => {
                     if (experience.company === 'Island Temperature Controls') {  
@@ -143,11 +146,10 @@ const Experience: React.FC = () => {
                           duration={experience.duration}
                           points={experience.points}
                         />
-                      )
-                    }
-                })}
-                </SimpleGrid>
-               
+                        )
+                      }
+                    })}
+                </SimpleGrid>        
             </TabPanel>
           </TabPanels>
         </Tabs>
