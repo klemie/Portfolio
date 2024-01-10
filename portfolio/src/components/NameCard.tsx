@@ -30,26 +30,26 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
     const isMobile = useBreakpointCheckerMobile();
 
     return (
-        <motion.div
-            whileHover={{ scale: 1.05 }}
-            onTap={() => { if (!isMobile) setInfo(!info)}}
-            transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
+        <Box 
+            bg={'#383838'} 
+            p={[10, 10, 10, 10]} 
+            borderRadius={0} 
+            textAlign={!info ? 'center' : 'start'}
+            width={"100vw"}
+            height={"100vh"}
+            sx={{ 
+                'box-shadow': '10px 10px 1px 0px rgba(72, 72, 72, 0.80)'
+            }}
         >
-            <Box 
-                bg={'#383838'} 
-                p={[10, 10, 10, 10]} 
-                borderRadius={0} 
-                textAlign={!info ? 'center' : 'start'}
-                width={isMobile ? "100vw" : 900}
-                height={isMobile ? "100vh" : 500}
-                sx={{ 
-                    'box-shadow': '10px 10px 1px 0px rgba(72, 72, 72, 0.80)'
-                }}
-            >
-                <IconContext.Provider value={{ size: "25" }}>
-                    <Minimize onClick={() => props.close()} />
-                </IconContext.Provider>
+            <IconContext.Provider value={{ size: "25" }}>
+                <Minimize onClick={() => props.close()} />
+            </IconContext.Provider>
                 <AbsoluteCenter>
+                    <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        onTap={() => { if (!isMobile) setInfo(!info)}}
+                        transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
+                    >
                     <Stack direction={!info ? 'column' : 'row'} spacing={4}>
                         {info && !isMobile && <Image src={Kris} height={'380'} borderRadius={0} boxShadow={'2xl'}/>}
                             <Stack direction={'column'} spacing={4} padding={[0,0,2,2]}>
@@ -57,7 +57,7 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                                     <Tooltip 
                                         label="Click to see more" 
                                         aria-label="A tooltip" 
-                                        placement={'top'} 
+                                        placement={'bottom'} 
                                         bg={'red.500'}
                                     >
                                         Kristopher Lemieux
@@ -69,7 +69,7 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                                             Software Engineer
                                         </Heading>    
                                         <Text fontSize={'Body'} color={'#F4EEE9'} as={'b'}>
-                                            Primarily deal with full stack development with an  preference to frontend. I am currently in my 5th year of Computer Engineering at <Tooltip label="Click to see more" aria-label="A tooltip">
+                                            Primarily deal with full stack development with a preference to frontend. I am currently in my 5th year of Computer Engineering at <Tooltip label="Click to see more" aria-label="A tooltip">
                                                 <Text as={'u'} color={'#F4EEE9'}>UVic</Text>
                                             </Tooltip> in British Columbia, Canada.
                                         </Text> 
@@ -96,10 +96,9 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                             </Stack>
                         </Center>}
                     </Stack>
+                    </motion.div>
                 </AbsoluteCenter>
-            </Box>
-        </motion.div>
-
+        </Box>
     );
 }
 

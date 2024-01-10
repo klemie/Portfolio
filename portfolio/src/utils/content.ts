@@ -12,6 +12,11 @@ import X1FC4 from '../../public/assets/Xenia1-FC-4.png';
 import HBC1 from '../../public/assets/HBC-1.png';
 import HBC2 from '../../public/assets/HBC-2.png'
 
+import GS1 from '../../public/assets/GS-1.jpg';
+import GS2 from '../../public/assets/GS-2.jpg';
+import GS3 from '../../public/assets/GS-3.jpg';
+import GS4 from '../../public/assets/GS-4.jpg';
+
 type project = {
     photos: string[] | [];
     color: string;
@@ -51,12 +56,13 @@ export const projects: project[] = [
         overview: 'Ground Support is a telemetry visualization and post flight analysis tool developed by the University of Victoria Rocketry Team. It is designed to be a modular and dynamic application that can be used for any configuration of sounding rocket.',
         color: 'projects',
         photos: [
-            'https://media.licdn.com/dms/image/D5622AQG3_kI_-ujfuQ/feedshare-shrink_2048_1536/0/1693875908809?e=1698883200&v=beta&t=J-jSNFPfeaPJ70p09YCSVaLbMFkbxBmpPQSjOQLCuRg',
-            'https://media.licdn.com/dms/image/D5622AQF4vne1wTtN-g/feedshare-shrink_2048_1536/0/1693875912928?e=1698883200&v=beta&t=QgTeAd5-xrtwozvOi2U54Kk_r996KPGoDLweJ1oCaqM',
-            'https://media.licdn.com/dms/image/D5622AQEFr7C3q54NHQ/feedshare-shrink_2048_1536/0/1693875912637?e=1698883200&v=beta&t=hQ3xQRvtyjPq6eQFSGlK9_y2WqiO1HD61aSLCSUCB8o'
+            GS1,
+            GS2,
+            GS3,
+            GS4
         ],
         timeline: 'Sep 2022 - present',
-        skillsDescription: 'This project was built on a micro service architecture with three services, frontend (Typescript React), telemetry (rust and python) and server (MongooseJs). ',
+        skillsDescription: 'This project was built on a micro service architecture with three services, frontend (Typescript React), telemetry (rust and python) and server (Express and MongooseJs). ',
         githubLink: 'https://github.com/UVicRocketry/Ground-Support',
         linkedinLink: 'https://www.linkedin.com/feed/update/urn:li:activity:7104630524907855873/',
         skills: ['TypeScript', 'React', 'Rust', 'MongooseJS', 'MUI', 'REST'],
@@ -96,10 +102,14 @@ export const projects: project[] = [
         photos: [
             ''
         ],
-        skillsDescription: 'This Project is in the planning phase. Will be completed winter/spring 2024',
+        skillsDescription: `The projects main scope is to combine the instrumentation and valve control to communicate with mission 
+        control over one connection.`,
         githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
-        skills: ['Ethernet Protocol', 'Full stack'],
-        competencies: [''],
+        skills: ['Labjack', 'Arduino','Full stack'],
+        competencies: [
+            'Investigated multiple solutions for communication through weighted objectives chart and cost analysis', 
+            'Extracted instrumentation data from a Labjack and control feedback from a Arduino and sent it over a UART connected to mission control computer' 
+        ],
     },
     {
         title: 'AndÚril Flight Computer',
@@ -135,13 +145,13 @@ export const projects: project[] = [
             X1FC3,
             X1FC4
         ],
-        skillsDescription: 'This project was built using python ',
+        skillsDescription: 'This project was built using python using adafruit libraries and a raspberry pi.',
         githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
         skills: ['Python', 'Embedded Systems'],
         competencies: [
-            'Use Object Oriented principles to ',
-            'Taught ',
-            ''
+            'Use Object Oriented principles in combination with an embedded libraries to develop a reliable data logger',
+            'Taught new members and younger students how to use git and python for embedded development',
+            'Created a backlog of tasks with concrete goals and acceptance create and assigned them to members by helping them break down the task into smaller pieces'
         ],
     },
     {
@@ -158,7 +168,10 @@ export const projects: project[] = [
         githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
         websiteLink: 'https://docs.google.com/presentation/d/1gkJjfWnc6jsr0PQ29cYPVdIOYFZum4SubFt4X8ovL-o/edit#slide=id.g15242db26bd_0_4',
         skills: ['Agile', 'Scrum', 'Monday.com', 'Trello', 'Github'],
-        competencies: [''],
+        competencies: [
+            'Developed a series of presentations to teach new members how to use the process',
+            'Recorded a series of video to teach members how the process works, through demonstrating a ticket lifecycle'
+        ],
     },
 
     {
@@ -188,11 +201,11 @@ export const experiences: experience[] = [
         duration: '1 yr 2 months',
         coop: false,
         points: [
-            'Oversee a backlog, and assigned tasks through an 3 week sprint to ensure member participation',
+            'Oversaw a backlog, and assigned tasks through an 3 week sprint to ensure member participation',
             'Ran full stack skilldevs to onboard new members and ensure members are comfortable with the MERN stack',
             'Developed a mirco service based system to allow for open source the project for other rocketry teams to use',
             'Designed and implemented a REST API to allow ',
-            'Designed and implemented a UI/UX for the web application'
+            'Designed UI/UX in Figma and ensured implementation matched design pattern'
         ]
     },
     {
@@ -236,11 +249,13 @@ export const experiences: experience[] = [
         company: 'Helm Operations',
         position: 'Full Stack Developer',
         coop: true,
-        startDate: 'Jan 2020',
-        endDate: 'Apr 2020',
+        startDate: 'Jan 2022',
+        endDate: 'Sept 2022',
         duration: '9 months',
         points: [
-            ''
+            'Designed, Developed, Tested and implemented a feature that enables the saving filtering presets for a dispatching system.',
+            'Created complex API endpoints, data and schema migrations to interact with a LINQ backbone.',
+            'Contributed to Quality assurance efforts by identifying bugs and unexpected workflows.'
         ]
     },
     {
@@ -251,9 +266,10 @@ export const experiences: experience[] = [
         endDate: 'Jan 2023',
         duration: '5 months',
         points: [
-            'Bridged the technical barrier between the development team and product team by developing prototypes',
-            'Prototyped client requested features used to win bids for __ clients',
-            ''
+            'Prototype features that were demonstrated at conferences to over 100 representatives from separate companies',
+            'Created client requested features to help win bids for large maritime concomitates',
+            'Communicated with product team to for technical insight into there designs',
+            'Developed and alters foundational frontend components for new VueJS'
         ]
     },
     {
@@ -266,7 +282,7 @@ export const experiences: experience[] = [
         points: [
             'Worked with a small to develop a web application for a local HVAC company',
             'Elicited requirements from other teams and validated designs with HVAC technicians to ensure accuracy of the user experience',
-            ''
+            'Coordinated directly with technicians to improve design by ensuring accuracy and  user experience'
         ]
     },
 ];
@@ -275,8 +291,7 @@ export const about: about = {
     overview: [
         `Hello my name is Kris, I am a technically trained hardware engineer that loves UX/UI.
         I aspire to create visually pleasing usually web applications. My interest in software 
-        development, specifically web development, began in high school when I attempted to create a cool math games 
-        clone for a variety of P5JS 2D games developed by my peers.`,
+        development, specifically web development, began in high school when I created a website hub for a variety of P5JS games developed by my peers.`,
         `Today, I am a fifth-year Computer Engineering student at UVic. I've been involved in a range of projects, from 
         web development to embedded systems, with a majority of them within the UVic Rocketry Team. Along side my 
         technical skills, I've developed a liking for project management and optimizing administrative processes, to the extent 
