@@ -1,7 +1,7 @@
 import React, { RefObject } from 'react';
 import Header from '../../components/Header';
 import { Pages, useViewContext } from '../../utils/ViewContext';
-import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Flex, Tabs, TabList, TabPanels, TabPanel, SimpleGrid, Center, Container } from '@chakra-ui/react';
+import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Flex, Tabs, TabList, TabPanels, TabPanel, SimpleGrid, Center, Stack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import ExperienceCard from '../../components/ExperienceCard';
 import { experiences } from '../../utils/content';
@@ -47,43 +47,66 @@ const Experience: React.FC = () => {
   const isMobile = useBreakpointCheckerMobile();
 
   return (
-    <Flex padding={10} direction={'column'} height={"100%"}>
+    <Stack padding={10} direction={'column'}>
       <Header 
         color='experience' 
         title='Experience' 
         close={() => {
           viewContext.setPage(Pages.TITLE);
-        }} />
-        <Tabs py={5} variant='unstyled' orientation={'horizontal'} >
-          <TabList gap={5} justifyContent={isMobile ? 'center' : 'left'}>
-            <CustomTab  
-              bg={'projects'} 
-            >
-              { !isMobile ? 'Helm Operations' : 'Helm' }
-            </CustomTab>
-            <CustomTab 
-              bg={'contact'} 
-            >
-              { !isMobile ? 'UVic Rocketry' : 'UVR' }
-            </CustomTab>
-            <CustomTab 
-              bg={'about'} 
-            >
-              { !isMobile ? 'Island Temperature Controls' : 'ITC' }
-            </CustomTab>
-          </TabList>
-          <TabPanels>
-            <TabPanel p={isMobile ? 0 : 10} paddingTop={10}>
+        }} 
+      />
+      <Tabs py={5} variant='unstyled' orientation={'horizontal'}>
+        <TabList gap={5} justifyContent={isMobile ? 'center' : 'left'}>
+          <CustomTab  
+            bg={'projects'} 
+          >
+            { !isMobile ? 'Helm Operations' : 'Helm' }
+          </CustomTab>
+          <CustomTab 
+            bg={'contact'} 
+          >
+            { !isMobile ? 'UVic Rocketry' : 'UVR' }
+          </CustomTab>
+          <CustomTab 
+            bg={'about'} 
+          >
+            { !isMobile ? 'Island Temperature Controls' : 'ITC' }
+          </CustomTab>
+        </TabList>
+        <TabPanels          
+          overflowY={'scroll'}
+          marginTop={5}
+          height={isMobile ? 'calc(100vh - 200px)' : 'calc(100vh - 200px)'}
+        >
+          <TabPanel p={isMobile ? 0 : 10} >
+            <SimpleGrid 
+              columns={ isMobile || isTablet ? 1 : 2 } 
+              spacing={10}
+            >  
+              {experiences.map((experience) => {
+                if (experience.company === 'Helm Operations') {  
+                  return (
+                    <ExperienceCard
+                      coop={experience.coop} 
+                      position={experience.position}
+                      company={experience.company}
+                      startDate={experience.startDate}
+                      endDate={experience.endDate}
+                      duration={experience.duration}
+                      points={experience.points}
+                    />
+                  )
+                }
+              })}
+            </SimpleGrid>
+          </TabPanel>
+          <TabPanel p={isMobile ? 0 : 10}  >
               <SimpleGrid 
-                columns={ isMobile || isTablet ? 1 : 2 } 
+                columns={ isMobile || isTablet ? 1 : 2 }                  
                 spacing={10}    
-                scrollBehavior={"smooth"} 
-                overflow={'scroll'} 
-                padding={5}
-                h={'100%'}
-              >  
+              >
                 {experiences.map((experience) => {
-                  if (experience.company === 'Helm Operations') {  
+                  if (experience.company === 'UVic Rocketry') {  
                     return (
                       <ExperienceCard
                         coop={experience.coop} 
@@ -97,75 +120,45 @@ const Experience: React.FC = () => {
                     )
                   }
                 })}
-              </SimpleGrid>
-            </TabPanel>
-            <TabPanel p={isMobile ? 0 : 10} paddingTop={10}>
-                <SimpleGrid 
-                  columns={ isMobile || isTablet ? 1 : 2 } 
-                  spacing={10}    
-                  scrollBehavior={"smooth"} 
-                  overflowY={'scroll'} 
-                  padding={5}
-                  h={'100vh'}
-                >
-                  {experiences.map((experience) => {
-                    if (experience.company === 'UVic Rocketry') {  
-                      return (
-                        <ExperienceCard
-                          coop={experience.coop} 
-                          position={experience.position}
-                          company={experience.company}
-                          startDate={experience.startDate}
-                          endDate={experience.endDate}
-                          duration={experience.duration}
-                          points={experience.points}
-                        />
+              </SimpleGrid >
+          </TabPanel>
+          <TabPanel p={isMobile ? 0 : 10}  >
+              <SimpleGrid 
+                columns={ isMobile || isTablet ? 1 : 2 } 
+                spacing={10}    
+              >
+                {experiences.map((experience) => {
+                  if (experience.company === 'Island Temperature Controls') {  
+                    return (
+                      <ExperienceCard 
+                        coop={experience.coop} 
+                        position={experience.position}
+                        company={experience.company}
+                        startDate={experience.startDate}
+                        endDate={experience.endDate}
+                        duration={experience.duration}
+                        points={experience.points}
+                      />
                       )
                     }
                   })}
-                </SimpleGrid >
-            </TabPanel>
-            <TabPanel p={isMobile ? 0 : 10} paddingTop={10}>
-                <SimpleGrid 
-                  columns={ isMobile || isTablet ? 1 : 2 } 
-                  spacing={10}    
-                  scrollBehavior={"smooth"}
-                  overflowY={'scroll'} 
-                  padding={5}
-                  h={'90%'}
-                >
-                  {experiences.map((experience) => {
-                    if (experience.company === 'Island Temperature Controls') {  
-                      return (
-                        <ExperienceCard 
-                          coop={experience.coop} 
-                          position={experience.position}
-                          company={experience.company}
-                          startDate={experience.startDate}
-                          endDate={experience.endDate}
-                          duration={experience.duration}
-                          points={experience.points}
-                        />
-                        )
-                      }
-                    })}
-                </SimpleGrid>        
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-        {isMobile && <Center
-            position={'fixed'}
-            bottom={10}
-            zIndex={2}
-          >
-            <Close
-              close={() => {
-                viewContext.setPage(Pages.TITLE);
-              }} 
-              color={'experience'} 
-            />
-          </Center>}
-    </Flex>
+              </SimpleGrid>        
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+      {isMobile && <Center
+          position={'fixed'}
+          bottom={10}
+          zIndex={2}
+        >
+          <Close
+            close={() => {
+              viewContext.setPage(Pages.TITLE);
+            }} 
+            color={'experience'} 
+          />
+        </Center>}
+    </Stack>
   );
 };
 

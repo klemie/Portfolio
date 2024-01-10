@@ -46,7 +46,7 @@ const Projects: React.FC = () => {
           </Stack>
         </Center>
         <Spacer />
-        {isDesktop && <Lines hiddenIndex={1} />}
+        {/* {isDesktop && <Lines hiddenIndex={1} />} */}
         {isMobile && <Center
             position={'fixed'}
             bottom={10}

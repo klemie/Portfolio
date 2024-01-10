@@ -28,7 +28,7 @@ const LandingPage: React.FC = () => {
 
     const sections = [
         { id: 0, color: '#1F77CB', title: 'About', icon: styled(AiFillInfoCircle)`color: #F8F3EE` },
-        { id: 1, color: '#5894CE', title: 'Project', icon: styled(AiFillProject)`color: #F8F3EE` },
+        { id: 1, color: '#5894CE', title: 'Projects', icon: styled(AiFillProject)`color: #F8F3EE` },
         { id: 2, color: '#B75950', title: 'Experience', icon: styled(MdWork)`color: #F8F3EE`  },
         { id: 3, color: '#F3C46A', title: 'Contacts', icon: styled(AiFillContacts)`color: #F8F3EE`  }
     ];
@@ -60,7 +60,7 @@ const LandingPage: React.FC = () => {
             case 'About':
                 setAboutOpen(true);
                 break;
-            case 'Project':
+            case 'Projects':
                 pageContext.setPage(Pages.PROJECTS);
                 pageContext.setTitle(false);
                 break;
@@ -107,9 +107,8 @@ const LandingPage: React.FC = () => {
                             style={{
                                 backgroundColor: bar.color,
                                 width: !pageContext.showTitle && hoveredBar !== null && hoveredBar !== bar.id ? '10vw' : '100vw',
-                                height: isMobile ? '25vh': '80px',
-                                transition: 'width 1s ease',
-                                marginTop: isMobile ? 0 : '20px'
+                                height: '25vh',
+                                transition: 'width 1s ease'
                             }}
                             onMouseEnter={() => handleHover(bar.id)}
                             onMouseLeave={handleLeave}
