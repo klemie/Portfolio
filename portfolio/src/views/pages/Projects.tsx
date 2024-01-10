@@ -4,7 +4,7 @@ import Header from '../../components/Header';
 import ProjectCard from '../../components/ProjectCard';
 import Lines from '../../components/Lines';
 import { Pages, useViewContext } from '../../utils/ViewContext';
-import { useBreakpointCheckerDesktop, useBreakpointCheckerMobile } from '../../utils/breakpointChecker';
+import { useBreakpointCheckerMobile } from '../../utils/breakpointChecker';
 import { projects } from '../../utils/content';
 import Close from '../../components/CloseButton';
 
@@ -16,19 +16,21 @@ const Projects: React.FC = () => {
   };
 
   const isMobile = useBreakpointCheckerMobile();
-  const isDesktop = useBreakpointCheckerDesktop();
 
   return (
     <Container maxW={"100vm"} h={"100%"} m={0} p={0}>
       <Flex padding={10} direction={'column'} height={"100%"}>
         <Header color='projects' title='Projects' close={backToTitle} />
         <Spacer />
-        <Center>
+        <Center           
+        >
           <Stack 
             padding={isMobile ? 5 : 5} 
             direction={isMobile ? 'column' : 'row'} 
             spacing={5} 
             scrollBehavior={"smooth"} 
+            height={isMobile ? 'calc(100vh)' : 'auto'}
+
             overflow={'scroll'}
           >
               {
