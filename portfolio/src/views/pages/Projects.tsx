@@ -2,7 +2,6 @@ import React from 'react';
 import { Center, Container, Flex, Spacer, Stack } from '@chakra-ui/react';
 import Header from '../../components/Header';
 import ProjectCard from '../../components/ProjectCard';
-import Lines from '../../components/Lines';
 import { Pages, useViewContext } from '../../utils/ViewContext';
 import { useBreakpointCheckerMobile } from '../../utils/breakpointChecker';
 import { projects } from '../../utils/content';

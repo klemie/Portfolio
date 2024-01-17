@@ -21,7 +21,7 @@ type project = {
     photos: string[] | [];
     color: string;
     title: string;
-    overview: string;
+    overview: string[];
     skills: string[];
     competencies: string[];
     skillsDescription: string;
@@ -53,7 +53,9 @@ type about = {
 export const projects: project[] = [
     {
         title: 'Ground Support',
-        overview: 'Ground Support is a telemetry visualization and post flight analysis tool developed by the University of Victoria Rocketry Team. It is designed to be a modular and dynamic application that can be used for any configuration of sounding rocket.',
+        overview: [`Ground Support is a telemetry visualization and post flight analysis tool developed by the University of 
+        Victoria Rocketry Team. It is designed to be a modular and dynamic 
+        application that can be used for any configuration of sounding rocket.`],
         color: 'projects',
         photos: [
             GS1,
@@ -71,7 +73,11 @@ export const projects: project[] = [
     {
         title: 'TableTapp',
         color: 'experience',
-        overview: 'Small restaurant businesses run on small profit margins and often have to subscribe to multiple software solutions in order to run their business. Our solution to this is TableTapp, an all-in-one service industry solution with the added benefit of serverless in-restaurant ordering. ',
+        overview: [
+            `Small restaurant businesses run on small profit margins and often have to subscribe to 
+            multiple software solutions in order to run their business. Our solution to this is TableTapp, 
+            an all-in-one service industry solution with the added benefit of serverless in-restaurant ordering.`
+    ],
         photos: [
             tableTappTeam,
             tableTappAward,
@@ -88,24 +94,33 @@ export const projects: project[] = [
         competencies: ['Web Development', 'UI/UX Design', 'API Design']
     },
     {
-        title: 'Hybrid Monitor System',
+        title: 'Hybrid Monitoring System',
         color: 'about',
-        timeline: 'Sep 2023 - present',
-        overview: `UVic Rocketry has been developing a test hybrid engine for over 
+        timeline: 'Jan 2024 - present',
+        overview: [`UVic Rocketry has been developing a test hybrid engine for over 
             5 years with a major pain point of the between the valve cart and controls box. 
             This system currently uses a serial usb connection and has proven to be unreliable. 
             Reliability of the system is instrumental to its safe operation at a remote distance. 
             The purpose and scope of this project would be to investigate other communication methods 
-            (fibre optic, RF) and integrate the current system with a more robust motoriting/control system. 
+            (fibre optic, RF) and integrate the current system with a more robust motoring/control system. 
             goals would be to simplify setup of the system, increase readability and maintainability of the codebase. 
             If this project is successful it will aid in completing UVic Rocketry’s first ever hotfire test for the test engine.`,
+            `This project was taken on as a directed studies course with the goal of developing a 
+            functional prototype in 4 months or less. For the scope of the four months I will integrate 
+            instrumentation and valve control to communicate with mission control over one communication line.
+            The act of integrating instrumentation and control into one platforms will eliminate the need for two separate 
+            software platforms (labview and controls) which has been an issue in the past.`,
+            `For this project I did a full requirements analysis, through eliciting 
+            requirements from the propulsion member, deriving ___ . 
+            `
+        ],
         photos: [
             ''
         ],
         skillsDescription: `The projects main scope is to combine the instrumentation and valve control to communicate with mission 
         control over one connection.`,
         githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
-        skills: ['Labjack', 'Arduino','Full stack'],
+        skills: ['Labjack', 'Arduino', 'Full stack', 'Communication Networks'],
         competencies: [
             'Investigated multiple solutions for communication through weighted objectives chart and cost analysis', 
             'Extracted instrumentation data from a Labjack and control feedback from a Arduino and sent it over a UART connected to mission control computer' 
@@ -136,7 +151,7 @@ export const projects: project[] = [
         title: 'Xenia-1 Flight Computer',
         color: 'about',
         overview: `Xenia-1 was the first rocket that UVR developed coming out of covid-19. Due to the pandemic restrictions the team lost mass of members, 
-        therefore the avionics team simplified the system to operate off of a raspberry pi using python. Though the avionics system was simplifed the rocket itself was
+        therefore the avionics team simplified the system to operate off of a raspberry pi using python. Though the avionics system was simplified the rocket itself was
         contained some of the most ambition projects, such as airbrakes and a deployable payload. Avionics was tasked with developing a control system for airbrakes `,
         timeline: 'Sep 2021 - Aug 2022',
         photos: [

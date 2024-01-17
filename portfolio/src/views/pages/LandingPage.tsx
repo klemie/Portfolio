@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { AiFillContacts, AiFillProject, AiFillInfoCircle } from "react-icons/ai";
 import { MdWork } from "react-icons/md";
 import { Pages, useViewContext } from "../../utils/ViewContext";
-import { useBreakpointCheckerMobile } from "../../utils/breakpointChecker";
 import { useIsFirstRender } from 'usehooks-ts'
 import AboutModal from "../../components/AboutModal";
 import { about } from "../../utils/content";
@@ -78,7 +77,6 @@ const LandingPage: React.FC = () => {
     };
 
     const [aboutOpen, setAboutOpen] = useState<boolean>(false);
-    const isMobile = useBreakpointCheckerMobile();
     const toast = useToast();
 
     useEffect(() => {

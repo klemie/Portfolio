@@ -1,7 +1,7 @@
 import React, { RefObject } from 'react';
 import Header from '../../components/Header';
 import { Pages, useViewContext } from '../../utils/ViewContext';
-import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Flex, Tabs, TabList, TabPanels, TabPanel, SimpleGrid, Center, Stack } from '@chakra-ui/react';
+import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Tabs, TabList, TabPanels, TabPanel, SimpleGrid, Center, Stack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import ExperienceCard from '../../components/ExperienceCard';
 import { experiences } from '../../utils/content';

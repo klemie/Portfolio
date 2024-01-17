@@ -12,7 +12,7 @@ export interface ProjectModalProps {
     close: () => void;
     photos: string[];
     title: string;
-    overview: string;
+    overview: string[];
     skills: string[];
     competencies: string[];
     skillsDescription: string;
@@ -120,7 +120,11 @@ const ProjectModal: React.FC<ProjectModalProps> = (props: ProjectModalProps) => 
                                     {timeline}
                                 </Tag> 
                                 <Text>
-                                    {overview}
+                                    {overview.map((paragraph: string) => (
+                                        <Text>
+                                            {paragraph}
+                                        </Text>
+                                    ))}
                                 </Text>
                             </Stack>
                             <Stack>
