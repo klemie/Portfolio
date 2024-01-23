@@ -9,7 +9,7 @@ import { projects } from '../utils/content';
 interface ProjectCardProps {
     color: string;
     title: string;
-    overview: string;
+    overview: string[];
     projectIndex: number;
 }
  
@@ -25,7 +25,7 @@ const ProjectCard: React.FC<ProjectCardProps> = (props: ProjectCardProps) => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
         >
-            <StyledBox maxWidth={500} minWidth={300} minH={'fit-content'} height={'auto'}>
+            <StyledBox maxWidth={510} minWidth={320} minH={'fit-content'} height={'auto'}>
                 <Center>
                     <Stack justifyContent={'center'} padding={10} gap={5}>
                         <Box textAlign={'center'}>

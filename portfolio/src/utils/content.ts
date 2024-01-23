@@ -76,7 +76,18 @@ export const projects: project[] = [
         overview: [
             `Small restaurant businesses run on small profit margins and often have to subscribe to 
             multiple software solutions in order to run their business. Our solution to this is TableTapp, 
-            an all-in-one service industry solution with the added benefit of serverless in-restaurant ordering.`
+            an all-in-one service industry solution with the added benefit of serverless in-restaurant ordering.`,
+            `In the project I took responsibilities of UX/UI Designer, Scrum master, Full stack developer. Since 
+            the project was limited to a semester we worked as a team to develop realistic time estimates and design phases 
+            delivered through a sprint scrum process. The team as a whole treated the project as a start up
+            has it had a high viability and targeted an product area that had minimal innovation as suggested through market research.`,
+            `Throughout the deign and development process I created wireframes and prototypes in Figma for all three
+            sections (Front of house, back of house, and customer) of the application. These designs were validated and 
+            improved through UX surveys and interviews with restaurant owners and front and back of house professionals. 
+            These designs then influenced the system design of the entity based mongoDB documents and the REST API. More 
+            specifically all sections of the application would share the same entity with different permissions being present depending
+            on the solution being used. Towards the end of the project I was responsible for the customer side and reliability 
+            of the api and database. For the demonstration we had the customer and restaurant side connected to show off our ticketing system.`,
     ],
         photos: [
             tableTappTeam,
@@ -110,9 +121,6 @@ export const projects: project[] = [
             instrumentation and valve control to communicate with mission control over one communication line.
             The act of integrating instrumentation and control into one platforms will eliminate the need for two separate 
             software platforms (labview and controls) which has been an issue in the past.`,
-            `For this project I did a full requirements analysis, through eliciting 
-            requirements from the propulsion member, deriving ___ . 
-            `
         ],
         photos: [
             ''
@@ -123,15 +131,20 @@ export const projects: project[] = [
         skills: ['Labjack', 'Arduino', 'Full stack', 'Communication Networks'],
         competencies: [
             'Investigated multiple solutions for communication through weighted objectives chart and cost analysis', 
-            'Extracted instrumentation data from a Labjack and control feedback from a Arduino and sent it over a UART connected to mission control computer' 
+            'Extracted instrumentation data from a Labjack and control feedback from a Arduino and sent it over a Ethernet connected to mission control computer',
+            'Integrated Valve control and instrumentation GUI into ground support system, consulating all ground operations for rocket and engine develop into one system'
         ],
     },
     {
         title: 'AndÚril Flight Computer',
         color: 'contact',
-        overview: `This Project is rocketry's first attempt at a developing a rust based 
-        flight computer system. My contribution to the project was do an investigation and report 
-        into the viability of rust in embedded systems.`,
+        overview: [
+            `This Project is rocketry's first attempt at a developing a rust based 
+            flight computer system. My contribution to the project was do an investigation and report 
+            into the viability of rust in embedded systems.`,
+            `After the an assessment of the viability of rust was done it was determined we needed a stronger base in C 
+            before we could move to rust. This lead into the develop of C based drivers for the STM32 microcontroller.`
+        ],
         timeline: 'Sep 2023 - present',
         photos: [
             ''
@@ -150,9 +163,15 @@ export const projects: project[] = [
     {
         title: 'Xenia-1 Flight Computer',
         color: 'about',
-        overview: `Xenia-1 was the first rocket that UVR developed coming out of covid-19. Due to the pandemic restrictions the team lost mass of members, 
-        therefore the avionics team simplified the system to operate off of a raspberry pi using python. Though the avionics system was simplified the rocket itself was
-        contained some of the most ambition projects, such as airbrakes and a deployable payload. Avionics was tasked with developing a control system for airbrakes `,
+        overview: [
+            `Xenia-1 was the first rocket that UVR developed coming out of covid-19. Due to the pandemic restrictions the team lost mass of members, 
+            therefore the avionics team simplified the system to operate off of a raspberry pi using python. Though the avionics system was simplified the rocket itself was
+            contained some of the most ambition projects, such as airbrakes and a deployable payload.`,
+            `During this time I was the Software lead of rocketry, making it my responsibility to ensure all embedded systems were tested and 
+            developed according to team wide deadlines. As a project manager in collaboration with the electrical lead I developed requirements, epics and throughout development 
+            created tasks with clear acceptance criteria. In the development side of thing using the requirement I implemented the foundations of a object oriented design pattern to allow for simple abstraction 
+            of the HAL features. In addition I developed sensor fault detection and migration so the airbrakes system would always act on reliable data.`
+        ],
         timeline: 'Sep 2021 - Aug 2022',
         photos: [
             X1FC1,
@@ -172,9 +191,11 @@ export const projects: project[] = [
     {
         title: 'Software Process',
         color: 'experience',
-        overview: `In my almost 2 years a Avionics software Lead I developed a Agile software process for the team. 
+        overview: [
+            `In my almost 2 years a Avionics software Lead I developed a Agile software process for the team. 
             Voluntary positions are hard to manage inside cross-functional teams, with that in mind I developed a process
-            to encourage participation, and accountability using scrum techniques.`,
+            to encourage participation, and accountability using scrum techniques.`
+        ],
         timeline: 'Sep 2021 - Aug 2022',
         photos: [
             ''
@@ -192,8 +213,10 @@ export const projects: project[] = [
     {
         title: 'Hybrid Controls System',
         color: 'projects',
-        overview: `For my first project in the rocketry club I developed multiple iterations of a GUI to 
-        interface with and control valves`,
+        overview: [
+            `For my first project in the rocketry club I developed multiple iterations of a GUI to 
+            interface with and control valves`
+        ],
         timeline: 'Dec 2019 - Mar 2021',
         photos: [
             HBC1,
@@ -219,7 +242,6 @@ export const experiences: experience[] = [
             'Oversaw a backlog, and assigned tasks through an 3 week sprint to ensure member participation',
             'Ran full stack skilldevs to onboard new members and ensure members are comfortable with the MERN stack',
             'Developed a mirco service based system to allow for open source the project for other rocketry teams to use',
-            'Designed and implemented a REST API to allow ',
             'Designed UI/UX in Figma and ensured implementation matched design pattern'
         ]
     },
@@ -232,7 +254,8 @@ export const experiences: experience[] = [
         duration: '1 yr 7 months',
         points: [
             'Standardized a agile software process for the team',
-            'Created series of presentations '
+            'Created series presentations, figma prototypes, and videos to onboard new members',
+            ''
         ]
     },
     {
@@ -243,7 +266,7 @@ export const experiences: experience[] = [
         duration: '1 yr 7 months',
         coop: false,
         points: [
-            'Organized fundraisers ',
+            'Organized fundraisers and events to raise money and community presence for the team',
             'Developed sponsorship packages and reached out to potential sponsors, landing sponsorship from Lockheed Martian and other aerospace companies',
             'Maintained a social media presence on Instagram and LinkedIn',
         ]
@@ -306,7 +329,8 @@ export const about: about = {
     overview: [
         `Hello my name is Kris, I am a technically trained hardware engineer that loves UX/UI.
         I aspire to create visually pleasing usually web applications. My interest in software 
-        development, specifically web development, began in high school when I created a website hub for a variety of P5JS games developed by my peers.`,
+        development, specifically web development, began in high school when I created a website 
+        hub for a variety of P5JS games developed by my classmates.`,
         `Today, I am a fifth-year Computer Engineering student at UVic. I've been involved in a range of projects, from 
         web development to embedded systems, with a majority of them within the UVic Rocketry Team. Along side my 
         technical skills, I've developed a liking for project management and optimizing administrative processes, to the extent 
