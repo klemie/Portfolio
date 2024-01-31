@@ -289,7 +289,8 @@ export const experiences: experience[] = [
         duration: '1 yr 4 months',
         points: [
             'Developed a GUI to interface with and control valves',
-            ''
+            'Developed a GUI to interface with and control valves based off of legacy code base and new requirements',
+            'Configured Linux OS and ssh sever for remote development',
         ]
     },
     {
@@ -337,8 +338,6 @@ export const experiences: experience[] = [
 export const about: about = {
     overview: [
         `Hello my name is Kris, I am a technically trained electronics engineer that loves UX/UI.
-        
-        
         My interest in software 
         development, specifically web development, began in high school when I created a website 
         hub for a variety of P5JS games developed by my classmates.`,

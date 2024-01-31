@@ -7,7 +7,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import styled from "styled-components";
 import Kris from "../assets/Kris.png";
 
-import resume from "../assets/Resume 2023.pdf";
+import resume from "../assets/Kris Lemieux Resume 2024.pdf";
 import { useBreakpointCheckerMobile } from "../utils/breakpointChecker";
 
 const Minimize = styled(AiOutlineClose)`
@@ -54,14 +54,7 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                         {info && !isMobile && <Image src={Kris} height={'380'} borderRadius={0} boxShadow={'2xl'}/>}
                             <Stack direction={'column'} spacing={4} padding={[0,0,2,2]}>
                                 {!info && <Heading fontSize={!info ? isMobile ? '6xl' : '9xl' : '7xl'} color={'#F4EEE9'} as={'b'} >
-                                    <Tooltip 
-                                        label="Click to see more" 
-                                        aria-label="A tooltip" 
-                                        placement={'bottom'} 
-                                        bg={'red.500'}
-                                    >
-                                        Kristopher Lemieux
-                                    </Tooltip>
+                                    Kristopher Lemieux
                                 </Heading>}
                                 {info && (
                                     <>
@@ -85,6 +78,12 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                                     <a target="_blank" href="https://www.linkedin.com/in/krislemie/">
                                         <FiLinkedin />
                                     </a>
+                                    <Tooltip 
+                                        label="Click to download my resume" 
+                                        aria-label="A tooltip" 
+                                        placement={'bottom'} 
+                                        bg={'red.500'}
+                                    >
                                     <a 
                                         target="_blank" 
                                         href={resume} 
@@ -92,6 +91,7 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                                         >
                                         <FiDownload />
                                     </a>
+                                    </Tooltip>
                                 </IconContext.Provider>
                             </Stack>
                         </Center>}
