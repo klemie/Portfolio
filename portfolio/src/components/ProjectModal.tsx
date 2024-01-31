@@ -121,7 +121,7 @@ const ProjectModal: React.FC<ProjectModalProps> = (props: ProjectModalProps) => 
                                 </Tag> 
                                 <Text>
                                     {overview.map((paragraph: string) => (
-                                        <Text>
+                                        <Text marginBottom={'1rem'}>
                                             {paragraph}
                                         </Text>
                                     ))}

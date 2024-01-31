@@ -121,6 +121,15 @@ export const projects: project[] = [
             instrumentation and valve control to communicate with mission control over one communication line.
             The act of integrating instrumentation and control into one platforms will eliminate the need for two separate 
             software platforms (labview and controls) which has been an issue in the past.`,
+            `To combine the controls and instrumentation a mini-pc running linux connects directly to the labjack and the arduino. 
+            This serves as a middle man relaying packets over a socket network connection to the mission control. The mission 
+            control is an addon to the already built Ground Support which is designed to be configurable which allows greater expansion as 
+            our propulsion systems evolve. The addition to this system will display instrumentation graphs and controls in one 
+            panel, opening the way to automated shut down in case of malfunction detected by the instrumentation. On the Valve 
+            cart side a custom python driver leveraging labjacks built in C based library for the U6-pro will extract raw filtered 
+            data to the socket connection. Whilst the controls communicates both ways over serial to the socket. In real time operation 
+            the system will relay controls and instrumentation separately and display them as they arrive.
+            `
         ],
         photos: [
             ''
@@ -327,8 +336,10 @@ export const experiences: experience[] = [
 
 export const about: about = {
     overview: [
-        `Hello my name is Kris, I am a technically trained hardware engineer that loves UX/UI.
-        I aspire to create visually pleasing usually web applications. My interest in software 
+        `Hello my name is Kris, I am a technically trained electronics engineer that loves UX/UI.
+        
+        
+        My interest in software 
         development, specifically web development, began in high school when I created a website 
         hub for a variety of P5JS games developed by my classmates.`,
         `Today, I am a fifth-year Computer Engineering student at UVic. I've been involved in a range of projects, from 
