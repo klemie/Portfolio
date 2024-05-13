@@ -264,7 +264,7 @@ export const experiences: experience[] = [
         points: [
             'Standardized a agile software process for the team',
             'Created series presentations, figma prototypes, and videos to onboard new members',
-            ''
+            'Designed and implemented a object oriented design pattern for the HAL features of the rocket'
         ]
     },
     {
@@ -289,8 +289,7 @@ export const experiences: experience[] = [
         duration: '1 yr 4 months',
         points: [
             'Developed a GUI to interface with and control valves',
-            'Developed a GUI to interface with and control valves based off of legacy code base and new requirements',
-            'Configured Linux OS and ssh sever for remote development',
+            ''
         ]
     },
     {
@@ -315,7 +314,7 @@ export const experiences: experience[] = [
         duration: '5 months',
         points: [
             'Prototype features that were demonstrated at conferences to over 100 representatives from separate companies',
-            'Created client requested features to help win bids for large maritime concomitates',
+            'Created client requested features to help win bids for large maritime commodities',
             'Communicated with product team to for technical insight into there designs',
             'Developed and alters foundational frontend components for new VueJS'
         ]
@@ -337,20 +336,22 @@ export const experiences: experience[] = [
 
 export const about: about = {
     overview: [
-        `Hello my name is Kris, I am a technically trained electronics engineer that loves UX/UI.
-        My interest in software 
-        development, specifically web development, began in high school when I created a website 
-        hub for a variety of P5JS games developed by my classmates.`,
-        `Today, I am a fifth-year Computer Engineering student at UVic. I've been involved in a range of projects, from 
-        web development to embedded systems, with a majority of them within the UVic Rocketry Team. Along side my 
-        technical skills, I've developed a liking for project management and optimizing administrative processes, to the extent 
-        that I kanban my day to day life.`,
-        `I am currently looking for a 4 month co-op position for the starting May 2024. If you are interested in working with me 
-        please feel free to contact me through email or linkedin.`
+        `Hello my name is Kris, I am a avid gravel cyclist, artist, and slightly illiterate Software Engineer. 
+        Growing up with Dyslexia my outlet was to express myself visually any way I could, from traditional painting 
+        to graphic design. This came to a head when in high school I was introduced to web site development and 
+        I became obsessed.`,
+        `Today, I am on my cusp of Graduating with a bachelors of Computer Engineering from the University of Victoria, 
+        as of December 2024. Throughout the 5 years of university I've been involved in a range of projects, from web 
+        development to mechatronics systems, with a majority of them within the UVic Rocketry Team. My favorite type of 
+        projects often involves a mix of software and hardware which require a deep understanding of system design. 
+        Along side my technical skills, I've developed a liking for project and people management, as there is no greater 
+        feeling when match the right person to the right task and see them thrive.`,
+        `I am currently looking to finish off my degree on 4 month co-op which would start September 2024. If you are 
+        interested in working with me please feel free to contact me through email or linkedin.`
     ],
     skillsDescription: 'Here are a few technologies I\'ve been working with recently:',
-    skills: ['TypeScript', 'React', 'MongooseJS', 'Rust', 'STM32'],
+    skills: ['TypeScript', 'React', 'MongooseJS', 'Rust', 'Commination Networks', 'Asynchronous Python'],
     githubLink: 'https://github.com/klemie',
     gmailLink: 'mailto: lemieuxkristopher@gmail.com',
-    linkedinLink: 'https://www.linkedin.com/in/klemie/'
+    linkedinLink: 'https://www.linkedin.com/in/krislemie/'
 };
