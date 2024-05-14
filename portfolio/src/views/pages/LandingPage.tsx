@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AbsoluteCenter, Box, Center, Flex, Heading,  useToast } from "@chakra-ui/react";
 import NameCard from "../../components/NameCard";
 import styled from "styled-components";
-import { motion } from "framer-motion";
+import { delay, motion } from "framer-motion";
 import { AiFillContacts, AiFillProject, AiFillInfoCircle } from "react-icons/ai";
 import { MdWork } from "react-icons/md";
 import { Pages, useViewContext } from "../../utils/ViewContext";
@@ -17,7 +17,7 @@ const LandingPage: React.FC = () => {
     const isFirstRender = useIsFirstRender();
 
     const [hoveredBar, setHoveredBar] = useState<number | null>(null);
-    const handleHover = (barId:number) => {
+    const handleHover = (barId: number) => {
       setHoveredBar(barId);
     };
   
@@ -51,7 +51,39 @@ const LandingPage: React.FC = () => {
                 duration: 0.5,
                 delay: 0.5
             }
-        }
+        },
+        expanded: {
+            opacity: 1,
+            x: 0,
+            margin: 0,
+            scale: 5
+        }   
+    };
+
+    const lineBarVariants = {
+        initial: {
+            width: '10vw',
+            transition: {
+                duration: 1
+            }
+        },
+        hover: {
+            width: '100vw',
+            transition: {
+                duration: 0.8,
+                type: 'easeOut',
+                stiffness: 200,
+            }
+        },
+        expanded: {
+            width: '100vw',
+            height: '100vh',
+            scale: 2,
+            AlignContent: 'center',
+            transition: {
+                duration: 0.5
+            }
+        },
     };
 
     const handleBarClick = (barTitle: string) => {
@@ -97,15 +129,16 @@ const LandingPage: React.FC = () => {
         if (!isFirstRender) {
             toast({
                 title: "Click To Explore",
-                description: "Hover over the color and click to explore more!",
+                description: "Hover over the colors and click to explore!",
                 status: "info",
                 duration: 4000,
                 isClosable: true,
                 position: 'bottom'
             });
         }
-
     }, [isFirstRender, toast]);
+
+    const [clickedBar, setClickedBar] = useState<boolean>(false);
 
     return (
         <Box margin={0} padding={0}>
@@ -117,13 +150,22 @@ const LandingPage: React.FC = () => {
                     {sections.map((bar) => (
                         <motion.div
                             key={bar.id}
+                            animate={hoveredBar === bar.id ? clickedBar ? 'expanded' : 'hover' : 'initial'}
+                            variants={lineBarVariants}
                             style={{
                                 backgroundColor: bar.color,
-                                width: !pageContext.showTitle && hoveredBar !== null && hoveredBar !== bar.id ? '10vw' : '100vw',
                                 height: '25vh',
-                                transition: 'width 1s ease'
                             }}
                             onMouseEnter={() => handleHover(bar.id)}
+                            onClick={() => {
+                                setClickedBar(true);
+                                if (hoveredBar === bar.id) {
+                                    delay(() => {
+                                        setClickedBar(false);
+                                        handleBarClick(bar.title);
+                                    }, 1500);
+                                }
+                            }}
                             onMouseLeave={handleLeave}
                         >
                             <TitleContainer
@@ -135,14 +177,20 @@ const LandingPage: React.FC = () => {
                                 <Flex 
                                     alignContent={"center"} 
                                     justifyContent={"center"}
-                                    onClick={() => handleBarClick(bar.title)}
                                     height={'100%'}
                                 >
-                                    <Center>
+                                    {clickedBar 
+                                    ? <AbsoluteCenter>
+                                        <Heading as={'b'} fontSize={'5xl'} color={"#F8F3EE"}>
+                                            {bar.title}
+                                        </Heading>
+                                    </AbsoluteCenter> 
+                                    : <Center>
                                         <Heading as={'b'} fontSize={'5xl'} color={"#F8F3EE"}>
                                             {bar.title}
                                         </Heading>
                                     </Center>
+                                }
                                 </Flex>
                             </TitleContainer>
                         </motion.div>
