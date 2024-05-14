@@ -1,12 +1,14 @@
 import React, { RefObject } from 'react';
 import Header from '../../components/Header';
 import { Pages, useViewContext } from '../../utils/ViewContext';
-import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Tabs, TabList, TabPanels, TabPanel, SimpleGrid, Center, Stack } from '@chakra-ui/react';
+import { Button, Box, UseTabProps, useMultiStyleConfig, useTab, Tabs, TabList, TabPanels, TabPanel, SimpleGrid, Center, Stack, Text, Image, Heading } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import ExperienceCard from '../../components/ExperienceCard';
 import { experiences } from '../../utils/content';
 import { useBreakpointCheckerMobile, useBreakpointCheckerTablet } from '../../utils/breakpointChecker';
 import Close from '../../components/CloseButton';
+import Helm from '../../../public/assets/helm_logo.png';
+import { StyledBox } from '../../components/StyledComponent';
 
 const Experience: React.FC = () => {
   const viewContext = useViewContext();
@@ -79,7 +81,19 @@ const Experience: React.FC = () => {
           height={isMobile ? 'calc(100vh - 200px)' : 'calc(100vh - 200px)'}
         >
           <TabPanel>
+            <StyledBox p={5}>
+              <Text as={'b'} fontSize={'2xl'}>About Helm</Text>
+              <Stack direction={'row'} spacing={4} alignItems={'center'} padding={5}>
+                <Image src={Helm} boxSize={100}/>
+                <Text>
+                  Helm Operation is a maritime Software as a Service (SaaS) company that provides software compliance and fleet management. Helm has one of the largest
+                  market share for cargo ships and tug boats in North America, and has accounts internationally.
+                  I worked as a Software Developer Co-op for 8 months, and contact work for 4 months after that. 
+                </Text>
+              </Stack>
+            </StyledBox>
             <SimpleGrid 
+              mt={5}
               columns={ isMobile || isTablet ? 1 : 2 } 
               spacing={10}
             >  

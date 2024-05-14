@@ -40,20 +40,23 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
         "contact"
     ];
 
+    const animationDelay: number = 2;
+
     const titleAnimationVariants = {
         initial: { x: 0, y: 100, scale: 1 },
-        animate: { x: 120, y: 50, scale: 0.75, textAlign: 'left', transition: { duration: 1.25, delay: 1 }},
+        animate: { x: 120, y: 50, scale: 0.75, TextAlign: 'left', transition: { duration: 1.25, delay: animationDelay }},
     };
 
     const subtitleAnimationVariants = {
         initial: { x: 0, y: 0, opacity: 0, hidden: true, scale: 0.9 },
-        animate: { x: 0, y: 0, scale: 1.0, hidden: false, opacity: 1.0, transition: { duration: 0.4, delay: 1.3 }},
+        animate: { x: 0, y: 0, scale: 1.0, hidden: false, opacity: 1.0, transition: { duration: 0.4, delay: animationDelay+0.3 }},
     };
 
     const pictureAnimationVariants = {
         initial: { x: 25, y: 135, opacity: 0, hidden: true, scale: 0.9 },
-        animate: { x: 25, y: 135, scale: 1.2, hidden: false, opacity: 1.0, transition: { duration: 0.8, delay: 1.6 }},
+        animate: { x: 25, y: 135, scale: 1.2, hidden: false, opacity: 1.0, transition: { duration: 0.8, delay: animationDelay+0.6 }},
     };
+
 
     const isMobile = useBreakpointCheckerMobile();
 
@@ -71,7 +74,7 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
             <IconContext.Provider value={{ size: "25" }}>
                 <Minimize onClick={() => props.close()} />
             </IconContext.Provider>
-                <AbsoluteCenter padding={90} bg={'#383838'}>
+                <AbsoluteCenter px={150} bg={'#383838'}>
                     <motion.div 
                         style={{ position: 'absolute' }}
                         initial="initial"
