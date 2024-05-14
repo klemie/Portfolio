@@ -78,7 +78,7 @@ const Experience: React.FC = () => {
           marginTop={5}
           height={isMobile ? 'calc(100vh - 200px)' : 'calc(100vh - 200px)'}
         >
-          <TabPanel p={isMobile ? 0 : 10} >
+          <TabPanel>
             <SimpleGrid 
               columns={ isMobile || isTablet ? 1 : 2 } 
               spacing={10}
@@ -100,7 +100,7 @@ const Experience: React.FC = () => {
               })}
             </SimpleGrid>
           </TabPanel>
-          <TabPanel p={isMobile ? 0 : 10}  >
+          <TabPanel>
               <SimpleGrid 
                 columns={ isMobile || isTablet ? 1 : 2 }                  
                 spacing={10}    
@@ -122,7 +122,7 @@ const Experience: React.FC = () => {
                 })}
               </SimpleGrid >
           </TabPanel>
-          <TabPanel p={isMobile ? 0 : 10}  >
+          <TabPanel>
               <SimpleGrid 
                 columns={ isMobile || isTablet ? 1 : 2 } 
                 spacing={10}    

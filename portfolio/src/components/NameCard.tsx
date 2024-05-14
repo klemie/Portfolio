@@ -1,4 +1,4 @@
-import { Box, Center, Heading, Image, Stack, Text, Tooltip, AbsoluteCenter } from "@chakra-ui/react";
+import { Box, Center, Heading, Image, Stack, Text, Tooltip, AbsoluteCenter, Link } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { IconContext } from "react-icons";
@@ -40,12 +40,26 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
         "contact"
     ];
 
+    const titleAnimationVariants = {
+        initial: { x: 0, y: 100, scale: 1 },
+        animate: { x: 120, y: 50, scale: 0.75, textAlign: 'left', transition: { duration: 1.25, delay: 1 }},
+    };
+
+    const subtitleAnimationVariants = {
+        initial: { x: 0, y: 0, opacity: 0, hidden: true, scale: 0.9 },
+        animate: { x: 0, y: 0, scale: 1.0, hidden: false, opacity: 1.0, transition: { duration: 0.4, delay: 1.3 }},
+    };
+
+    const pictureAnimationVariants = {
+        initial: { x: 25, y: 135, opacity: 0, hidden: true, scale: 0.9 },
+        animate: { x: 25, y: 135, scale: 1.2, hidden: false, opacity: 1.0, transition: { duration: 0.8, delay: 1.6 }},
+    };
+
     const isMobile = useBreakpointCheckerMobile();
 
     return (
         <Box 
             bg={'#383838'} 
-            // p={[10, 10, 10, 10]} 
             borderRadius={0} 
             textAlign={!info ? 'center' : 'start'}
             width={"100vw"}
@@ -58,30 +72,48 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                 <Minimize onClick={() => props.close()} />
             </IconContext.Provider>
                 <AbsoluteCenter padding={90} bg={'#383838'}>
+                    <motion.div 
+                        style={{ position: 'absolute' }}
+                        initial="initial"
+                        animate="animate"
+                        variants={pictureAnimationVariants}
+                    >
+                        <Image src={Kris} alt="Kris" boxSize="150px" objectFit={'cover'} />
+                    </motion.div>
                     <motion.div>
                         <Stack direction={!info ? 'column' : 'row'} spacing={4}>
                             {info && !isMobile && <Image src={Kris} height={'380'} borderRadius={0} boxShadow={'2xl'}/>}
                                 <Stack direction={'column'} spacing={4} padding={[0,0,2,2]}>
-                                    {!info && <Heading fontSize={!info ? isMobile ? '6xl' : '9xl' : '7xl'} color={'#F4EEE9'} as={'b'} >
-                                        Kristopher Lemieux
-                                    </Heading>}
-                                    {info && (
-                                        <>
-                                            <Heading fontSize={'3xl'} color={'#F4EEE9'} as={'b'}>
+                                    <motion.div 
+                                        initial="initial"
+                                        animate="animate"
+                                        variants={titleAnimationVariants}
+                                    >
+                                        {!info && <Heading fontSize={!info ? isMobile ? '6xl' : '9xl' : '7xl'} color={'#F4EEE9'} as={'b'} >
+                                            Kristopher Lemieux
+                                        </Heading>}
+                                    </motion.div>
+                                    <motion.div 
+                                        initial="initial"
+                                        animate="animate"
+                                        variants={subtitleAnimationVariants}
+                                    >
+                                        <Stack>
+                                            <Heading fontSize={'3xl'} color={'#F4EEE9'} as={'b'} textAlign={'left'}>
                                                 Software Engineer
                                             </Heading>    
-                                            <Text fontSize={'Body'} color={'#F4EEE9'} as={'b'}>
+                                            <Text fontSize={'Body'} color={'#F4EEE9'} as={'b'} textAlign={'left'}>
                                                 Primarily deal with full stack development with a preference to frontend. I am currently in my 5th year of Computer Engineering at <Tooltip label="Click to see more" aria-label="A tooltip">
-                                                    <Text as={'u'} color={'#F4EEE9'}>UVic</Text>
-                                                </Tooltip> in British Columbia, Canada.
+                                                    <Link href="https://www.uvic.ca/" isExternal color={'contact'}>UVic</Link>
+                                                </Tooltip> in British Columbia, Canada. Planned graduation is December 2024.
                                             </Text> 
-                                        </>
-                                    )}
+                                        </Stack>
+                                   </motion.div>
                                 </Stack>
                             {!info && <Center>
                                 <Stack direction={'row'} gap={3} alignItems={'center'}>
                                     <Text fontSize={'xl'} color={'#F4EEE9'} as={'b'}>
-                                        Top Projects:
+                                        Top Projects
                                     </Text>
                                     <ProjectHighLightCard color='projects' projectName={'Engine Monitoring'} projectIndex={1} />
                                     <ProjectHighLightCard color='experience' projectName={'TableTapp'} projectIndex={0} />
@@ -97,7 +129,7 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                                             <FiLinkedin />
                                         </a>
                                         <Tooltip 
-                                            label="Click to download my resume" 
+                                            label="Click to download resume pdf" 
                                             aria-label="A tooltip" 
                                             placement={'bottom'} 
                                             bg={'red.500'}
