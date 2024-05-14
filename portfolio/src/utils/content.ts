@@ -17,6 +17,12 @@ import GS2 from '../../public/assets/GS-2.jpg';
 import GS3 from '../../public/assets/GS-3.jpg';
 import GS4 from '../../public/assets/GS-4.jpg';
 
+import EMS1 from '../../public/assets/EMS-1.jpg';
+import EMS2 from '../../public/assets/EMS-2.jpg';
+import EMS3 from '../../public/assets/EMS-3.jpg';
+
+import AFC1 from '../../public/assets/AFC-1.jpg';
+
 type project = {
     photos: string[] | [];
     color: string;
@@ -53,9 +59,14 @@ type about = {
 export const projects: project[] = [
     {
         title: 'Ground Support',
-        overview: [`Ground Support is a telemetry visualization and post flight analysis tool developed by the University of 
-        Victoria Rocketry Team. It is designed to be a modular and dynamic 
-        application that can be used for any configuration of sounding rocket.`],
+        overview: [
+            `Ground Support is a telemetry visualization and post flight analysis tool developed by the University of 
+            Victoria Rocketry Team. It is designed to be a modular and dynamic 
+            application that can be used for any configuration of sounding rocket.`,
+            `The system was designed with the core principles of a micro service architecture, for easy maintainability and
+            scalability. The core of the system is composed of two services, application, and telemetry. 
+            `
+        ],
         color: 'projects',
         photos: [
             GS1,
@@ -81,7 +92,7 @@ export const projects: project[] = [
             the project was limited to a semester we worked as a team to develop realistic time estimates and design phases 
             delivered through a sprint scrum process. The team as a whole treated the project as a start up
             has it had a high viability and targeted an product area that had minimal innovation as suggested through market research.`,
-            `Throughout the deign and development process I created wireframes and prototypes in Figma for all three
+            `Throughout the deign and development process I created wire frames and prototypes in Figma for all three
             sections (Front of house, back of house, and customer) of the application. These designs were validated and 
             improved through UX surveys and interviews with restaurant owners and front and back of house professionals. 
             These designs then influenced the system design of the entity based mongoDB documents and the REST API. More 
@@ -105,39 +116,39 @@ export const projects: project[] = [
         competencies: ['Web Development', 'UI/UX Design', 'API Design']
     },
     {
-        title: 'Hybrid Monitoring System',
+        title: 'Engine Monitoring System',
         color: 'about',
         timeline: 'Jan 2024 - present',
         overview: [`UVic Rocketry has been developing a test hybrid engine for over 
-            5 years with a major pain point of the between the valve cart and controls box. 
-            This system currently uses a serial usb connection and has proven to be unreliable. 
-            Reliability of the system is instrumental to its safe operation at a remote distance. 
-            The purpose and scope of this project would be to investigate other communication methods 
-            (fibre optic, RF) and integrate the current system with a more robust motoring/control system. 
-            goals would be to simplify setup of the system, increase readability and maintainability of the codebase. 
-            If this project is successful it will aid in completing UVic Rocketry’s first ever hotfire test for the test engine.`,
+            5 years with a major pain point of the comms between the valve cart and mission control. 
+            This system previous system used a serial usb connection and has proven to be unreliable. 
+            Reliability of the system is instrumental to its safe operation at a remote distance, the goal of this
+            project is to develop a reliable communication and monitoring system that can be used in the field. 
+            If this project is successful it will aid in completing UVic Rocketry’s first ever hotfire test.`,
             `This project was taken on as a directed studies course with the goal of developing a 
-            functional prototype in 4 months or less. For the scope of the four months I will integrate 
-            instrumentation and valve control to communicate with mission control over one communication line.
+            functional prototype in 4 months or less. For the scope of the four months I planned to integrate 
+            instrumentation and control of the feed system to communicate with mission control over one communication line.
             The act of integrating instrumentation and control into one platforms will eliminate the need for two separate 
-            software platforms (labview and controls) which has been an issue in the past.`,
+            software platforms (Labview and controls) which has been an issue in the past.`,
             `To combine the controls and instrumentation a mini-pc running linux connects directly to the labjack and the arduino. 
             This serves as a middle man relaying packets over a socket network connection to the mission control. The mission 
             control is an addon to the already built Ground Support which is designed to be configurable which allows greater expansion as 
             our propulsion systems evolve. The addition to this system will display instrumentation graphs and controls in one 
             panel, opening the way to automated shut down in case of malfunction detected by the instrumentation. On the Valve 
-            cart side a custom python driver leveraging labjacks built in C based library for the U6-pro will extract raw filtered 
+            cart side a custom python driver leveraging Labjacks built in C based library for the U6-pro will extract raw filtered 
             data to the socket connection. Whilst the controls communicates both ways over serial to the socket. In real time operation 
-            the system will relay controls and instrumentation separately and display them as they arrive.
-            `
+            the system will relay controls and instrumentation separately and display them as they arrive.`
         ],
         photos: [
-            ''
+            EMS1,
+            EMS2,
+            EMS3
         ],
         skillsDescription: `The projects main scope is to combine the instrumentation and valve control to communicate with mission 
         control over one connection.`,
-        githubLink: 'https://github.com/UVicRocketry/Xenia1-Flight-Computer',
-        skills: ['Labjack', 'Arduino', 'Full stack', 'Communication Networks'],
+        githubLink: 'https://github.com/UVicRocketry/PDP-Monitoring-System',
+        linkedinLink: "https://www.linkedin.com/feed/update/urn:li:activity:7183004322358550528/",
+        skills: ['Labjack', 'Arduino', 'Full stack', 'Comm Networks', 'AsyncPython', 'WebSockets'],
         competencies: [
             'Investigated multiple solutions for communication through weighted objectives chart and cost analysis', 
             'Extracted instrumentation data from a Labjack and control feedback from a Arduino and sent it over a Ethernet connected to mission control computer',
@@ -156,13 +167,13 @@ export const projects: project[] = [
         ],
         timeline: 'Sep 2023 - present',
         photos: [
-            ''
+            AFC1
         ],
         skillsDescription: ``,
         githubLink: '',
         linkedinLink: '',
         websiteLink: 'https://drive.google.com/drive/folders/1HmbC9vWZxt-nJ8LGUyFYhisnisMbH3kO?usp=share_link',
-        skills: ['Rust', 'Embedded Systems', 'HIL Testing', 'STM32'],
+        skills: ['Rust', 'C', 'Embedded Systems', 'HIL Testing', 'STM32', 'FreeRTOS'],
         competencies: [
             'Developed series of technical report focusing on evaluating rusts viability in embedded systems using quantifiable metrics',
             'Migrated Xenia-2 C++ codebase to rust, validated system through HIL testing. Plan to fly in on a L1 certification flight Feb 2024.',

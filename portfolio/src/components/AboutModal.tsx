@@ -8,6 +8,7 @@ import { useBreakpointCheckerMobile } from '../utils/breakpointChecker';
 import krisBiking from '../../public/assets/kris-biking.png';
 import krisPainting from '../../public/assets/kris-painting.png';
 import krisHeadShot from '../../public/assets/kris-present.png';
+import ProjectHighLightCard from './ProjectHighLightCard';
 
 export interface AboutModalProps {
     open: boolean;
@@ -52,7 +53,6 @@ const AboutModal: React.FC<AboutModalProps> = (props: AboutModalProps) => {
                                     <Image src={krisPainting} width={'33.3%'} borderRadius={0}/>
                                     <Image src={krisHeadShot} width={'33.3%'} borderRadius={0}/>
                                 </Stack>
-
                                 <Flex>
                                     <Heading fontSize={'3xl'}>Overview</Heading>
                                     <Spacer />
@@ -109,6 +109,12 @@ const AboutModal: React.FC<AboutModalProps> = (props: AboutModalProps) => {
                                             </a>
                                         </motion.div>}
                                     </Stack>
+                                </Flex>
+                                <Flex direction={'row'} width={'100%'} alignItems={'center'}>
+                                    <Heading fontSize={'xl'}>Highlighted Projects</Heading>
+                                    <Spacer />
+                                    <ProjectHighLightCard projectIndex={2} projectName='Engine Motoring System' />
+                                    <ProjectHighLightCard projectIndex={1} projectName='TableTapp' />
                                 </Flex>
                                 {overview.map((paragraph: string) => (
                                     <Text>

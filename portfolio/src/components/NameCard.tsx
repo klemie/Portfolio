@@ -9,6 +9,7 @@ import Kris from "../assets/Kris.png";
 
 import resume from "../assets/Kris Lemieux Resume 2024.pdf";
 import { useBreakpointCheckerMobile } from "../utils/breakpointChecker";
+import ProjectHighLightCard from "./ProjectHighLightCard";
 
 const Minimize = styled(AiOutlineClose)`
     &:hover {
@@ -27,6 +28,7 @@ interface NameCardProps {
 
 const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
     const [info, setInfo] = useState<boolean>(false);
+    setInfo(false);
     const isMobile = useBreakpointCheckerMobile();
 
     return (
@@ -46,9 +48,9 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
             </IconContext.Provider>
                 <AbsoluteCenter>
                     <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        onTap={() => { if (!isMobile) setInfo(!info)}}
-                        transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
+                        // whileHover={{ scale: 1.05 }}
+                        // onTap={() => { if (!isMobile) setInfo(!info)}}
+                        // transition={{ type: "spring", stiffness: 400, damping: 17, bounce: 0.5 }}
                     >
                     <Stack direction={!info ? 'column' : 'row'} spacing={4}>
                         {info && !isMobile && <Image src={Kris} height={'380'} borderRadius={0} boxShadow={'2xl'}/>}
@@ -69,6 +71,15 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                                     </>
                                 )}
                             </Stack>
+                        {!info && <Center>
+                            <Stack direction={'row'} gap={3} alignItems={'center'}>
+                                <Text fontSize={'xl'} color={'#F4EEE9'} as={'b'}>
+                                    Top Projects:
+                                </Text>
+                                <ProjectHighLightCard projectName={'Engine Monitoring'} projectIndex={2} />
+                                <ProjectHighLightCard projectName={'TableTapp'} projectIndex={1} />
+                            </Stack>
+                        </Center>}
                         {!info && <Center>
                             <Stack direction={'row'} gap={4}>
                                 <IconContext.Provider value={{ color: '#F4EEE9', size: "30" }}>
