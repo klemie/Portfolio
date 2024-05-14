@@ -58,30 +58,6 @@ type about = {
 
 export const projects: project[] = [
     {
-        title: 'Ground Support',
-        overview: [
-            `Ground Support is a telemetry visualization and post flight analysis tool developed by the University of 
-            Victoria Rocketry Team. It is designed to be a modular and dynamic 
-            application that can be used for any configuration of sounding rocket.`,
-            `The system was designed with the core principles of a micro service architecture, for easy maintainability and
-            scalability. The core of the system is composed of two services, application, and telemetry. 
-            `
-        ],
-        color: 'projects',
-        photos: [
-            GS1,
-            GS2,
-            GS3,
-            GS4
-        ],
-        timeline: 'Sep 2022 - present',
-        skillsDescription: 'This project was built on a micro service architecture with three services, frontend (Typescript React), telemetry (rust and python) and server (Express and MongooseJs). ',
-        githubLink: 'https://github.com/UVicRocketry/Ground-Support',
-        linkedinLink: 'https://www.linkedin.com/feed/update/urn:li:activity:7104630524907855873/',
-        skills: ['TypeScript', 'React', 'Rust', 'MongooseJS', 'MUI', 'REST'],
-        competencies: ['Web Development', 'UI/UX Design', 'API Design']
-    },
-    {
         title: 'TableTapp',
         color: 'experience',
         overview: [
@@ -151,9 +127,33 @@ export const projects: project[] = [
         skills: ['Labjack', 'Arduino', 'Full stack', 'Comm Networks', 'AsyncPython', 'WebSockets'],
         competencies: [
             'Investigated multiple solutions for communication through weighted objectives chart and cost analysis', 
-            'Extracted instrumentation data from a Labjack and control feedback from a Arduino and sent it over a Ethernet connected to mission control computer',
+            'Extracted instrumentation data from a Labjack and control feedback from a Arduino and sent it over a Wifi connected to mission control computer',
             'Integrated Valve control and instrumentation GUI into ground support system, consulating all ground operations for rocket and engine develop into one system'
         ],
+    },
+    {
+        title: 'Ground Support',
+        overview: [
+            `Ground Support is a telemetry visualization and post flight analysis tool developed by the University of 
+            Victoria Rocketry Team. It is designed to be a modular and dynamic 
+            application that can be used for any configuration of sounding rocket.`,
+            `The system was designed with the core principles of a micro service architecture, for easy maintainability and
+            scalability. The core of the system is composed of two services, application, and telemetry. 
+            `
+        ],
+        color: 'projects',
+        photos: [
+            GS1,
+            GS2,
+            GS3,
+            GS4
+        ],
+        timeline: 'Sep 2022 - present',
+        skillsDescription: 'This project was built on a micro service architecture with three services, frontend (Typescript React), telemetry (rust and python) and server (Express and MongooseJs). ',
+        githubLink: 'https://github.com/UVicRocketry/Ground-Support',
+        linkedinLink: 'https://www.linkedin.com/feed/update/urn:li:activity:7104630524907855873/',
+        skills: ['TypeScript', 'React', 'Rust', 'MongooseJS', 'MUI', 'REST'],
+        competencies: ['Web Development', 'UI/UX Design', 'API Design']
     },
     {
         title: 'AndÚril Flight Computer',

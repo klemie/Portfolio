@@ -90,6 +90,21 @@ const LandingPage: React.FC = () => {
                 position: 'top'
             });
         }
+        if (!pageContext.showTitle) {
+            toast.closeAll();
+        }
+
+        if (!isFirstRender) {
+            toast({
+                title: "Click To Explore",
+                description: "Hover over the color and click to explore more!",
+                status: "info",
+                duration: 4000,
+                isClosable: true,
+                position: 'bottom'
+            });
+        }
+
     }, [isFirstRender, toast]);
 
     return (

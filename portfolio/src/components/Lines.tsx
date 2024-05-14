@@ -17,10 +17,10 @@ const Lines: React.FC<LinesProps> = (props: LinesProps) => {
 
     return (
         <Stack direction={'column'}>
-            {lines.map((line, index) => (
+            {lines.map((color, index) => (
                 index !== hiddenIndex && <Box
                     key={index}
-                    bg={line} 
+                    bg={color} 
                     height={10}
                     width={"100%"} 
                 />

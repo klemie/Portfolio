@@ -8,12 +8,14 @@ import { StyledBox } from './StyledComponent';
 interface ProjectHighLightCardProps {
     projectName: string;
     projectIndex: number;
+    color: 'contract' | 'experience' | 'projects' | 'about';
 }
 
 const ProjectHighLightCard: React.FC<ProjectHighLightCardProps> = (props: ProjectHighLightCardProps) => {
     const {
         projectName, 
-        projectIndex 
+        projectIndex,
+        color
     } = props;
 
     const [open, setOpen] = useState<boolean>(false);
@@ -26,7 +28,7 @@ const ProjectHighLightCard: React.FC<ProjectHighLightCardProps> = (props: Projec
                 onClick={() => setOpen(true)}
                 style={{ marginLeft: 10}}
             >
-                <StyledBox background={"#1a202c"} color={"#F4EEE9"} boxShadow={"none"} cursor={'pointer'}>
+                <StyledBox background={color} color={"#F4EEE9"} boxShadow={"none"} cursor={'pointer'}>
                     <Stack padding={2}>
                         <Text color={"#F4EEE9"} as={'b'}>{projectName}</Text>
                     </Stack>

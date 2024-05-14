@@ -111,10 +111,10 @@ const AboutModal: React.FC<AboutModalProps> = (props: AboutModalProps) => {
                                     </Stack>
                                 </Flex>
                                 <Flex direction={'row'} width={'100%'} alignItems={'center'}>
-                                    <Heading fontSize={'xl'}>Highlighted Projects</Heading>
+                                    <Text as={"b"} fontSize={'xl'}>Highlighted Projects</Text>
                                     <Spacer />
-                                    <ProjectHighLightCard projectIndex={2} projectName='Engine Motoring System' />
-                                    <ProjectHighLightCard projectIndex={1} projectName='TableTapp' />
+                                    <ProjectHighLightCard color='about' projectIndex={1} projectName='Engine Motoring System' />
+                                    <ProjectHighLightCard color='experience' projectIndex={0} projectName='TableTapp' />
                                 </Flex>
                                 {overview.map((paragraph: string) => (
                                     <Text>

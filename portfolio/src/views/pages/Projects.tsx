@@ -24,12 +24,11 @@ const Projects: React.FC = () => {
         <Center           
         >
           <Stack 
-            padding={isMobile ? 5 : 5} 
+            padding={5} 
             direction={isMobile ? 'column' : 'row'} 
             spacing={5} 
             scrollBehavior={"smooth"} 
             height={isMobile ? 'calc(100vh)' : 'auto'}
-
             overflow={'scroll'}
           >
               {
