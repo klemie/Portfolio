@@ -1,0 +1,265 @@
+/* The ride: a sticky inset map scrubbed by scroll, opening on an establishing
+   shot with the invitation over it. See docs/flyover-spec.md.
+
+   Every visitor gets this — there is no fallback page — so the portrait block
+   at the bottom of this file restacks the chrome for narrow screens rather
+   than routing them somewhere else.
+
+   StopPanel and ProjectPopover own their own files. */
+
+.ride {
+  position: relative;
+  /* height is set inline: (stops + 1) * 100vh */
+}
+
+/* The frame. Inset --ride-inset from all four viewport edges and rounded, so
+   the ride reads as a card rather than bleeding off the screen.
+
+   Vertical gutters come from `top` + `height`, horizontal from `margin`:
+   deliberately not a top/bottom margin, which would move `.ride`'s own box and
+   so shift the scroll-progress math in Flyover.tsx. Margin rather than 100vw
+   arithmetic on the sides, so the right gutter clears the scrollbar.
+
+   The gutter is left transparent — the page background shows through, so this
+   tracks `body` instead of pinning a second copy of that colour here. */
+.ride-sticky {
+  position: sticky;
+  top: var(--ride-inset);
+  height: calc(100vh - var(--ride-inset) * 2);
+  margin: 0 var(--ride-inset);
+  border-radius: var(--ride-radius);
+  overflow: hidden;
+  background: var(--ink);
+}
+
+/* Two classes deep on purpose: maplibre-gl.css ships `.maplibregl-map
+   { position: relative }`, and both it and this file land in the same lazy
+   Flyover chunk — a single-class rule here would be at the mercy of the
+   bundler's ordering, and losing means the container collapses to height 0,
+   which also stops the map ever firing `load`. Explicit width/height too, so
+   this holds whatever `position` ends up as. */
+.ride-sticky .ride-map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Round and clip here as well as on .ride-sticky. The parent's overflow
+     should already clip this, but the map canvas gets its own compositing
+     layer, and corner-clipping a composited layer from an ancestor is exactly
+     where browsers have historically leaked square corners. */
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.ride-intro {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition: opacity 400ms ease;
+  pointer-events: none;
+}
+
+/* Opaque plate behind the invitation so it stays legible over any part of the
+   map underneath. */
+.ride-intro-plate {
+  background: color-mix(in srgb, var(--ink) 88%, transparent);
+  color: var(--paper);
+  padding: 2rem 3rem;
+  text-align: center;
+}
+
+.ride-intro-plate h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.ride-intro-plate p {
+  margin: 0.5rem 0 0;
+  font-size: 1.125rem;
+  opacity: 0.85;
+}
+
+.ride-intro-cue {
+  display: block;
+  margin-top: 1.5rem;
+  font-size: 1.5rem;
+  opacity: 0.6;
+  animation: ride-cue 2s ease-in-out infinite;
+}
+
+@keyframes ride-cue {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+.ride-counter {
+  position: absolute;
+  right: 3rem;
+  bottom: 3rem;
+  margin: 0;
+  color: var(--paper);
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 60%);
+}
+
+/* Stop pins are built as detached DOM for MapLibre markers, so these styles
+   apply outside the React tree. */
+.ride-pin {
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.ride-pin-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--route);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--route) 30%, transparent);
+}
+
+.ride-pin-label {
+  margin-top: 0.375rem;
+  color: var(--paper);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-shadow: 0 1px 4px rgb(0 0 0 / 80%);
+}
+
+/* Project cards fan out around the stop pin — seven at one coordinate would
+   otherwise overlap completely, which is the case at UVic. */
+.ride-cards {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  pointer-events: none;
+}
+
+.ride-card {
+  position: absolute;
+  /* The inline transform in Flyover.tsx is the only thing positioning these —
+     it carries the row offset and the centring translate together. Nothing
+     here may set `transform`, and `ride-card-in` animates opacity only, so
+     neither fights it. */
+  pointer-events: auto;
+  text-align: left;
+  max-width: 28ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid color-mix(in srgb, var(--paper) 35%, transparent);
+  background: color-mix(in srgb, var(--ink) 85%, transparent);
+  color: var(--paper);
+  font: inherit;
+  font-size: 0.8125rem;
+  padding: 0.375rem 0.75rem;
+  white-space: nowrap;
+  cursor: pointer;
+  animation: ride-card-in 300ms ease both;
+}
+
+.ride-card:hover,
+.ride-card:focus-visible {
+  border-color: var(--route);
+  background: var(--ink);
+}
+
+/* Opacity only — animating transform here would override the inline transform
+   that positions each card. */
+@keyframes ride-card-in {
+  from { opacity: 0; }
+}
+
+.ride-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.ride-failed {
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+/* ─── Portrait ────────────────────────────────────────────────────────────
+   Phones ride too, so the chrome restacks instead of narrow viewports getting
+   a different page. The frame splits into two bands: map on top, and a
+   full-width sheet along the bottom carrying the invitation on the landing
+   screen and the stop panel for the rest of the ride. The camera, the scroll
+   scrub and the route drawing are all untouched.
+
+   Keep this threshold in step with COMPACT_QUERY in Flyover.tsx, which owns
+   the project-card geometry. */
+@media (max-width: 900px) {
+  .ride-sticky {
+    /* Height of the bottom band. The map takes whatever is left, so this is
+       the single number that decides the split. Inherited by .ride-panel. */
+    --ride-sheet: 40vh;
+  }
+
+  /* Map keeps the top band. `height: auto` because the desktop rule pins an
+     explicit 100%, which would otherwise beat `bottom`. */
+  .ride-sticky .ride-map {
+    height: auto;
+    bottom: var(--ride-sheet);
+    /* Only the top corners sit on the frame's edge now; the bottom edge meets
+       the sheet, so it squares off. */
+    border-radius: var(--ride-radius) var(--ride-radius) 0 0;
+  }
+
+  /* The invitation moves into the band the stop panel will later occupy, so
+     the landing screen isn't a map with a dead strip under it. The plate drops
+     its own backing there — that band is already frame background. */
+  .ride-intro {
+    top: auto;
+    height: var(--ride-sheet);
+  }
+
+  .ride-intro-plate {
+    background: none;
+    padding: 1rem 1.5rem;
+  }
+
+  .ride-intro-cue {
+    margin-top: 0.75rem;
+  }
+
+  /* Out of the sheet's way, into the top of the map band. */
+  .ride-counter {
+    top: 1rem;
+    right: 1rem;
+    bottom: auto;
+  }
+
+  /* The card column tracks the pin, and the camera centres the pin in the
+     *map*, which is no longer the middle of the frame. */
+  .ride-cards {
+    top: calc((100% - var(--ride-sheet)) / 2);
+  }
+
+  .ride-card {
+    max-width: 74vw;
+    /* Tap target rather than mouse target. CARD_PITCH_COMPACT in Flyover.tsx
+       is widened to match, so the rows still tile instead of overlapping. */
+    padding: 0.5rem 0.875rem;
+  }
+}
+
+/* The chevron bounce is the only decorative motion left in the ride — the
+   camera itself already cuts between stops instead of flying under this
+   preference, see RideOptions.reducedMotion in camera.ts. Everything else here
+   transitions opacity only, which is not what this query is asking about. */
+@media (prefers-reduced-motion: reduce) {
+  .ride-intro-cue {
+    animation: none;
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "portfolio-v2",
+  "private": true,
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "preview": "pnpm --filter web preview",
+    "studio": "pnpm --filter studio dev",
+    "studio:deploy": "pnpm --filter studio deploy"
+  }
+}

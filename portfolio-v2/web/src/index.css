@@ -1,0 +1,25 @@
+/* Design tokens only.
+   Everything else lives beside the component that owns it — see
+   `styles/base.css` for the element reset, `styles/primitives.css` for the
+   handful of classes shared across components, and `<Component>.css` next to
+   each component for the rest. */
+
+:root {
+  /* The ride's ink-on-paper palette. Also the page's accent, via --route. */
+  --ink: #1f1e1d;
+  --paper: #f4eee9;
+  --route: #e4572e;
+
+  /* The ride's frame geometry. It sits inset from the viewport edges rather
+     than bleeding to them, so it reads as a card on the page. Global rather
+     than local to flyover/ because App.css's loading placeholder has to match
+     the frame exactly or the map jumps when the lazy chunk lands. */
+  --ride-inset: 20px;
+  --ride-radius: 16px;
+
+  /* Page surfaces and text. */
+  --text: #1a1a1a;
+  --text-muted: #666;
+  --surface: #fff;
+  --border: #ddd;
+}
