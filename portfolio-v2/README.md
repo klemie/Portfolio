@@ -81,6 +81,12 @@ makes at runtime — they appear in the Studio but never on the site.
 
 ## Deploying to Cloudflare Pages
 
+Live site: https://portfolio-boh.pages.dev
+
+Cloudflare project: `portfolio`. Production and preview build variables are
+configured in Cloudflare, and their Sanity origins allow requests without
+credentials. New commits to `portfolio-v2-flyover` deploy automatically.
+
 Push the repo, then create or configure a Pages project connected to
 `klemie/Portfolio` with these settings:
 
