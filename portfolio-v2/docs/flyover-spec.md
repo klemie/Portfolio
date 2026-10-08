@@ -1,20 +1,21 @@
 # Flyover
 
-A Strava-Flyover-inspired landing experience: the visitor uncovers a map of
-Victoria with their cursor, then scrolls to ride a route through the places
-Kris has worked, stopping at each one for a blurb.
+A scroll-driven route through the places Kris has worked. The interaction
+now takes inspiration from [Studio Mirage](https://studiomirage.io): preview
+a place, visit its story, then return to the route.
 
 Status: **built.** Runs at `/` for every visitor — desktop landscape and a
-restacked portrait layout on narrow screens. Terrain source resolved: AWS
+responsive preview layout on narrow screens. Terrain source resolved: AWS
 terrarium. The fallback page has been removed; see §5.
 
 Implementation:
 
 | Path | |
 |---|---|
-| `web/src/flyover/` | `Flyover.tsx`, `camera.ts`, `mapStyle.ts`, `StopPanel.tsx`, `ProjectPopover.tsx` |
-| `web/src/lib/` | `gpx.ts`, `route.ts` |
-| `web/src/hooks/` | `useRouteGpx.ts`, `useMediaQuery.ts`, `usePrefersReducedMotion.ts` |
+| `web/src/flyover/` | `Flyover.tsx`, `camera.ts`, `mapStyle.ts`, `RidePreview.tsx`, `VisitHero.tsx` |
+| `web/src/lib/` | `gpx.ts`, `route.ts`, `visit.ts` |
+| `web/src/components/VisitContent.tsx` | stop, project and experience content |
+| `web/src/hooks/` | `useRouteGpx.ts`, `useVisitRoute.ts`, `usePrefersReducedMotion.ts` |
 | `web/public/flyover-route.gpx` | committed default route |
 | `web/scripts/check-route.ts` | `pnpm --filter web check:route` |
 | `web/scripts/build-tiles.sh` | pmtiles extract + R2 upload |
@@ -25,14 +26,9 @@ Implementation:
 
 ## 1. Landing page
 
-The map loads and paints first, hidden underneath an opaque dark overlay. The
-overlay is masked, not the map.
-
-| Behaviour | Detail |
-|---|---|
-| Base | The establishing shot — whole route in frame, angled so it recedes |
-| Text | Name + "take a ride with me" on an opaque plate over the map |
-| Gating | None. Scroll works from the first moment |
+The route overview fills the rounded frame, inset 20px on all four sides.
+Name and location sit at the top; the invitation and an Explore action start
+the ride. The map stays available on portrait screens as well.
 
 **The cursor reveal was built and then removed.** A dark overlay masked by a
 radial gradient that followed the cursor and grew with cumulative movement,
@@ -56,7 +52,7 @@ Scroll-driven scrub. The visitor sets the pace, can stop, and can scroll back.
 | Camera | Single low tilted camera on 3D terrain, one mode throughout |
 | Camera path | Follows the uploaded track |
 | Camera speed | Varies with leg length — 6.8× swing, see risks |
-| Chrome | The drawing trace, plus "stop 2 of 4". Nothing else |
+| Chrome | Stop title, central Visit CTA, next destination at bottom left, previous destination at bottom right |
 | Camera angles | Pitch / bearing / zoom hardcoded per stop, not in the CMS |
 
 ### Stops
@@ -93,16 +89,34 @@ Kris writes all four. Budget **~60 words each** — that is what 100vh per stop
 buys. The schema ships with the fields empty and validation flagging which
 stops are still unwritten.
 
-### Project cards
+### Preview and Visit
 
-Cards sit on the map. Click → scroll locks → lightweight popover anchored to
-the pin → close → scroll resumes. The URL does not change, so a project opened
-from a card is not deep-linkable; the Projects section further down the page
-uses `/projects/:slug` and is.
+Arriving at a stop reveals its title and enables **Visit this stop**. While
+settled, the map slowly rotates around the pin at two degrees per second. It
+pauses offscreen and when the document is hidden. Orbit headings carry into
+the departure leg, so scrolling away does not reset the camera heading.
 
-On portrait the column centres on the pin and takes the width, since there is
-no room to hang it off to one side. `CARD_PITCH_COMPACT` widens the rows into
-tap targets.
+Visit opens `/stops/:id` as an editorial story page. The existing map contracts
+into a 240px-high card beside the title, stop number and discipline tags in
+500ms. The orbit pauses, the map stays sharp, and the opening story appears
+within the first screen. The map's bounds animate without scaling its labels;
+its canvas resizes throughout. On mobile, it becomes a 180px-high strip below
+the heading. Scrolling takes the card offscreen and returns it naturally.
+
+Clicking anywhere on the compact map expands it in 350ms and returns to
+the saved route position. The map itself is keyboard accessible; there is no
+extra button overlaid on the map. A persistent Resume ride control also
+returns to the map. It skips nested project detail pages, while browser
+Back follows normal history (project → stop → ride). History entries retain
+the ride position through refresh. Direct links resume at the associated stop.
+Save the position **before** changing layout because a shorter document can
+immediately clamp `window.scrollY`. Reduced motion changes layout without the
+frame or heading animation; direct links open in the settled story layout.
+
+Projects open `/projects/:slug`; experience links open `/experiences/:id`.
+They use the same story layout and frame the associated stop, with existing
+descriptions, skills, images and external links in ordinary document flow.
+The former StopPanel, ProjectPopover and ProjectModal were removed.
 
 ---
 
@@ -214,19 +228,14 @@ part of the original bar — the remaining camera work is terrain and pitch. The
 gate, the `RouteOutline` drawing and the second layout are all gone, so there
 is one path to maintain instead of two.
 
-**Portrait.** Below 900px the frame splits into two bands: map on top,
-full-width sheet along the bottom. The sheet carries the invitation on the
-landing screen and the stop panel for the rest of the ride, so the same band is
-always the place text lives. The camera, scroll scrub and route drawing are
-identical to landscape. The threshold is duplicated between `COMPACT_QUERY` in
-`Flyover.tsx` (card geometry) and a media query in `Flyover.css` (everything
-else); they must stay in step.
+**Portrait.** The map fills the inset frame on every screen. Below 700px,
+the central Visit CTA stacks above next and previous controls. Visit screen
+titles and tags stack above the scroll cue. There is no bottom sheet, and no
+JS breakpoint needs to match the CSS.
 
 **Reduced motion.** Kept as a behaviour rather than a separate page:
-`RideOptions.reducedMotion` holds the camera still on a stop and cuts to the
-next at the slice boundary instead of scrubbing along the leg. Every stop,
-blurb, pin and card is still reachable. The chevron bounce is the only
-decorative motion, and it is disabled by media query.
+`RideOptions.reducedMotion` cuts between stops rather than flying between them.
+The idle orbit is disabled too. Stops and their Visit screens remain available.
 
 **Not covered.** No WebGL, or a basemap style that will not load, now lands on
 the `.ride-failed` state — a short apology, and the page below it still renders
@@ -296,8 +305,9 @@ All seven projects hang off the UVic stop as cards.
 2. **No path for a visitor whose map will not load.** Dropping the capability
    gate means no-WebGL and dead-basemap cases get `.ride-failed` instead of a
    route drawing. Deliberate (§5), but it is a real regression for them.
-3. **Cards do not deep-link**, since the popover does not touch the URL. The
-   Projects section below the ride does, via `/projects/:slug`.
+3. **Direct Visit links start a fresh ride.** URLs for stops, projects and
+   experiences work independently; closing a direct link returns to the route
+   overview because there is no saved in-session ride position.
 4. **UVic is pinned at the campus boundary**, not at the address or the
    rocketry lab. Deliberate, but it is the one pin that is not where the
    institution actually is.
@@ -323,7 +333,7 @@ Recorded because each cost real time and would cost it again.
    tangent on this route swings 184° → 234° → 1° inside a single leg. Temporal
    damping would smooth it but break scroll reversibility, so heading is
    anchored per stop and interpolated across legs — which also keeps the camera
-   perfectly still through every dwell.
+   stable through travel; the preview adds a slow orbit during dwell.
 4. **A radial fan cannot hold 7 project cards.** UVic's seven titles collapsed
    into an illegible pile at one coordinate. A vertical column works at any
    count.
@@ -355,7 +365,7 @@ Recorded so these are not re-litigated.
 | Ordering | Geographic, chronological within stops | Pure chronological; geographic with scrambled dates |
 | Off-track pins | Moot — pins come from the track | Route must reach Sanity pins; camera detours; snapping |
 | Bad route file | Committed default in repo | Last known good route; drop to fallback page |
-| Card click | Lightweight popover, scroll locks | Reuse ProjectModal + URL; popover tracks moving pin |
+| Visit | Clickable compact map card, story page and a real URL | Project popover with scroll lock (previous implementation) |
 | Blurb authorship | Kris writes all four | Drafted from existing content; place + auto-list |
 | Camera params | In code | Sanity fields |
 
@@ -368,3 +378,32 @@ Recorded so these are not re-litigated.
   extract — not a rewrite.
 - **UVic campus sub-stops** (rocketry lab, engine test stand, course building).
 - **Elevation profile chrome**, now that GPX supplies real elevation.
+
+### Appearance and floating navigation
+
+The page uses `prefers-color-scheme` in CSS by default. An appearance icon inside the navigation bar opens
+a menu for Light, Dark or System. The ride menu opens above the bottom bar;
+the story menu opens below the top bar. It closes on selection, Escape or
+clicking outside. Explicit choices persist locally; System
+clears the override and follows the CSS media query. Semantic tokens cover content, overlays, labels and
+controls. Dataviz/OpenFreeMap styles switch with the resolved appearance
+without recreating the map, resetting its camera or losing ride progress.
+Explicit custom map styles retain their authored palette.
+
+A floating bottom navigation bar provides Visit during the ride; previous
+and next controls live on the map itself. Story screens replace this bar
+with a persistent top navigation containing Resume ride. The résumé PDF
+link remains on the ride screen. Clicking the compact map also returns to the ride. The compact layout also fits mobile screens.
+
+### Cycling identity
+
+The intro explicitly introduces Kris as a gravel cyclist and product engineer,
+with centered intro copy and a “Start the ride” action.
+A compact orange bicycle marker follows the same GPX progress as the drawn
+route, centered on the current location. Its outer pointer follows the route
+heading relative to the camera bearing, including during an orbit. The bike
+icon stays upright and readable. There is no decorative wheel animation.
+
+Story skills and technology tags appear once in the heading. Back to top
+appears only when the story content extends beyond the viewport, and updates
+when the viewport or content size changes.

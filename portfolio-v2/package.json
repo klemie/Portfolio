@@ -9,5 +9,6 @@
     "preview": "pnpm --filter web preview",
     "studio": "pnpm --filter studio dev",
     "studio:deploy": "pnpm --filter studio deploy"
-  }
+  },
+  "packageManager": "pnpm@10.14.0"
 }

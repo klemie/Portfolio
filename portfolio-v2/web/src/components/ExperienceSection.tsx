@@ -2,7 +2,7 @@ import {formatRange} from '../lib/formatDate'
 import type {Experience} from '../lib/types'
 import './ExperienceSection.css'
 
-export const ExperienceSection = ({experiences}: {experiences: Experience[]}) => (
+export const ExperienceSection = ({experiences, onOpen}: {experiences: Experience[]; onOpen: (id: string) => void}) => (
   <section className="section" id="experience">
     <h2>Experience</h2>
     <ul className="list">
@@ -18,6 +18,7 @@ export const ExperienceSection = ({experiences}: {experiences: Experience[]}) =>
               <li key={skill}>{skill}</li>
             ))}
           </ul>
+          <button type="button" className="experience-visit" onClick={() => onOpen(experience._id)}>Visit experience ↗</button>
         </li>
       ))}
     </ul>

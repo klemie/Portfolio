@@ -1,12 +1,12 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState, type RefObject, type ReactNode} from 'react'
 import {LngLat, LngLatBounds, Map as MapLibreMap, Marker, type ErrorEvent} from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import './Flyover.css'
 import {buildRoute, placeWaypoints, positionAt, type Route} from '../lib/route'
 import {parseGpx} from '../lib/gpx'
-import {useMediaQuery} from '../hooks/useMediaQuery'
 import {usePrefersReducedMotion} from '../hooks/usePrefersReducedMotion'
-import type {Project, SiteSettings, Stop} from '../lib/types'
+import type {SiteSettings, Stop} from '../lib/types'
+import type {Visit} from '../lib/visit'
 import {
   addFlyoverLayers,
   buildStyle,
@@ -14,62 +14,31 @@ import {
 } from './mapStyle'
 import {
   rideStateFor,
+  stopCameras,
   type CameraState,
   type RideState,
   type StopAnchor,
 } from './camera'
-import {StopPanel} from './StopPanel'
-import {ProjectPopover} from './ProjectPopover'
+import type {Theme} from '../hooks/useTheme'
+import {FloatingNavigation} from '../components/FloatingNavigation'
+import {RidePreview} from './RidePreview'
+import {VisitHero} from './VisitHero'
+import {useMapFrameTransition, type MapFrameBounds} from '../hooks/useMapFrameTransition'
+import {visitPath} from '../lib/visit'
+import {createBikeMarker} from './BikeMarker'
 
 interface FlyoverProps {
+  theme: Theme
+  themeControl: ReactNode
   settings: SiteSettings
   stops: Stop[]
   /** GPX text, already fetched by the caller. */
   gpx: string
-}
-
-/**
- * Portrait layout threshold. Must stay in step with the `max-width` media
- * query in Flyover.css — JS owns the card geometry, CSS owns everything else,
- * and they have to agree on where the split happens.
- */
-const COMPACT_QUERY = '(max-width: 900px)'
-
-/** Row pitch for the project card column, in px. Looser when tappable. */
-const CARD_PITCH = 34
-const CARD_PITCH_COMPACT = 40
-
-/**
- * Screen-space offset for a project card, relative to the stop pin (which the
- * camera always centres).
- *
- * A vertical column rather than a radial fan around the pin: UVic carries all
- * seven projects at a single coordinate, and titles like "Engine Monitoring
- * System" are wide enough that any arc arrangement collapses into an
- * unreadable pile. A column stays legible at any count and still reads as
- * attached to the pin.
- *
- * Portrait has no room to hang the column off to one side — 44px in from the
- * centre of a 390px screen leaves nothing for a title — so it centres on the
- * pin instead and takes the width. The centre card does then sit over the pin
- * dot at a stop carrying an odd number of projects.
- *
- * `y` is where the row's *centre* goes. The caller pairs it with a -50%
- * translate, so the column is centred on the pin without JS needing to know
- * how tall a card renders — which is CSS's business, and differs between the
- * two layouts.
- */
-const cardOffset = (
-  index: number,
-  total: number,
-  compact: boolean,
-): {x: number; y: number; centred: boolean} => {
-  const pitch = compact ? CARD_PITCH_COMPACT : CARD_PITCH
-  return {
-    x: compact ? 0 : 44,
-    y: -((total - 1) * pitch) / 2 + index * pitch,
-    centred: compact,
-  }
+  visit: Visit | null
+  onVisit: (stop: Stop) => void
+  onResume: () => void
+  resumeStopRef: RefObject<string | null>
+  transitionFromRef: RefObject<MapFrameBounds | null>
 }
 
 /**
@@ -115,21 +84,26 @@ const establishingShot = (
   }
 }
 
-export const Flyover = ({settings, stops, gpx}: FlyoverProps) => {
+export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVisit, onResume, resumeStopRef, transitionFromRef}: FlyoverProps) => {
+  const themeRef = useRef(theme)
+  themeRef.current = theme
+  const styledThemeRef = useRef(theme)
+  const frameNodeRef = useRef<HTMLDivElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
   const mapNodeRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MapLibreMap | null>(null)
   const establishingRef = useRef<CameraState | null>(null)
+  const bikeRef = useRef<ReturnType<typeof createBikeMarker> | null>(null)
   const markersRef = useRef<Marker[]>([])
   const frameRef = useRef(0)
-  const lockedRef = useRef(false)
+  const orbitOffsetsRef = useRef<number[]>([])
+  const stateRef = useRef<RideState | null>(null)
 
   const [ready, setReady] = useState(false)
   const [failed, setFailed] = useState<string | null>(null)
-  const [openProject, setOpenProject] = useState<Project | null>(null)
-
-  const compact = useMediaQuery(COMPACT_QUERY)
   const reducedMotion = usePrefersReducedMotion()
+  const visiting = Boolean(visit)
+  useMapFrameTransition(frameNodeRef, transitionFromRef, visit ? visitPath(visit.target) : null, reducedMotion)
 
   // Discrete state only — camera updates stay imperative so scrolling does
   // not re-render the tree every frame.
@@ -172,13 +146,17 @@ export const Flyover = ({settings, stops, gpx}: FlyoverProps) => {
     const node = mapNodeRef.current
     if (!node || anchors.length === 0) return
 
+    setReady(false)
+    setFailed(null)
     let cancelled = false
     let map: MapLibreMap | null = null
     let loadGuard = 0
 
     const start = positionAt(route, anchors[0].alongTrack)
 
-    buildStyle()
+    const initialTheme = themeRef.current
+    styledThemeRef.current = initialTheme
+    buildStyle(initialTheme)
       .then((style) => {
         if (cancelled) return
 
@@ -268,6 +246,26 @@ export const Flyover = ({settings, stops, gpx}: FlyoverProps) => {
     }
   }, [route, anchors])
 
+  // Swap cartography without recreating the map or losing the current camera.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!ready || !map || styledThemeRef.current === theme) return
+    const controller = new AbortController()
+    const restoreRoute = () => {
+      addFlyoverLayers(map, route.coordinates)
+      if (stateRef.current) setRouteProgress(map, stateRef.current.routeProgress)
+    }
+    buildStyle(theme, controller.signal).then((style) => {
+      if (controller.signal.aborted) return
+      styledThemeRef.current = theme
+      map.once('style.load', restoreRoute)
+      map.setStyle(style)
+    }).catch((error: Error) => {
+      if (!controller.signal.aborted) console.warn('[flyover] could not switch map theme', error)
+    })
+    return () => { controller.abort(); map.off('style.load', restoreRoute) }
+  }, [theme, ready, route])
+
   // --- stop pins -----------------------------------------------------------
   useEffect(() => {
     const map = mapRef.current
@@ -278,10 +276,15 @@ export const Flyover = ({settings, stops, gpx}: FlyoverProps) => {
       const position = positionAt(route, anchor.alongTrack)
       const element = document.createElement('div')
       element.className = 'ride-pin'
-      element.innerHTML = `<span class="ride-pin-dot"></span><span class="ride-pin-label">${
-        orderedStops[index]?.title ?? anchor.name
-      }</span>`
-      return new Marker({element, anchor: 'center'})
+      const dot = document.createElement('span')
+      dot.className = 'ride-pin-dot'
+      const label = document.createElement('span')
+      label.className = 'ride-pin-label'
+      label.textContent = orderedStops[index]?.title ?? anchor.name
+      element.append(dot, label)
+      // Each orbit frame emits moveend. Preserve fractional pixels so
+      // markers do not alternate between rounded and projected positions.
+      return new Marker({element, anchor: 'center', subpixelPositioning: true})
         .setLngLat([position.lon, position.lat])
         .addTo(map)
     })
@@ -292,7 +295,30 @@ export const Flyover = ({settings, stops, gpx}: FlyoverProps) => {
     }
   }, [ready, route, anchors, orderedStops])
 
-  // --- scroll scrub --------------------------------------------------------
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !ready) return
+    const bike = createBikeMarker(map, route)
+    bikeRef.current = bike
+    return () => { bike.remove(); bikeRef.current = null }
+  }, [ready, route])
+
+  useEffect(() => {
+    if (!ready || !visiting) return
+    const attribution = mapNodeRef.current?.querySelector<HTMLDetailsElement>('.maplibregl-ctrl-attrib')
+    if (attribution) {
+      attribution.open = false
+      attribution.classList.remove('maplibregl-compact-show')
+    }
+  }, [ready, visiting])
+
+  const cameras = useMemo(() => stopCameras(route, anchors), [route, anchors])
+  const visitedIndex = visit?.stop
+    ? orderedStops.findIndex((stop) => stop._id === visit.stop?._id)
+    : -1
+
+  // Keep the accumulated heading at each stop. The departure interpolates
+  // from that heading too, so scrolling out of an orbit does not snap north.
   const update = useCallback(() => {
     const wrap = wrapRef.current
     const map = mapRef.current
@@ -302,19 +328,24 @@ export const Flyover = ({settings, stops, gpx}: FlyoverProps) => {
     const rect = wrap.getBoundingClientRect()
     const scrollable = rect.height - window.innerHeight
     const progress = scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0
-
-    const state: RideState = rideStateFor(route, anchors, progress, establishing, {
+    const offsets = reducedMotion ? [] : orbitOffsetsRef.current
+    const state: RideState = visit ? {
+      camera: visitedIndex >= 0
+        ? {...cameras[visitedIndex], zoom: cameras[visitedIndex].zoom - 0.6, pitch: 40, bearing: cameras[visitedIndex].bearing + (offsets[visitedIndex] ?? 0)}
+        : establishing,
+      stopIndex: Math.max(0, visitedIndex),
+      dwell: 1,
+      routeProgress: visitedIndex >= 0 ? anchors[visitedIndex].alongTrack / route.totalDistance : 1,
+      landing: visitedIndex < 0,
+    } : rideStateFor(route, anchors, progress, establishing, {
       reducedMotion,
+      bearingOffsets: offsets,
     })
 
-    map.jumpTo({
-      center: state.camera.center,
-      zoom: state.camera.zoom,
-      bearing: state.camera.bearing,
-      pitch: state.camera.pitch,
-    })
+    stateRef.current = state
+    bikeRef.current?.update(state.routeProgress, !visit || visitedIndex >= 0)
+    map.jumpTo(state.camera)
     setRouteProgress(map, state.routeProgress)
-
     setPhase((previous) =>
       previous.index === state.stopIndex &&
       previous.landing === state.landing &&
@@ -322,138 +353,108 @@ export const Flyover = ({settings, stops, gpx}: FlyoverProps) => {
         ? previous
         : {index: state.stopIndex, dwell: state.dwell, landing: state.landing},
     )
-  }, [route, anchors, reducedMotion])
+  }, [route, anchors, cameras, reducedMotion, visit, visitedIndex])
 
   useEffect(() => {
     if (!ready) return
-
-    const onScroll = () => {
-      // Scroll is locked while a popover is open so the ride cannot move out
-      // from under the thing being read.
-      if (lockedRef.current) return
-      cancelAnimationFrame(frameRef.current)
-      frameRef.current = requestAnimationFrame(update)
-    }
-
-    // Crossing the portrait threshold changes the map container's height (CSS
-    // gives the bottom band to the stop panel), and MapLibre sizes its canvas
-    // from the container, so it has to be told — and the establishing shot,
-    // which frames the route to that canvas, has to be refitted.
+    const node = mapNodeRef.current
     const onResize = () => {
       const map = mapRef.current
       if (map) {
         map.resize()
-        if (anchors.length > 0) {
-          establishingRef.current = establishingShot(
-            map,
-            route,
-            positionAt(route, anchors[0].alongTrack),
-          )
-        }
+        establishingRef.current = establishingShot(map, route, positionAt(route, anchors[0].alongTrack))
       }
-      onScroll()
+      update()
     }
-
+    const observer = new ResizeObserver(onResize)
+    if (node) observer.observe(node)
     update()
-    window.addEventListener('scroll', onScroll, {passive: true})
+    window.addEventListener('scroll', update, {passive: true})
     window.addEventListener('resize', onResize)
-    window.addEventListener('orientationchange', onResize)
     return () => {
-      window.removeEventListener('scroll', onScroll)
+      observer.disconnect()
+      window.removeEventListener('scroll', update)
       window.removeEventListener('resize', onResize)
-      window.removeEventListener('orientationchange', onResize)
-      cancelAnimationFrame(frameRef.current)
     }
   }, [ready, update, route, anchors])
 
-  // --- popover scroll lock -------------------------------------------------
   useEffect(() => {
-    lockedRef.current = openProject !== null
-    if (!openProject) return
-
-    const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = previous
+    if (!ready || reducedMotion || visiting) return
+    let last = 0
+    const orbit = (now: number) => {
+      const elapsed = last ? Math.min(now - last, 100) : 0
+      last = now
+      const state = stateRef.current
+      const map = mapRef.current
+      const rect = mapNodeRef.current?.getBoundingClientRect()
+      if (map && state && !state.landing && state.dwell > 0 &&
+          rect && rect.bottom > 0 && rect.top < window.innerHeight && !document.hidden) {
+        // Two degrees per second: a full turn takes three minutes. Ramp in on
+        // arrival, and pause when the map has scrolled out of the detail page.
+        const delta = elapsed * 0.002 * Math.min(1, state.dwell * 8)
+        const index = state.stopIndex
+        orbitOffsetsRef.current[index] = (orbitOffsetsRef.current[index] ?? 0) + delta
+        state.camera.bearing += delta
+        map.setBearing(state.camera.bearing)
+      }
+      frameRef.current = requestAnimationFrame(orbit)
     }
-  }, [openProject])
+    frameRef.current = requestAnimationFrame(orbit)
+    return () => cancelAnimationFrame(frameRef.current)
+  }, [ready, reducedMotion, visiting])
 
-  if (failed) {
-    return (
-      <section className="ride-failed">
-        <p>The map could not load, so the ride is unavailable.</p>
-        <p className="entry-meta">{failed}</p>
-      </section>
-    )
+  const navigate = (index: number) => {
+    const wrap = wrapRef.current
+    if (!wrap) return
+    const top = window.scrollY + wrap.getBoundingClientRect().top
+    const scrollable = wrap.offsetHeight - window.innerHeight
+    const progress = index < 0 ? 0 : (index + 1.82) / (anchors.length + 1)
+    window.scrollTo({
+      top: index >= anchors.length ? top + wrap.offsetHeight : top + scrollable * progress,
+      behavior: reducedMotion ? 'instant' : 'smooth',
+    })
   }
 
-  const activeStop = orderedStops[phase.index]
-  const projects = activeStop?.projects ?? []
-  const cardsVisible = phase.dwell > 0.25 && !phase.landing
+  useEffect(() => {
+    if (!ready || visit || !resumeStopRef.current) return
+    const index = orderedStops.findIndex((stop) => stop._id === resumeStopRef.current)
+    resumeStopRef.current = null
+    if (index >= 0) {
+      const wrap = wrapRef.current
+      if (wrap) window.scrollTo({top: (wrap.offsetHeight - window.innerHeight) * (index + 1.82) / (anchors.length + 1), behavior: 'instant'})
+    }
+  }, [ready, visit, orderedStops, anchors.length, resumeStopRef])
+
+  if (failed) return (
+    <section className="ride-failed">
+      <p>The map could not load.</p>
+      <p className="entry-meta">{failed}</p>
+      {visit && <><h1>{visit.title}</h1><button type="button" onClick={onResume}>Back to map</button></>}
+    </section>
+  )
 
   return (
-    <section
-      ref={wrapRef}
-      className="ride"
-      style={{height: `${(anchors.length + 1) * 100}vh`}}
-      aria-label="Career flyover"
-    >
-      <div className="ride-sticky">
-        <div ref={mapNodeRef} className="ride-map" />
-
-        <div className="ride-intro" style={{opacity: phase.landing ? 1 : 0}}>
-          <div className="ride-intro-plate">
-            <h1>{settings.name}</h1>
-            <p>take a ride with me</p>
-            <span className="ride-intro-cue" aria-hidden="true">
-              ⌄
-            </span>
-          </div>
+    <section ref={wrapRef} className={`ride${visit ? ' ride--visit' : ''}`}
+      style={visit ? undefined : {height: `${(anchors.length + 1) * 100}svh`}}
+      aria-label={visit ? `${visit.title} map` : 'Career flyover'}>
+      {visit && <VisitHero visit={visit} stopIndex={visitedIndex} stopCount={anchors.length} onResume={onResume} themeControl={themeControl} />}
+      {!visit && <FloatingNavigation
+        onVisit={() => phase.landing ? navigate(0) : onVisit(orderedStops[phase.index])}
+        visitDisabled={!ready || (!phase.landing && phase.dwell <= 0)}
+        visitLabel={phase.landing ? 'Start the ride' : 'Visit stop'}
+        resumeUrl={settings.resumeUrl} themeControl={themeControl} />}
+      <div className="ride-map-slot">
+        <div ref={frameNodeRef} className="ride-sticky">
+          <div ref={mapNodeRef} className="ride-map" />
+          {visit && <button type="button" className="ride-map-resume" onClick={onResume} aria-label="Return to the ride" />}
+          {!visit && <RidePreview settings={settings} stop={orderedStops[phase.index]}
+            previous={orderedStops[phase.index - 1]} next={orderedStops[phase.index + 1]}
+            index={phase.index} count={anchors.length} landing={phase.landing}
+            settled={phase.dwell > 0} onNavigate={navigate} />}
+          {!ready && <p className="ride-loading" role="status">Loading the map…</p>}
         </div>
-
-        {!phase.landing && activeStop && (
-          <>
-            <StopPanel stop={activeStop} dwell={phase.dwell} />
-            <p className="ride-counter">
-              stop {phase.index + 1} of {anchors.length}
-            </p>
-          </>
-        )}
-
-        {cardsVisible && projects.length > 0 && (
-          <div className="ride-cards">
-            {projects.map((project, index) => {
-              const {x, y, centred} = cardOffset(index, projects.length, compact)
-              return (
-                <button
-                  key={project._id}
-                  type="button"
-                  className="ride-card"
-                  style={{
-                    // Vertical -50% always, so the column is centred on the
-                    // pin rather than hanging half a row below it; horizontal
-                    // only in portrait, where the column straddles the pin
-                    // instead of sitting beside it.
-                    transform:
-                      `translate(${centred ? `calc(-50% + ${x}px)` : `${x}px`}, ` +
-                      `calc(-50% + ${y}px))`,
-                    animationDelay: `${index * 40}ms`,
-                  }}
-                  onClick={() => setOpenProject(project)}
-                >
-                  {project.title}
-                </button>
-              )
-            })}
-          </div>
-        )}
-
-        {!ready && <p className="ride-loading">Loading the map…</p>}
+        {visit && <p className="ride-map-caption">Your place on the route · Ride paused</p>}
       </div>
-
-      {openProject && (
-        <ProjectPopover project={openProject} onClose={() => setOpenProject(null)} />
-      )}
     </section>
   )
 }

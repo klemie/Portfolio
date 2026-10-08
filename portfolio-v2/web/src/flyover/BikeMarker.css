@@ -1,0 +1,32 @@
+.ride-cyclist {
+  width: 56px;
+  height: 56px;
+  pointer-events: none;
+}
+.ride-cyclist[hidden] { display: none; }
+.ride-cyclist-badge {
+  position: absolute;
+  inset: 7px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  background: var(--route);
+  color: var(--rider-icon);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
+}
+.ride-cyclist-badge svg { width: 34px; height: 25px; }
+.ride-cyclist-heading {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+}
+.ride-cyclist-heading span {
+  position: absolute;
+  left: 23px;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  background: var(--route);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}

@@ -10,9 +10,9 @@ portfolio-v2/
 
 ## Stack
 
-- **Site:** Vite, React, TypeScript, plain CSS. No router — the site is a single
-  scroll page (Hero → Experience → Projects → Contact) and a project modal that
-  syncs the URL to `/projects/:slug` via the History API.
+- **Site:** Vite, React, TypeScript, component CSS. A scroll-driven map ride
+  opens story pages at `/stops/:id`, `/projects/:slug` and `/experiences/:id`.
+  Returning to the ride restores the saved stop and scroll position.
 - **Content:** Sanity project `az7tzozl`, dataset `production` (public). Content
   is fetched in the browser at runtime, so edits go live without a rebuild.
 - **Hosting:** Cloudflare Pages, Git integration.
@@ -46,9 +46,9 @@ The route and its pins come from a Strava **route** export (activity exports
 have no waypoints). Upload it in the Studio under Site Settings → Flyover
 route; `web/public/flyover-route.gpx` is the committed fallback.
 
-Desktop gets the ride; mobile, `prefers-reduced-motion`, no WebGL and throttled
-connections get a static route drawing plus the ordinary scroll page, with no
-map JS shipped at all.
+The same map runs on desktop and mobile. Visiting a stop pauses and docks it
+beside the story; mobile uses a compact map strip. Reduced motion skips the
+frame animation. Click the docked map or Resume ride to return to the route.
 
 ## Content model
 
@@ -58,7 +58,7 @@ Defined in `studio/schemaTypes/`:
   headshot, email, resume PDF, and social links. Drives the Hero and Contact
   sections.
 - **`project`** — title, slug, overview, skillDescription, timeline, skills,
-  technologies, images, and links. Rendered as cards plus the modal.
+  technologies, images, and links. Rendered as cards and dedicated story pages.
 - **`experience`** — company, position, startDate, endDate, about, skills.
 - **`stop`** — a flyover stop: title, `waypointName` (must match a GPX
   `<wpt><name>`), order, blurb, plus references to the experiences and projects
@@ -81,22 +81,48 @@ makes at runtime — they appear in the Studio but never on the site.
 
 ## Deploying to Cloudflare Pages
 
-Push the repo, then in the Cloudflare dashboard create a Pages project connected
-to `klemie/Portfolio` with:
+Push the repo, then create or configure a Pages project connected to
+`klemie/Portfolio` with these settings:
 
-| Setting | Value |
-| --- | --- |
-| Production branch | your choice (currently on `pure-css-rewrite`) |
-| Framework preset | None |
-| Build command | `pnpm --filter web build` |
-| Build output directory | `portfolio-v2/web/dist` |
-| Root directory | `portfolio-v2` |
+```text
+Root directory:         portfolio-v2
+Build command:          pnpm --filter web build
+Build output directory: web/dist
+Production branch:      portfolio-v2-flyover
+Framework preset:       None
+```
 
-Add the `VITE_SANITY_*` variables from `web/.env.example` under **Settings →
-Environment variables**, since `.env` is gitignored.
+The output directory is relative to the selected root directory. The workspace
+pins Node 22 with `.node-version` and pnpm with `packageManager`.
 
-`web/public/_redirects` provides the SPA fallback so a deep link to
-`/projects/some-slug` serves `index.html` instead of 404ing.
+Add the following build environment variables for both Production and Preview,
+copying the values from the local `web/.env` (which is gitignored):
+
+```text
+VITE_SANITY_PROJECT_ID
+VITE_SANITY_DATASET
+VITE_SANITY_API_VERSION
+VITE_MAPTILER_KEY
+VITE_MAPTILER_STYLE
+VITE_MAP_BUILDINGS_3D
+PNPM_VERSION=10.14.0
+```
+
+The three Sanity identifiers are documented in `web/.env.example`. Never put a
+Sanity write token in a `VITE_*` variable; this frontend reads the public dataset
+without a token. MapTiler's browser key is public by design and should allow the
+production and preview origins in its dashboard.
+
+`web/public/_redirects` provides the SPA fallback so a deep link to a stop,
+project or experience serves `index.html` instead of returning a 404.
+
+In Sanity's API settings, allow the Pages origin and any custom domain as CORS
+origins, without credentials. Add those origins to the MapTiler key's allowed
+HTTP origins as well.
+
+After deployment, verify the map and route, both themes and System mode, the
+résumé PDF, direct story URLs, refreshing a story URL, and returning to the saved
+ride position.
 
 The Studio is not deployed. Run `pnpm studio` locally, or `pnpm studio:deploy`
 to publish it to a `*.sanity.studio` URL.

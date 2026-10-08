@@ -1,0 +1,201 @@
+.visit-content {
+  min-height: 100svh;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 7rem) clamp(1.5rem, 5vw, 4rem);
+}
+
+.visit-content h2 {
+  max-width: 22ch;
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.75rem, 3.25vw, 3rem);
+  font-weight: 550;
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+}
+
+.visit-content-kicker {
+  margin: 0 0 1.25rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.visit-content-prose {
+  max-width: 70ch;
+  margin: 0 0 2rem;
+  font-size: 1.1rem;
+  line-height: 1.85;
+  white-space: pre-line;
+}
+
+.visit-stop-intro {
+  padding-bottom: 3rem;
+}
+
+.visit-role {
+  padding: 3rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.visit-content-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.visit-content-labels li {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8rem;
+}
+
+.visit-stop-projects, .visit-project-skills {
+  margin-top: 4rem;
+}
+
+.visit-project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.visit-project-card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.75rem;
+}
+
+.visit-project-card h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.visit-project-card > p:not(.visit-content-kicker) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+  color: var(--text-muted);
+}
+
+.visit-project-card .visit-content-labels {
+  margin-bottom: 2rem;
+}
+
+.visit-content button {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.75rem 1.1rem;
+  background: none;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.visit-content button:hover {
+  background: var(--surface-raised);
+}
+
+.visit-project-card button {
+  margin-top: auto;
+}
+
+.visit-project-card button span {
+  margin-left: 1rem;
+}
+
+.visit-project-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 4rem;
+}
+
+.visit-project-meta {
+  border-left: 1px solid var(--border);
+  padding-left: 2rem;
+}
+
+.visit-project-meta h3 {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+}
+
+.visit-project-meta p, .visit-project-meta ul {
+  margin-bottom: 2rem;
+}
+
+.visit-project-links {
+  list-style: none;
+  padding: 0;
+}
+
+.visit-project-links li {
+  margin-bottom: 0.75rem;
+}
+
+.visit-content a {
+  color: var(--text);
+  text-underline-offset: 4px;
+}
+
+.visit-project-image {
+  margin: 4rem 0;
+}
+
+.visit-project-image img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.visit-project-image figcaption {
+  margin-top: 1rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.visit-content-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: center;
+  margin-top: 5rem;
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+}
+
+@media (max-width: 700px) {
+  .visit-project-grid, .visit-project-intro {
+    grid-template-columns: 1fr;
+  }
+  .visit-project-meta {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+    padding: 2rem 0 0;
+  }
+  .visit-project-intro {
+    gap: 2rem;
+  }
+}
+
+.visit-content { padding-bottom: 9rem; }
+
+/* The story starts beside the docked map, within the first screen. */
+.visit-content { min-height: auto; padding-top: 2.5rem; padding-bottom: 4rem; }
+.visit-content-body > .visit-role:first-child { padding-top: 1rem; border-top: 0; }
+@media (max-width: 700px) { .visit-content { padding-top: 1.5rem; } }

@@ -6,9 +6,9 @@
  *
  * The page is divided into equal slices: one for the landing approach, then
  * one per stop. Each stop's slice is split into a travel phase and a dwell
- * phase. The camera is completely still through every dwell, so a blurb is
- * never read over a moving map (spec §1) and the project cards anchored to a
- * stop do not drift while being clicked.
+ * phase. The scroll camera holds its position through dwell; Flyover adds a
+ * slow time-based orbit while the visitor previews a stop. Each accumulated
+ * heading is carried into the next leg to keep departures continuous.
  *
  * Legs differ ~6.8x in length but each gets equal scroll, which is the
  * accepted trade in spec §8. Easing in and out of every stop is what keeps
@@ -136,11 +136,13 @@ export interface RideOptions {
    *
    * The camera holds perfectly still on one stop and cuts to the next at the
    * slice boundary, rather than being scrubbed along the leg between them.
-   * Every stop, blurb, pin and project card is still reachable by scrolling —
+   * Every stop and its Visit screen remain reachable by scrolling —
    * what goes away is the continuous motion, which is the part
    * `prefers-reduced-motion` is actually asking about.
    */
   reducedMotion?: boolean
+  /** Accumulated orbit angle at each stop, carried through adjacent legs. */
+  bearingOffsets?: number[]
 }
 
 /**
@@ -162,7 +164,9 @@ export const rideStateFor = (
 
   const progress = clamp(pageProgress, 0, 1)
   const landingShare = 1 / (count + 1)
-  const bearings = stopBearings(route, anchors)
+  const bearings = stopBearings(route, anchors).map((bearing, index) =>
+    bearing + (options.reducedMotion ? 0 : options.bearingOffsets?.[index] ?? 0),
+  )
   const startProgress = anchors[0].alongTrack / route.totalDistance
 
   // --- reduced motion: cut between stops, never interpolate ----------------

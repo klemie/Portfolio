@@ -4,7 +4,7 @@ import {Protocol} from 'pmtiles'
 /**
  * Basemap and terrain configuration. See docs/flyover-spec.md §4.
  *
- * The basemap style is chosen by env (see STYLE_URL below). Self-hosting the
+ * The basemap style is chosen by env (see styleUrl below). Self-hosting the
  * tiles via `VITE_MAP_PMTILES_URL` is only possible for an open tileset such as
  * OpenFreeMap — a commercial style like MapTiler's cannot be extracted, so
  * choosing one trades the "no key, no third-party SLA" property for its
@@ -28,11 +28,13 @@ const MAPTILER_STYLE = (import.meta.env.VITE_MAPTILER_STYLE as string | undefine
  *  3. OpenFreeMap Liberty — no key, and the only option that can be extracted
  *     to your own .pmtiles.
  */
-const STYLE_URL =
+// Dataviz and OpenFreeMap have matching light/dark variants. Explicit
+// custom style URLs and other MapTiler map IDs retain their authored style.
+const styleUrl = (mode: 'light' | 'dark') =>
   (import.meta.env.VITE_MAP_STYLE_URL as string | undefined) ??
   (MAPTILER_KEY
-    ? `https://api.maptiler.com/maps/${MAPTILER_STYLE}/style.json?key=${MAPTILER_KEY}`
-    : 'https://tiles.openfreemap.org/styles/liberty')
+    ? `https://api.maptiler.com/maps/${MAPTILER_STYLE.startsWith('dataviz') ? `dataviz-${mode}` : MAPTILER_STYLE}/style.json?key=${MAPTILER_KEY}`
+    : `https://tiles.openfreemap.org/styles/${mode === 'dark' ? 'dark' : 'liberty'}`)
 
 const PMTILES_URL = import.meta.env.VITE_MAP_PMTILES_URL as string | undefined
 
@@ -232,8 +234,9 @@ const addBuildingExtrusions = (style: StyleSpecification): StyleSpecification =>
   return style
 }
 
-export const buildStyle = async (): Promise<StyleSpecification> => {
-  const response = await fetch(STYLE_URL)
+export const buildStyle = async (mode: 'light' | 'dark', signal?: AbortSignal): Promise<StyleSpecification> => {
+  const STYLE_URL = styleUrl(mode)
+  const response = await fetch(STYLE_URL, {signal})
   if (!response.ok) {
     // Strip the key before it reaches a log or an error overlay.
     const safe = STYLE_URL.replace(/key=[^&]+/, 'key=***')
@@ -299,6 +302,7 @@ export const addFlyoverLayers = (
   map: MapLibreMap,
   coordinates: [number, number][],
 ): void => {
+  if (map.getLayer(ROUTE_LAYER)) return
   map.setTerrain({source: TERRAIN_SOURCE, exaggeration: 1.35})
 
   map.addSource(ROUTE_SOURCE, {

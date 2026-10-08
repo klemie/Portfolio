@@ -9,6 +9,10 @@ import './index.css'
 import './styles/base.css'
 import './styles/primitives.css'
 import {App} from './App'
+import {storedTheme} from './hooks/useTheme'
+
+const initialTheme = storedTheme()
+if (initialTheme) document.documentElement.dataset.theme = initialTheme
 
 const root = document.getElementById('root')
 if (!root) throw new Error('Missing #root element')
