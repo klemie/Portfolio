@@ -129,9 +129,6 @@
   }
 }
 
-.ride-preview-top { padding-right: 9rem; }
-@media (max-width: 700px) { .ride-preview-top { flex-direction: column; gap: .5rem; padding-right: 6rem; } }
-
 .ride-preview--intro .ride-preview-title {
   inset: 40% 1.5rem auto;
   transform: translateY(-50%);

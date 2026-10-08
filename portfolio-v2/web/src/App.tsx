@@ -3,9 +3,7 @@ import './App.css'
 import {ThemeSwitch} from './components/ThemeSwitch'
 import {useTheme} from './hooks/useTheme'
 import {Contact} from './components/Contact'
-import {ExperienceSection} from './components/ExperienceSection'
 import {Hero} from './components/Hero'
-import {ProjectsSection} from './components/ProjectsSection'
 import {VisitContent} from './components/VisitContent'
 import {useVisitRoute} from './hooks/useVisitRoute'
 import {useRouteGpx} from './hooks/useRouteGpx'
@@ -59,8 +57,6 @@ export const App = () => {
       {visit ? <VisitContent visit={visit} onVisit={openVisit} /> : (
         <main className="page">
           {settings.data && <Hero settings={settings.data} />}
-          {experiences.data && experiences.data.length > 0 && <ExperienceSection experiences={experiences.data} onOpen={(id) => openVisit({kind: 'experiences', id})} />}
-          {projects.data && projects.data.length > 0 && <ProjectsSection projects={projects.data} onOpen={(id) => openVisit({kind: 'projects', id})} />}
           {settings.data && <Contact settings={settings.data} />}
         </main>
       )}
