@@ -1,0 +1,30 @@
+/* App shell. */
+
+.page {
+  max-width: 70ch;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+/* Shown while the lazy Flyover chunk downloads, so it has to live in the main
+   chunk — putting it in flyover/Flyover.css would mean the styles arrive with
+   the very chunk this is covering for.
+
+   Geometry mirrors `.ride-sticky` so the placeholder occupies the same inset,
+   rounded box the map will: any mismatch here shows up as a jump the moment
+   the chunk lands. All four sides as margin, since this one does not stick. */
+.ride-booting {
+  position: relative;
+  height: calc(100vh - var(--ride-inset) * 2);
+  margin: var(--ride-inset);
+  border-radius: var(--ride-radius);
+  display: grid;
+  place-items: center;
+  color: var(--text);
+  background: var(--surface);
+}
+
+.page { padding-bottom: 9rem; }
+
+.ride-booting--visit { height: 105px; margin: 0; border-radius: 0; border-bottom: 1px solid var(--border); }
+@media (max-width: 700px) { .ride-booting--visit { height: 97px; } }

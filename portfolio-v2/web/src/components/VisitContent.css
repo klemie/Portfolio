@@ -1,0 +1,26 @@
+.visit-content {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 2rem clamp(1.5rem, 5vw, 4rem) 4rem;
+}
+.visit-content-body { min-width: 0; }
+.visit-experience { margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+.visit-content .experience-summary + .project-showcase { margin-top: 2rem; }
+.visit-stop-intro { max-width: 70ch; margin: 0 0 2rem; line-height: 1.8; white-space: pre-line; }
+.visit-content-footer { display: flex; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+.visit-content-footer button {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: .75rem 1.1rem;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: .9rem;
+  cursor: pointer;
+}
+.visit-content-footer button:hover { background: var(--surface-raised); }
+.visit-content-footer button:focus-visible { outline: 2px solid var(--route); outline-offset: 4px; }
+@media (max-width: 700px) {
+  .visit-content { padding-top: 1.5rem; }
+  .visit-experience { margin-top: 3rem; padding-top: 2rem; }
+}

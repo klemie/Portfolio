@@ -1,0 +1,2 @@
+# Cloudflare Pages SPA fallback: serve index.html for deep links like /projects/my-project
+/*  /index.html  200

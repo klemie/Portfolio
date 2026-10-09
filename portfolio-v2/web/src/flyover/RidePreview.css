@@ -1,0 +1,188 @@
+.ride-preview {
+  position: absolute;
+  inset: 0;
+  color: var(--text);
+  background: linear-gradient(180deg, rgb(var(--overlay-rgb) / 55%), transparent 28%, rgb(var(--overlay-rgb) / 25%) 55%, rgb(var(--overlay-rgb) / 95%));
+  pointer-events: none;
+}
+
+.ride-preview button {
+  pointer-events: auto;
+}
+
+.ride-preview-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 3rem);
+}
+
+.ride-wordmark {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  cursor: pointer;
+}
+
+.ride-preview-count, .ride-eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ride-eyebrow {
+  opacity: 0.75;
+}
+
+.ride-preview-title {
+  position: absolute;
+  inset: 28% 1.5rem auto;
+  text-align: center;
+  text-shadow: 0 2px 24px var(--hero-shadow);
+}
+
+.ride-preview-title h1 {
+  max-width: 18ch;
+  margin: 0 auto;
+  font-size: clamp(2.5rem, 5.5vw, 6rem);
+  font-weight: 550;
+  line-height: 1.08;
+  letter-spacing: -0.055em;
+}
+
+.ride-preview-title > p:last-child {
+  margin-top: 1.5rem;
+}
+
+.ride-preview-footer {
+  position: absolute;
+  right: clamp(1.25rem, 3vw, 3rem);
+  left: clamp(1.25rem, 3vw, 3rem);
+  bottom: 8rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: 2rem;
+}
+
+.ride-preview-forward {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.ride-preview-forward button, .ride-preview-previous {
+  background: none;
+  color: inherit;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.ride-preview-previous {
+  display: grid;
+  gap: 0.5rem;
+  justify-self: start;
+  text-align: left;
+  max-width: 24ch;
+}
+
+.ride-preview:not(.ride-preview--intro) .ride-preview-forward {
+  justify-self: end;
+  text-align: right;
+}
+.ride-preview:not(.ride-preview--intro) .ride-preview-forward button {
+  text-align: right;
+}
+
+.ride-preview button:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 6px;
+}
+
+/* Keep stop links level with the centered navigation on wider screens. */
+@media (min-width: 701px) {
+  .ride-preview:not(.ride-preview--intro) .ride-preview-footer {
+    bottom: calc(40px + env(safe-area-inset-bottom));
+    min-height: 64px;
+    grid-template-columns: minmax(0, 1fr) 20rem minmax(0, 1fr);
+    align-items: center;
+  }
+  .ride-preview:not(.ride-preview--intro) .ride-preview-forward {
+    grid-column: 3;
+  }
+}
+
+@media (max-width: 700px) {
+  .ride-preview-title {
+    top: 25%;
+  }
+  .ride-preview-title h1 {
+    font-size: clamp(2.25rem, 9vw, 4rem);
+  }
+  .ride-preview-top {
+    align-items: start;
+  }
+  .ride-wordmark {
+    max-width: 14ch;
+    text-align: left;
+  }
+  .ride-preview-count {
+    white-space: nowrap;
+  }
+  .ride-preview-footer {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 1rem;
+    bottom: 7rem;
+  }
+  .ride-preview-forward, .ride-preview-previous {
+    font-size: 0.8rem;
+  }
+  .ride-preview-forward button, .ride-preview-previous {
+    font-size: 0.8rem;
+  }
+}
+
+.ride-preview--intro .ride-preview-title {
+  inset: 40% 1.5rem auto;
+  transform: translateY(-50%);
+  text-align: center;
+}
+.ride-preview--intro .ride-preview-title h1 {
+  margin: 0 auto;
+  max-width: 18ch;
+  font-size: clamp(2.5rem, 5vw, 5.5rem);
+}
+.ride-intro-description {
+  max-width: 34ch;
+  margin: 1.5rem auto 0;
+  font-size: clamp(.9rem, 1.2vw, 1.1rem);
+  color: var(--text-muted);
+}
+.ride-preview--intro .ride-preview-footer { grid-template-columns: 1fr; }
+.ride-preview--intro .ride-preview-forward {
+  justify-self: center;
+  text-align: center;
+}
+.ride-preview--intro .ride-preview-forward button { text-align: center; }
+@media (max-width: 700px) {
+  .ride-preview--intro .ride-preview-title { inset: 40% 1.25rem auto; }
+  .ride-preview--intro .ride-preview-title h1 {
+    max-width: 16ch;
+    font-size: clamp(1.8rem, 7vw, 2.6rem);
+  }
+  .ride-preview--intro .ride-eyebrow { font-size: .65rem; }
+  .ride-intro-description { margin-top: .8rem; max-width: 32ch; }
+}
+
+/* Reveal ride controls once the returning map has room for them. */
+.ride-preview { transition: opacity 160ms ease; }
+.ride-sticky[data-frame-transition="resume"] .ride-preview { opacity: 0; transition: none; }
+@media (prefers-reduced-motion: reduce) { .ride-preview { transition: none; } }

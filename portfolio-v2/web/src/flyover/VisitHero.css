@@ -1,0 +1,26 @@
+.visit-hero-heading {
+  grid-area: heading;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  color: var(--text);
+  animation: visit-story-arrive 450ms 100ms both;
+}
+.visit-hero-heading > p {
+  margin: 0 0 .35rem;
+  color: var(--text-muted);
+  font-size: .625rem;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.visit-hero-heading h1 {
+  margin: 0;
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 550;
+  line-height: 1.15;
+  letter-spacing: -.04em;
+  overflow-wrap: anywhere;
+}
+@keyframes visit-story-arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .visit-hero-heading { animation: none; } }

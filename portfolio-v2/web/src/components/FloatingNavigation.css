@@ -1,0 +1,68 @@
+.floating-navigation {
+  position: fixed;
+  z-index: 15;
+  bottom: calc(60px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  max-width: calc(100% - 64px);
+  padding: .5rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: 0 8px 40px rgb(0 0 0 / 15%);
+  backdrop-filter: blur(20px);
+}
+
+.floating-navigation button, .floating-navigation a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .7rem;
+  padding: .8rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  color: var(--text);
+  background: transparent;
+  font: inherit;
+  font-size: .85rem;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.floating-navigation .nav-visit {
+  background: var(--text);
+  color: var(--surface);
+  font-weight: 600;
+}
+
+.floating-navigation button:hover:not(:disabled), .floating-navigation a:hover {
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+.floating-navigation button:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+.floating-navigation :focus-visible {
+  outline: 2px solid var(--route);
+  outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+  .floating-navigation {
+    bottom: calc(32px + env(safe-area-inset-bottom));
+    gap: .15rem;
+    padding: .35rem;
+  }
+  .floating-navigation button, .floating-navigation a {
+    padding: .7rem .65rem;
+    font-size: .75rem;
+    gap: .35rem;
+  }
+}
