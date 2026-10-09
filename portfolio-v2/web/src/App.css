@@ -26,5 +26,5 @@
 
 .page { padding-bottom: 9rem; }
 
-.ride-booting--visit { max-width: 360px; height: 240px; margin: 148px 36px 0 auto; }
-@media (max-width: 700px) { .ride-booting--visit { height: 180px; margin: 120px 24px 0; } }
+.ride-booting--visit { height: 105px; margin: 0; border-radius: 0; border-bottom: 1px solid var(--border); }
+@media (max-width: 700px) { .ride-booting--visit { height: 97px; } }

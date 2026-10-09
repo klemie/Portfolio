@@ -10,6 +10,8 @@ export interface Visit {
   stop: Stop | null
   project?: Project
   experience?: Experience
+  /** Role shown beside the docked map. Other roles follow below it. */
+  featuredExperience?: Experience
 }
 
 export const visitPath = ({kind, id}: VisitTarget): string =>
@@ -39,14 +41,16 @@ export const resolveVisit = (
   if (!target) return null
   if (target.kind === 'stops') {
     const stop = stops.find((candidate) => candidate._id === target.id)
-    return stop ? {target, stop, title: stop.title, subtitle: 'A place along the way', labels: stopLabels(stop)} : null
+    if (!stop) return null
+    const featuredExperience = stop.experiences.at(-1)
+    return {target, stop, featuredExperience, title: featuredExperience?.company ?? stop.title, subtitle: 'A place along the way', labels: []}
   }
   if (target.kind === 'projects') {
     const project = projects.find((candidate) => candidate.slug === target.id)
     if (!project) return null
     return {
       target, project,
-      stop: stops.find((stop) => stop.projects.some((candidate) => candidate._id === project._id)) ?? null,
+      stop: stops.find((stop) => stop.experiences.some((candidate) => candidate._id === project.experienceId)) ?? null,
       title: project.title,
       subtitle: 'Project',
       labels: [...new Set([...(project.technologies ?? []), ...(project.skills ?? [])])],
@@ -55,10 +59,10 @@ export const resolveVisit = (
   const experience = experiences.find((candidate) => candidate._id === target.id)
   if (!experience) return null
   return {
-    target, experience,
+    target, experience, featuredExperience: experience,
     stop: stops.find((stop) => stop.experiences.some((candidate) => candidate._id === experience._id)) ?? null,
     title: experience.company,
-    subtitle: experience.position,
-    labels: experience.skills ?? [],
+    subtitle: 'A place along the way',
+    labels: [],
   }
 }

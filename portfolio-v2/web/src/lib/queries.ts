@@ -14,7 +14,7 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   websiteLink
 }`
 
-export const projectsQuery = `*[_type == "project"] | order(_createdAt desc){
+const projectFields = `
   _id,
   title,
   "slug": coalesce(slug.current, _id),
@@ -28,18 +28,27 @@ export const projectsQuery = `*[_type == "project"] | order(_createdAt desc){
   demoLink,
   gitHubLink,
   websiteLink,
-  linkedInLink
-}`
+  linkedInLink,
+  embedUrl,
+  presentations,
+  previewUrl,
+  viewerOrder,
+  "experienceId": experience._ref
+`
 
-export const experiencesQuery = `*[_type == "experience"] | order(startDate desc){
+const experienceFields = `
   _id,
   company,
   position,
   startDate,
   endDate,
   about,
-  skills
-}`
+  skills,
+  "projects": *[_type == "project" && experience._ref == ^._id] | order(coalesce(viewerOrder, 0) asc, _createdAt asc){${projectFields}}
+`
+
+export const projectsQuery = `*[_type == "project"] | order(_createdAt desc){${projectFields}}`
+export const experiencesQuery = `*[_type == "experience"] | order(startDate desc){${experienceFields}}`
 
 // Ride stops. `order` is the authoring order; the camera visits them in the
 // order the GPX route actually reaches them. References are already stored
@@ -50,23 +59,6 @@ export const stopsQuery = `*[_type == "stop"] | order(order asc){
   waypointName,
   order,
   blurb,
-  "experiences": experiences[]->{
-    _id, company, position, startDate, endDate, about, skills
-  },
-  "projects": projects[]->{
-    _id,
-    title,
-    "slug": coalesce(slug.current, _id),
-    overview,
-    skillDescription,
-    timeline,
-    skills,
-    technologies,
-    images,
-    hasDemo,
-    demoLink,
-    gitHubLink,
-    websiteLink,
-    linkedInLink
-  }
+  "experiences": experiences[]->{${experienceFields}},
+  "projects": *[_type == "project" && experience._ref in ^.experiences[]._ref] | order(coalesce(viewerOrder, 0) asc, _createdAt asc){${projectFields}}
 }`

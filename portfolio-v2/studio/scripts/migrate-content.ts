@@ -15,6 +15,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import {getCliClient} from 'sanity/cli'
+import {capstoneExperience, legacyProjectEmbeds, legacyProjectExperiences, legacyProjectOrder} from '../../shared/projectExperienceMigration'
 
 const client = getCliClient({apiVersion: '2025-09-06'})
 
@@ -284,20 +285,6 @@ async function migrate() {
   })
   console.log('  wrote siteSettings')
 
-  console.log('\nprojects')
-  for (const project of projects) {
-    const {slug, images, ...rest} = project
-    await client.createOrReplace({
-      _id: `project-${slug}`,
-      _type: 'project',
-      ...rest,
-      slug: {_type: 'slug', current: slug},
-      images: await imageArray(images),
-      hasDemo: false,
-    })
-    console.log(`  wrote ${project.title}`)
-  }
-
   console.log('\nexperience')
   for (const experience of experiences) {
     const {id, ...rest} = experience
@@ -307,6 +294,24 @@ async function migrate() {
       ...rest,
     })
     console.log(`  wrote ${experience.company} — ${experience.position}`)
+  }
+  await client.createIfNotExists(capstoneExperience)
+
+  console.log('\nprojects')
+  for (const project of projects) {
+    const {slug, images, ...rest} = project
+    await client.createOrReplace({
+      _id: `project-${slug}`,
+      _type: 'project',
+      ...rest,
+      slug: {_type: 'slug', current: slug},
+      experience: {_type: 'reference', _ref: legacyProjectExperiences[slug]},
+      viewerOrder: legacyProjectOrder[slug],
+      embedUrl: legacyProjectEmbeds[slug],
+      images: await imageArray(images),
+      hasDemo: false,
+    })
+    console.log(`  wrote ${project.title}`)
   }
 
   // Clean up the first pass, which used dotted (private) ids.

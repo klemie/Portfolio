@@ -32,11 +32,24 @@ export interface Project {
   skills: string[]
   technologies: string[]
   images?: SanityImage[] | null
+  /** Local review screenshots; never persisted as Sanity image references. */
+  localImages?: {src: string; alt: string}[]
   hasDemo: boolean
   demoLink?: string | null
   gitHubLink?: string | null
   websiteLink?: string | null
+  /** Optional wording for the external project link. */
+  websiteLinkLabel?: string
   linkedInLink?: string | null
+  /** Parent role. Project membership is authored here, never on the stop. */
+  experienceId?: string | null
+  /** An author-confirmed embeddable URL; ordinary links stay external. */
+  embedUrl?: string | null
+  presentations?: {_key?: string; title: string; url: string}[] | null
+  /** Live project opened externally from a screenshot-backed preview. */
+  previewUrl?: string | null
+  /** Ordering within the parent experience; lowest appears first. */
+  viewerOrder?: number | null
 }
 
 export interface Experience {
@@ -48,6 +61,7 @@ export interface Experience {
   endDate?: string | null
   about: string
   skills: string[]
+  projects: Project[]
 }
 
 /**

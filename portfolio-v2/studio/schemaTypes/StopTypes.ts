@@ -47,14 +47,13 @@ export const stopType = defineType({
     }),
     defineField({
       name: 'experiences',
+      description: 'Oldest first, newest last. Projects are pulled from each experience automatically.',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'experience'}]}],
     }),
-    defineField({
-      name: 'projects',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'project'}]}],
-    }),
+    // Retained for the currently deployed site; the new queries derive projects
+    // from experiences. No second membership list is exposed to editors.
+    defineField({name: 'projects', type: 'array', hidden: true, readOnly: true, of: [{type: 'reference', to: [{type: 'project'}]}]}),
   ],
   orderings: [
     {

@@ -35,5 +35,8 @@ export const experienceType = defineType({
       of: [{type: 'string'}],
       validation: (rule) => rule.required(),
     })
-  ]
+  ],
+  preview: {
+    select: {title: 'company', subtitle: 'position'},
+  },
 })

@@ -304,12 +304,20 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
   }, [ready, route])
 
   useEffect(() => {
-    if (!ready || !visiting) return
-    const attribution = mapNodeRef.current?.querySelector<HTMLDetailsElement>('.maplibregl-ctrl-attrib')
-    if (attribution) {
-      attribution.open = false
-      attribution.classList.remove('maplibregl-compact-show')
+    const map = mapRef.current
+    if (!ready || !map) return
+    // Compact attribution starts expanded in MapLibre. Collapse it on load and
+    // screen changes while keeping the information button available to open it.
+    const collapseAttribution = () => {
+      const attribution = mapNodeRef.current?.querySelector<HTMLDetailsElement>('.maplibregl-ctrl-attrib')
+      if (attribution) {
+        attribution.open = false
+        attribution.classList.remove('maplibregl-compact-show')
+      }
     }
+    collapseAttribution()
+    map.on('style.load', collapseAttribution)
+    return () => {map.off('style.load', collapseAttribution)}
   }, [ready, visiting])
 
   const cameras = useMemo(() => stopCameras(route, anchors), [route, anchors])
@@ -436,8 +444,9 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
   return (
     <section ref={wrapRef} className={`ride${visit ? ' ride--visit' : ''}`}
       style={visit ? undefined : {height: `${(anchors.length + 1) * 100}svh`}}
-      aria-label={visit ? `${visit.title} map` : 'Career flyover'}>
-      {visit && <VisitHero visit={visit} stopIndex={visitedIndex} stopCount={anchors.length} onResume={onResume} themeControl={themeControl} />}
+      role={visit ? 'banner' : undefined}
+      aria-label={visit ? `${visit.title} header` : 'Career flyover'}>
+      {visit && <VisitHero visit={visit} stopIndex={visitedIndex} stopCount={anchors.length} />}
       {!visit && <FloatingNavigation
         onVisit={() => phase.landing ? navigate(0) : onVisit(orderedStops[phase.index])}
         visitDisabled={!ready || (!phase.landing && phase.dwell <= 0)}
@@ -453,7 +462,6 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
             settled={phase.dwell > 0} onNavigate={navigate} />}
           {!ready && <p className="ride-loading" role="status">Loading the map…</p>}
         </div>
-        {visit && <p className="ride-map-caption">Your place on the route · Ride paused</p>}
       </div>
     </section>
   )

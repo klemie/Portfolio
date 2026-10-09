@@ -57,12 +57,60 @@ Defined in `studio/schemaTypes/`:
 - **`siteSettings`** — singleton (fixed id `siteSettings`). Name, tagline, bio,
   headshot, email, resume PDF, and social links. Drives the Hero and Contact
   sections.
-- **`project`** — title, slug, overview, skillDescription, timeline, skills,
-  technologies, images, and links. Rendered as cards and dedicated story pages.
+- **`project`** — required reference to its `experience`, title, slug, overview,
+  skillDescription, timeline, skills, technologies, images, and links. Optional
+  `embedUrl` accepts an iframe-compatible HTTPS URL. In an experience, the
+  project title switches between its projects; the viewer cycles through the
+  embedded preview and photos. Without an embed URL it shows photos and links.
 - **`experience`** — company, position, startDate, endDate, about, skills.
 - **`stop`** — a flyover stop: title, `waypointName` (must match a GPX
-  `<wpt><name>`), order, blurb, plus references to the experiences and projects
-  that belong to that place. No coordinates — those come from the GPX.
+  `<wpt><name>`), order, blurb, and experience references, oldest first and
+  newest last. Projects are derived from those experiences. The former project
+  list is hidden and retained only for the currently deployed site's old query.
+  No coordinates — those come from the GPX.
+
+### Experience viewer migration
+
+The development app previews the relationship migration without changing the
+shared production dataset. It groups the existing rocketry projects by role
+and adds a University of Victoria capstone experience for TableTapp. This
+preview applies only while existing projects lack their parent reference;
+authored references always take precedence. Production builds use Sanity only.
+
+The local viewer includes PDF App, Agent Toolkit Seminar and Apps Directory
+under Shift Browser until those projects are published. Interview-based copy and
+presentation URLs are stored in `shared/shiftProjects.ts`; PDF screenshots are
+local review assets. Create unpublished Studio drafts without changing published content:
+
+```sh
+cd studio
+pnpm exec sanity exec scripts/create-shift-projects.ts --with-user-token
+PORTFOLIO_CREATE_SHIFT_DRAFTS=1 pnpm exec sanity exec scripts/create-shift-projects.ts --with-user-token
+```
+
+The script verifies the parent experience and skips existing projects. Review
+the drafts and upload the local screenshots as Sanity images before
+publishing; published content takes precedence over the local preview.
+
+Before deploying the new app, preview and apply the patch migration:
+
+```sh
+cd studio
+pnpm exec sanity exec scripts/link-project-experiences.ts --with-user-token
+PORTFOLIO_APPLY_RELATIONS=1 pnpm exec sanity exec scripts/link-project-experiences.ts --with-user-token
+```
+
+The migration preserves project text, assets, existing parent references, and
+the legacy stop project list. It uses revision checks and includes the verified
+TableTapp website and Software Process slide preview as embeds. In Studio, new
+projects must choose their experience. Only set an embedded preview URL for a
+page that permits framing; ordinary demo, website, GitHub and LinkedIn links
+remain available externally. Readers can open an embed in another tab or
+return to photos if its provider refuses to load.
+
+```sh
+pnpm --filter web check:projects
+```
 
 ### Content migration
 

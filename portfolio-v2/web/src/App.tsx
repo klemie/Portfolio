@@ -11,6 +11,7 @@ import {useSanityQuery} from './hooks/useSanityQuery'
 import {resolveVisit, visitPath} from './lib/visit'
 import {experiencesQuery, projectsQuery, siteSettingsQuery, stopsQuery} from './lib/queries'
 import type {Experience, Project, SiteSettings, Stop} from './lib/types'
+import {previewProjectRelations} from './lib/developmentContent'
 
 const Flyover = lazy(() => import('./flyover/Flyover'))
 
@@ -24,7 +25,10 @@ export const App = () => {
   const route = useRouteGpx(settings.data?.routeGpxUrl)
   const previousScreenRef = useRef<string | null>(null)
   const screen = target ? visitPath(target) : null
-  const visit = resolveVisit(target, stops.data ?? [], projects.data ?? [], experiences.data ?? [])
+  const content = import.meta.env.DEV
+    ? previewProjectRelations(projects.data ?? [], experiences.data ?? [], stops.data ?? [])
+    : {projects: projects.data ?? [], experiences: experiences.data ?? [], stops: stops.data ?? []}
+  const visit = resolveVisit(target, content.stops, content.projects, content.experiences)
 
   // The map stays mounted across screens. Save the ride's document position
   // before docking it beside the story, and restore it on return.
@@ -49,12 +53,12 @@ export const App = () => {
       <div id="top" />
       {hasRide && settings.data && route.gpx && (
         <Suspense fallback={<div className={`ride-booting${visit ? ' ride-booting--visit' : ''}`}>Loading the ride…</div>}>
-          <Flyover settings={settings.data} stops={stops.data!} gpx={route.gpx}
+          <Flyover settings={settings.data} stops={content.stops} gpx={route.gpx}
             theme={theme} themeControl={<ThemeSwitch preference={preference} onChange={change} />} visit={visit} onVisit={(stop) => openVisit({kind: 'stops', id: stop._id})}
             onResume={returnToRide} resumeStopRef={resumeStopRef} transitionFromRef={transitionFromRef} />
         </Suspense>
       )}
-      {visit ? <VisitContent visit={visit} onVisit={openVisit} /> : (
+      {visit ? <VisitContent key={screen} visit={visit} /> : (
         <main className="page">
           {settings.data && <Hero settings={settings.data} />}
           {settings.data && <Contact settings={settings.data} />}

@@ -89,14 +89,35 @@
 .ride-preview-previous {
   display: grid;
   gap: 0.5rem;
+  justify-self: start;
+  text-align: left;
+  max-width: 24ch;
+}
+
+.ride-preview:not(.ride-preview--intro) .ride-preview-forward {
   justify-self: end;
   text-align: right;
-  max-width: 24ch;
+}
+.ride-preview:not(.ride-preview--intro) .ride-preview-forward button {
+  text-align: right;
 }
 
 .ride-preview button:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: 6px;
+}
+
+/* Keep stop links level with the centered navigation on wider screens. */
+@media (min-width: 701px) {
+  .ride-preview:not(.ride-preview--intro) .ride-preview-footer {
+    bottom: calc(40px + env(safe-area-inset-bottom));
+    min-height: 64px;
+    grid-template-columns: minmax(0, 1fr) 20rem minmax(0, 1fr);
+    align-items: center;
+  }
+  .ride-preview:not(.ride-preview--intro) .ride-preview-forward {
+    grid-column: 3;
+  }
 }
 
 @media (max-width: 700px) {

@@ -69,6 +69,7 @@ const stops: StopSeed[] = [
       'experience-uvic-rocketry-propulsion-member',
       'experience-uvic-rocketry-media-lead',
       'experience-uvic-rocketry-avionics-co-lead',
+      'experience-uvic-capstone',
       'experience-uvic-rocketry-technical-coordinator',
     ],
     projects: [

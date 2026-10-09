@@ -15,20 +15,23 @@
 .ride-map-slot { display: contents; }
 .ride--visit {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 36%);
+  grid-template-columns: minmax(0, 1fr) 112px;
+  grid-template-areas: "heading map";
   align-items: center;
-  gap: 3rem;
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 148px clamp(1.5rem, 5vw, 4rem) 0;
+  gap: 1.5rem;
+  padding: 1rem max(clamp(1.5rem, 5vw, 4rem), calc((100% - 1032px) / 2));
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
 }
-.ride--visit .ride-map-slot { display: block; position: relative; height: 268px; }
-.ride--visit .ride-sticky { position: absolute; inset: 0 0 28px; height: 240px; margin: 0; }
-.ride-map-caption { position: absolute; bottom: 0; margin: 0; font-size: .7rem; color: var(--text-muted); }
+.ride--visit .ride-map-slot { grid-area: map; display: block; position: relative; height: 72px; }
+.ride--visit .ride-sticky { position: absolute; inset: 0; height: auto; margin: 0; border-radius: 12px; }
+.ride--visit .ride-pin-label { display: none; }
 @media (max-width: 700px) {
-  .ride--visit { grid-template-columns: 1fr; gap: 1.5rem; padding-top: 120px; }
-  .ride--visit .ride-map-slot { height: 208px; }
-  .ride--visit .ride-sticky { height: 180px; }
+  .ride--visit {
+    grid-template-columns: minmax(0, 1fr) 104px;
+    gap: 1rem;
+  }
+  .ride--visit .ride-map-slot { height: 64px; }
 }
 
 /* Two-class specificity wins over MapLibre's position:relative rule. */

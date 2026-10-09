@@ -26,18 +26,19 @@ export const RidePreview = ({settings, stop, previous, next, index, count, landi
       {landing && <p className="ride-intro-description">From gravel roads to the things I build, a few stops along the way.</p>}
     </div>
     <div className="ride-preview-footer">
-      <div className="ride-preview-forward">
-        <span className="ride-eyebrow">{landing ? 'Your ride starts here' : next ? 'Next stop' : 'The rest of the story'}</span>
-        <button type="button" onClick={() => onNavigate(landing ? 0 : index + 1)}>
-          {landing ? 'Scroll to start riding' : next?.title ?? 'About & contact'} <span aria-hidden="true">↓</span>
-        </button>
-      </div>
       {!landing && (
         <button type="button" className="ride-preview-previous" onClick={() => onNavigate(index - 1)}>
-          <span className="ride-eyebrow">Previous <span aria-hidden="true">↖</span></span>
+          <span className="ride-eyebrow">Previous</span>
           <span>{previous?.title ?? 'The route'}</span>
         </button>
       )}
+      <div className="ride-preview-forward">
+        <span className="ride-eyebrow">{landing ? 'Your ride starts here' : next ? 'Next stop' : 'The rest of the story'}</span>
+        <button type="button" onClick={() => onNavigate(landing ? 0 : index + 1)}>
+          {landing ? 'Scroll to start riding' : next?.title ?? 'About & contact'} {landing && <span aria-hidden="true">↓</span>}
+        </button>
+      </div>
+
     </div>
   </div>
 )
