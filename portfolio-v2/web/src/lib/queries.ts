@@ -24,6 +24,7 @@ const projectFields = `
   skills,
   technologies,
   images,
+  videos[]{_key, title, "url": file.asset->url, poster},
   hasDemo,
   demoLink,
   gitHubLink,
@@ -59,6 +60,10 @@ export const stopsQuery = `*[_type == "stop"] | order(order asc){
   waypointName,
   order,
   blurb,
+  cycling{
+    races[]{_key, title, date, result, description, distanceKm, elevationM, url, image},
+    routes[]{_key, title, date, result, description, distanceKm, elevationM, url, image}
+  },
   "experiences": experiences[]->{${experienceFields}},
   "projects": *[_type == "project" && experience._ref in ^.experiences[]._ref] | order(coalesce(viewerOrder, 0) asc, _createdAt asc){${projectFields}}
 }`

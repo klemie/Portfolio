@@ -5,12 +5,13 @@ import './Flyover.css'
 import {buildRoute, placeWaypoints, positionAt, type Route} from '../lib/route'
 import {parseGpx} from '../lib/gpx'
 import {usePrefersReducedMotion} from '../hooks/usePrefersReducedMotion'
-import type {SiteSettings, Stop} from '../lib/types'
+import type {Project, SiteSettings, Stop} from '../lib/types'
 import type {Visit} from '../lib/visit'
 import {
   addFlyoverLayers,
   buildStyle,
   setRouteProgress,
+  setRouteOpacity,
 } from './mapStyle'
 import {
   rideStateFor,
@@ -26,23 +27,36 @@ import {VisitHero} from './VisitHero'
 import {useMapFrameTransition, type MapFrameBounds} from '../hooks/useMapFrameTransition'
 import {visitPath} from '../lib/visit'
 import {createBikeMarker} from './BikeMarker'
+import {MusicControl} from '../components/MusicControl'
+import {LivingRoute, type LivingRouteHandle} from './LivingRoute'
+import {landingTransitionFor} from './landingTransition'
 
 interface FlyoverProps {
   theme: Theme
   themeControl: ReactNode
   settings: SiteSettings
   stops: Stop[]
+  projects: Project[]
   /** GPX text, already fetched by the caller. */
   gpx: string
   visit: Visit | null
   onVisit: (stop: Stop) => void
+  onProject: (project: Project) => void
   onResume: () => void
   resumeStopRef: RefObject<string | null>
   transitionFromRef: RefObject<MapFrameBounds | null>
+  musicPlaying: boolean
+  musicAnalyserRef: RefObject<AnalyserNode | null>
+  onToggleMusic: () => void
+  onStartMusic: () => void
 }
 
+// Reserve the visible frame separately so every stage gets a full 1.5 screens
+// of scroll, including the opening handoff and each stop's travel and dwell.
+const SCROLL_STAGE_HEIGHT = 150
+
 /**
- * Establishing shot: the whole route in frame, angled so it recedes.
+ * Establishing shot: the whole route, north-up to receive the opening trace.
  *
  * Padding scales with the canvas instead of sitting at a fixed 120px. On the
  * portrait map band 120px is over a quarter of the height, and `cameraForBounds`
@@ -69,7 +83,7 @@ const establishingShot = (
     Math.min(120, Math.min(canvas.clientWidth, canvas.clientHeight) * 0.12),
   )
 
-  const framed = map.cameraForBounds(bounds, {padding, bearing: 20})
+  const framed = map.cameraForBounds(bounds, {padding, bearing: 0, pitch: 0})
   // cameraForBounds returns center as LngLat or [lng, lat] depending on how it
   // was constructed; LngLat.convert normalises both.
   const center = framed?.center
@@ -78,13 +92,13 @@ const establishingShot = (
 
   return {
     center: [center.lng, center.lat],
-    zoom: (framed?.zoom ?? 11) - 0.35,
-    bearing: 20,
-    pitch: 46,
+    zoom: framed?.zoom ?? 11,
+    bearing: 0,
+    pitch: 0,
   }
 }
 
-export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVisit, onResume, resumeStopRef, transitionFromRef}: FlyoverProps) => {
+export const Flyover = ({theme, themeControl, settings, stops, projects, gpx, visit, onVisit, onProject, onResume, resumeStopRef, transitionFromRef, musicPlaying, musicAnalyserRef, onToggleMusic, onStartMusic}: FlyoverProps) => {
   const themeRef = useRef(theme)
   themeRef.current = theme
   const styledThemeRef = useRef(theme)
@@ -98,8 +112,11 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
   const frameRef = useRef(0)
   const orbitOffsetsRef = useRef<number[]>([])
   const stateRef = useRef<RideState | null>(null)
+  const livingRouteRef = useRef<LivingRouteHandle>(null)
+  const routeOpacityRef = useRef(0)
 
   const [ready, setReady] = useState(false)
+  const [highlightedProject, setHighlightedProject] = useState<string | null>(null)
   const [failed, setFailed] = useState<string | null>(null)
   const reducedMotion = usePrefersReducedMotion()
   const visiting = Boolean(visit)
@@ -112,6 +129,7 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
     dwell: 0,
     landing: true,
   })
+  useEffect(() => { setHighlightedProject(null) }, [visiting, phase.landing])
 
   const {route, anchors, orderedStops} = useMemo(() => {
     const parsed = parseGpx(gpx)
@@ -204,6 +222,7 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
           }
           try {
             addFlyoverLayers(map, route.coordinates)
+            setRouteOpacity(map, routeOpacityRef.current)
           } catch (error) {
             // A ride with no trace still beats a blank page.
             console.warn('[flyover] could not add route layers', error)
@@ -254,6 +273,7 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
     const restoreRoute = () => {
       addFlyoverLayers(map, route.coordinates)
       if (stateRef.current) setRouteProgress(map, stateRef.current.routeProgress)
+      setRouteOpacity(map, routeOpacityRef.current)
     }
     buildStyle(theme, controller.signal).then((style) => {
       if (controller.signal.aborted) return
@@ -321,6 +341,14 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
   }, [ready, visiting])
 
   const cameras = useMemo(() => stopCameras(route, anchors), [route, anchors])
+  const suggestedProjects = useMemo(() => ['engine-monitoring-system', 'shift-pdf-app'].flatMap((slug) => {
+    const project = projects.find((project) => project.slug === slug)
+    return project ? [project] : []
+  }), [projects])
+  const suggestedProjectCues = useMemo(() => suggestedProjects.flatMap((project) => {
+    const index = orderedStops.findIndex((stop) => stop.experiences.some((experience) => experience._id === project.experienceId))
+    return index >= 0 ? [{project, alongTrack: anchors[index].alongTrack}] : []
+  }), [suggestedProjects, orderedStops, anchors])
   const visitedIndex = visit?.stop
     ? orderedStops.findIndex((stop) => stop._id === visit.stop?._id)
     : -1
@@ -353,6 +381,20 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
     stateRef.current = state
     bikeRef.current?.update(state.routeProgress, !visit || visitedIndex >= 0)
     map.jumpTo(state.camera)
+    const introProgress = visit ? 1 : Math.min(1, progress * (anchors.length + 1))
+    const transition = landingTransitionFor(introProgress)
+    const frame = frameNodeRef.current
+    frame?.style.setProperty('--intro-map-reveal', String(transition.mapReveal))
+    frame?.style.setProperty('--intro-copy-opacity', String(transition.copyOpacity))
+    frame?.style.setProperty('--intro-details-opacity', String(transition.detailsOpacity))
+    frame?.style.setProperty('--intro-footer-opacity', String(1 - transition.detailsOpacity))
+    frame?.style.setProperty('--first-stop-opacity', String(state.landing || state.stopIndex > 0 || visit ? 1 : Math.min(1, state.dwell / 0.12)))
+    livingRouteRef.current?.update(introProgress, map)
+    const routeOpacity = visit ? 1 : reducedMotion ? transition.mapReveal : transition.mapRouteOpacity
+    if (routeOpacityRef.current !== routeOpacity) {
+      routeOpacityRef.current = routeOpacity
+      setRouteOpacity(map, routeOpacity)
+    }
     setRouteProgress(map, state.routeProgress)
     setPhase((previous) =>
       previous.index === state.stopIndex &&
@@ -414,6 +456,7 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
   const navigate = (index: number) => {
     const wrap = wrapRef.current
     if (!wrap) return
+    if (index >= 0) onStartMusic()
     const top = window.scrollY + wrap.getBoundingClientRect().top
     const scrollable = wrap.offsetHeight - window.innerHeight
     const progress = index < 0 ? 0 : (index + 1.82) / (anchors.length + 1)
@@ -443,7 +486,7 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
 
   return (
     <section ref={wrapRef} className={`ride${visit ? ' ride--visit' : ''}`}
-      style={visit ? undefined : {height: `${(anchors.length + 1) * 100}svh`}}
+      style={visit ? undefined : {height: `${100 + (anchors.length + 1) * SCROLL_STAGE_HEIGHT}svh`}}
       role={visit ? 'banner' : undefined}
       aria-label={visit ? `${visit.title} header` : 'Career flyover'}>
       {visit && <VisitHero visit={visit} stopIndex={visitedIndex} stopCount={anchors.length} />}
@@ -451,17 +494,30 @@ export const Flyover = ({theme, themeControl, settings, stops, gpx, visit, onVis
         onVisit={() => phase.landing ? navigate(0) : onVisit(orderedStops[phase.index])}
         visitDisabled={!ready || (!phase.landing && phase.dwell <= 0)}
         visitLabel={phase.landing ? 'Start the ride' : 'Visit stop'}
-        resumeUrl={settings.resumeUrl} themeControl={themeControl} />}
+        visitReady={ready && !phase.landing && phase.dwell > 0}
+        scrollHint={phase.landing ? undefined : phase.dwell > 0 ? 'Visit this stop or keep scrolling' : 'Keep scrolling to the next stop'}
+        resumeUrl={settings.resumeUrl} themeControl={themeControl}
+        musicControl={!phase.landing && <MusicControl playing={musicPlaying} analyserRef={musicAnalyserRef} onToggle={onToggleMusic} compact />} />}
       <div className="ride-map-slot">
         <div ref={frameNodeRef} className="ride-sticky">
-          <div ref={mapNodeRef} className="ride-map" />
-          {visit && <button type="button" className="ride-map-resume" onClick={onResume} aria-label="Return to the ride" />}
+          <div ref={mapNodeRef} className={`ride-map${!visit && phase.landing ? ' ride-map--landing' : ''}`} inert={Boolean(visit) || phase.landing} />
           {!visit && <RidePreview settings={settings} stop={orderedStops[phase.index]}
+            suggestedProjects={suggestedProjects} onProject={onProject}
+            highlightedProject={highlightedProject} onHighlightProject={setHighlightedProject}
             previous={orderedStops[phase.index - 1]} next={orderedStops[phase.index + 1]}
             index={phase.index} count={anchors.length} landing={phase.landing}
-            settled={phase.dwell > 0} onNavigate={navigate} />}
+            settled={phase.dwell > 0} onNavigate={navigate}
+            musicControl={<MusicControl playing={musicPlaying} analyserRef={musicAnalyserRef} onToggle={onToggleMusic} />} />}
+          {!visit && <LivingRoute ref={livingRouteRef} route={route} frameRef={frameNodeRef} reducedMotion={reducedMotion} projectCues={suggestedProjectCues}
+            highlightedProject={highlightedProject} onHighlightProject={setHighlightedProject} onProject={onProject} />}
           {!ready && <p className="ride-loading" role="status">Loading the map…</p>}
         </div>
+        {visit && <button type="button" className="ride-map-resume" onClick={onResume} aria-label="Back to map — continue the ride">
+          <span className="ride-map-resume-copy">
+            <span className="ride-map-resume-title">Back to map</span>
+            <span className="ride-map-resume-hint">Continue the ride</span>
+          </span>
+        </button>}
       </div>
     </section>
   )

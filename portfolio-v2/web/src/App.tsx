@@ -1,7 +1,9 @@
-import {Suspense, lazy, useLayoutEffect, useRef} from 'react'
+import {Suspense, lazy, useLayoutEffect, useMemo, useRef} from 'react'
 import './App.css'
 import {ThemeSwitch} from './components/ThemeSwitch'
 import {useTheme} from './hooks/useTheme'
+import {useSoundtrack} from './hooks/useSoundtrack'
+import {MusicControl} from './components/MusicControl'
 import {Contact} from './components/Contact'
 import {Hero} from './components/Hero'
 import {VisitContent} from './components/VisitContent'
@@ -16,7 +18,8 @@ import {previewProjectRelations} from './lib/developmentContent'
 const Flyover = lazy(() => import('./flyover/Flyover'))
 
 export const App = () => {
-  const {theme, preference, change} = useTheme()
+  const {theme, change} = useTheme()
+  const soundtrack = useSoundtrack()
   const settings = useSanityQuery<SiteSettings>(siteSettingsQuery)
   const projects = useSanityQuery<Project[]>(projectsQuery)
   const experiences = useSanityQuery<Experience[]>(experiencesQuery)
@@ -25,10 +28,11 @@ export const App = () => {
   const route = useRouteGpx(settings.data?.routeGpxUrl)
   const previousScreenRef = useRef<string | null>(null)
   const screen = target ? visitPath(target) : null
-  const content = import.meta.env.DEV
+  const content = useMemo(() => import.meta.env.DEV
     ? previewProjectRelations(projects.data ?? [], experiences.data ?? [], stops.data ?? [])
-    : {projects: projects.data ?? [], experiences: experiences.data ?? [], stops: stops.data ?? []}
-  const visit = resolveVisit(target, content.stops, content.projects, content.experiences)
+    : {projects: projects.data ?? [], experiences: experiences.data ?? [], stops: stops.data ?? []},
+  [projects.data, experiences.data, stops.data])
+  const visit = useMemo(() => resolveVisit(target, content.stops, content.projects, content.experiences), [target, content])
 
   // The map stays mounted across screens. Save the ride's document position
   // before docking it beside the story, and restore it on return.
@@ -50,14 +54,19 @@ export const App = () => {
 
   return (
     <>
+      <audio ref={soundtrack.ref} src="/audio/20191229.mp3" preload="none" loop
+        onPlay={soundtrack.onPlay} onPause={soundtrack.onPause} onError={soundtrack.onPause} />
       <div id="top" />
       {hasRide && settings.data && route.gpx && (
         <Suspense fallback={<div className={`ride-booting${visit ? ' ride-booting--visit' : ''}`}>Loading the ride…</div>}>
-          <Flyover settings={settings.data} stops={content.stops} gpx={route.gpx}
-            theme={theme} themeControl={<ThemeSwitch preference={preference} onChange={change} />} visit={visit} onVisit={(stop) => openVisit({kind: 'stops', id: stop._id})}
-            onResume={returnToRide} resumeStopRef={resumeStopRef} transitionFromRef={transitionFromRef} />
+          <Flyover settings={settings.data} stops={content.stops} projects={content.projects} gpx={route.gpx}
+            theme={theme} themeControl={<ThemeSwitch theme={theme} onChange={change} />} visit={visit} onVisit={(stop) => openVisit({kind: 'stops', id: stop._id})}
+            onProject={(project) => openVisit({kind: 'projects', id: project.slug})}
+            onResume={returnToRide} resumeStopRef={resumeStopRef} transitionFromRef={transitionFromRef}
+            musicPlaying={soundtrack.playing} musicAnalyserRef={soundtrack.analyserRef} onToggleMusic={soundtrack.toggle} onStartMusic={soundtrack.start} />
         </Suspense>
       )}
+      {visit && <div className="story-soundtrack"><MusicControl playing={soundtrack.playing} analyserRef={soundtrack.analyserRef} onToggle={soundtrack.toggle} /></div>}
       {visit ? <VisitContent key={screen} visit={visit} /> : (
         <main className="page">
           {settings.data && <Hero settings={settings.data} />}

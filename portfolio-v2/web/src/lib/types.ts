@@ -32,6 +32,8 @@ export interface Project {
   skills: string[]
   technologies: string[]
   images?: SanityImage[] | null
+  /** File URLs projected from uploaded Sanity video assets. */
+  videos?: {_key?: string; title: string; url: string | null; poster?: SanityImage | null}[] | null
   /** Local review screenshots; never persisted as Sanity image references. */
   localImages?: {src: string; alt: string}[]
   hasDemo: boolean
@@ -77,4 +79,17 @@ export interface Stop {
   blurb?: string | null
   experiences: Experience[]
   projects: Project[]
+  cycling?: {races?: CyclingEntry[] | null; routes?: CyclingEntry[] | null} | null
+}
+
+export interface CyclingEntry {
+  _key: string
+  title: string
+  date?: string | null
+  result?: string | null
+  description?: string | null
+  distanceKm?: number | null
+  elevationM?: number | null
+  url?: string | null
+  image?: SanityImage | null
 }

@@ -34,9 +34,45 @@
 }
 
 .floating-navigation .nav-visit {
+  position: relative;
   background: var(--text);
   color: var(--surface);
   font-weight: 600;
+}
+
+.nav-scroll-hint {
+  position: absolute;
+  bottom: calc(100% + .85rem);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.floating-navigation .nav-visit--ready:not(:disabled) {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--route-highlight) 60%, transparent);
+}
+@property --visit-shimmer-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+.nav-visit--ready:not(:disabled)::after {
+  content: '';
+  position: absolute;
+  inset: -3.5px;
+  padding: 2.5px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--visit-shimmer-angle), transparent 0deg 230deg,
+    color-mix(in srgb, var(--route-highlight) 70%, transparent) 265deg,
+    var(--route-highlight) 300deg, var(--route-highlight) 335deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 1;
+  animation: visit-stop-shimmer 6s linear infinite;
+}
+@keyframes visit-stop-shimmer {
+  from { --visit-shimmer-angle: 0deg; }
+  to { --visit-shimmer-angle: 360deg; }
 }
 
 .floating-navigation button:hover:not(:disabled), .floating-navigation a:hover {
@@ -65,4 +101,8 @@
     font-size: .75rem;
     gap: .35rem;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-visit--ready:not(:disabled)::after { animation: none; opacity: .55; }
 }

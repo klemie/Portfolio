@@ -46,9 +46,10 @@ The route and its pins come from a Strava **route** export (activity exports
 have no waypoints). Upload it in the Studio under Site Settings → Flyover
 route; `web/public/flyover-route.gpx` is the committed fallback.
 
-The same map runs on desktop and mobile. Visiting a stop pauses and docks it
-beside the story; mobile uses a compact map strip. Reduced motion skips the
-frame animation. Click the docked map or Resume ride to return to the route.
+The same map runs on desktop and mobile. Visiting a stop docks a map thumbnail
+beside the story title. A labeled Back to map control stays in the header while
+scrolling and returns to the saved route position. Reduced motion skips the
+frame animation.
 
 ## Content model
 
@@ -68,6 +69,30 @@ Defined in `studio/schemaTypes/`:
   newest last. Projects are derived from those experiences. The former project
   list is hidden and retained only for the currently deployed site's old query.
   No coordinates — those come from the GPX.
+
+The October 12, 2026 route (`A ride with me - website (2).gpx`) has six stops:
+Shift Browser, Helm Operations, Island Temperature Controls, UVic Rocketry,
+UVic, and Fort Street Cycle. Rocketry roles and their projects belong to UVic
+Rocketry; the campus stop (`UVic 1` in the GPX) holds the TableTapp capstone.
+Fort Street Cycle matches the GPX waypoint `Fort Street Cycles` and has optional
+**Cycling → Races** and **Favourite routes in Victoria** lists in Studio. Each
+story can include a result, notes, date, distance, climbing, photo and Strava
+link. Only populated sections appear on the site. Its initial races are BWR BC
+Wafer (1st in Kris's age category) and BWR AZ Wafer; the third race and favourite
+routes are deferred.
+
+To preview or apply the six-stop route update:
+
+```sh
+cd studio
+pnpm exec sanity exec scripts/seed-stops.ts --with-user-token
+PORTFOLIO_APPLY_STOPS=1 pnpm exec sanity exec scripts/seed-stops.ts --with-user-token
+```
+
+The script defaults to the committed GPX and validates every stop before any
+write. It patches stop membership and route settings in one revision-guarded
+transaction, preserves authored blurbs and cycling stories, and saves a recovery
+snapshot in the system temporary directory. Re-running it does not duplicate races.
 
 ### Experience viewer migration
 
@@ -112,6 +137,16 @@ return to photos if its provider refuses to load.
 pnpm --filter web check:projects
 ```
 
+### Project covers and unpublishing
+
+The first gallery image supplies the cover and small thumbnail for project previews and presentations. Interactive demos with a gallery video use that video's poster instead. To add an image from the Studio CLI, preview `scripts/publish-project-image.ts` with `PORTFOLIO_IMAGE_PROJECT` (slug), `PORTFOLIO_IMAGE_FILE` (absolute path), and `PORTFOLIO_IMAGE_ALT` (description). Add `PORTFOLIO_APPLY_IMAGE=1` to upload and publish it. Existing gallery images are preserved.
+
+To remove a project from the public portfolio while retaining it in Studio, preview `scripts/unpublish-project.ts` with `PORTFOLIO_UNPUBLISH_PROJECT` (slug), then add `PORTFOLIO_APPLY_UNPUBLISH=1`. It saves a local recovery snapshot, preserves or creates the project's draft, and removes only its legacy stop references before unpublishing in one revision-guarded transaction. Unexpected references require review. Republishing the draft restores the project to its experience.
+
+On October 12, 2026, Andúril Flight Computer and Software Process were unpublished this way. Their media remain in Sanity, and their legacy references were removed from the stop seed. The historical import scripts still describe the original portfolio dataset.
+
+Apps Directory's cover is a screenshot of `https://shift.com/apps/`. Agent Toolkit Seminar's cover is its speaker-introduction slide (`1-106`) from the linked Figma presentation. Both were captured and published October 12, 2026.
+
 ### Content migration
 
 The dataset is populated: `siteSettings`, 7 projects, and 8 experience entries,
@@ -133,7 +168,7 @@ Live site: https://portfolio-boh.pages.dev
 
 Cloudflare project: `portfolio`. Production and preview build variables are
 configured in Cloudflare, and their Sanity origins allow requests without
-credentials. New commits to `portfolio-v2-flyover` deploy automatically.
+credentials. New commits to `main` deploy automatically.
 
 Push the repo, then create or configure a Pages project connected to
 `klemie/Portfolio` with these settings:
@@ -142,7 +177,7 @@ Push the repo, then create or configure a Pages project connected to
 Root directory:         portfolio-v2
 Build command:          pnpm --filter web build
 Build output directory: web/dist
-Production branch:      portfolio-v2-flyover
+Production branch:      main
 Framework preset:       None
 ```
 

@@ -15,8 +15,8 @@ export const legacyProjectEmbeds: Record<string, string> = {
 }
 
 export const legacyProjectOrder: Record<string, number> = {
-  'ground-support': 0,
-  'engine-monitoring-system': 1,
+  'engine-monitoring-system': 0,
+  'ground-support': 1,
   'anduril-flight-computer': 2,
   'xenia-1-flight-computer': 0,
   'software-process': 1,

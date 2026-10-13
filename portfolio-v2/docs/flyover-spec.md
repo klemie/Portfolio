@@ -26,9 +26,38 @@ Implementation:
 
 ## 1. Landing page
 
-The route overview fills the rounded frame, inset 20px on all four sides.
-Name and location sit at the top; the invitation and an Explore action start
-the ride. The map stays available on portrait screens as well.
+The opening fills the rounded frame, inset 20px on all four sides. Name and
+location sit at the top. A north-up 2D trace uses the same GPX geometry as the
+ride, with a slowly moving sage-green marker and a highlight ending at that exact
+point. Two unlabeled markers identify the suggested projects; hovering or focusing
+one highlights its project card, and a card highlights its matching marker.
+Markers also open the project directly. Its size follows the
+viewport height so it remains prominent on large screens.
+
+The opening centers the route and suggested projects without an invitation,
+eyebrow, or tagline. The music reference sits at bottom left and
+“Scroll at your own pace” at bottom right, balanced around the Start action.
+Two compact suggested-project cards beneath the route link directly to Engine
+Monitoring System and PDF App. Their existing project pages retain the embedded
+demos. The route keeps its larger scale on tall screens, while shorter viewports
+make room for the cards and footer.
+Both cards use sage-green hover states. As the live trace passes each project's
+associated stop, its card receives one faint 1.8-second border shimmer per loop.
+The cue uses the rider's exact position, pauses with the route, and is disabled
+for reduced motion.
+The page uses the published Sanity headshot for its browser icon and square social preview thumbnail,
+with a browser title identifying Kris as a product engineer and cyclist.
+“20191229” by Mac DeMarco uses the user-provided MP3 hosted with the site. A quiet, looping soundtrack at 5% volume
+attempts autoplay on entry, with the first click or key press starting it if the
+browser blocks audible autoplay. One audio element survives
+in-app navigation, and an explicit pause remains respected. The music control
+uses five bars responding to the MP3's frequency bands through one shared Web
+Audio analyser. Fixed decibel ranges calibrated to the track keep quiet frequencies
+visible and leave room for peaks, without constantly scaling each band to full height.
+The wave is still when paused. Reduced motion keeps the bars static. It
+stays available on the ride and story screens, with a hover/focus tooltip on its
+compact navigation button; audible gallery videos lower
+the soundtrack volume while they play.
 
 **The cursor reveal was built and then removed.** A dark overlay masked by a
 radial gradient that followed the cursor and grew with cumulative movement,
@@ -37,18 +66,40 @@ cut on sight for looking bad. All of it is gone — `useCursorReveal.ts`,
 `maskOpacityFor`, the `.ride-mask` element and its CSS — rather than left
 switched off, so nothing has to be reasoned around later.
 
-The landing is now simply the map with the invitation over it.
+The map stays mounted behind the opening. The first scroll freezes the idle
+trace. First, every SVG vertex moves to its projected position on the whole north-up
+map while the opening stays opaque. Placement occupies the first 68% of the
+scroll slice. Suggested projects fade out as the expanding route approaches
+their space, and return when scrolling backward. Once fully aligned, a fade
+over the next 12% reveals the map and hands over the drawing and dot. The preview
+uses a 2px base stroke and a 2.5px live highlight. Only then does the camera zoom and tilt toward
+the first stop. Scrolling backward reverses these stages; at the top the idle
+trace resumes from its paused position. Reduced motion uses a fade and a camera
+cut instead of the route morph and flight. Hidden tabs pause the idle animation.
 
 ---
 
 ## 2. The ride
 
 Scroll-driven scrub. The visitor sets the pace, can stop, and can scroll back.
+Each stage has 150svh of usable scroll distance, with another viewport reserved
+for the visible map frame. The opening handoff, travel and dwell all get more
+room; navigation and returning from a story use the section's measured height.
+
+A visible scroll cue appears beside the opening navigation and stays above it
+throughout the ride. On arrival
+it reads “Visit this stop or keep scrolling,” and a 2.5-pixel sage highlight continuously
+travels around the enabled Visit stop button every six seconds. Its wider trail uses a
+more colorful sage highlight, dark in light mode and light in dark mode. It starts on arrival
+without hovering, with no invisible gaps, and stops while travelling or visiting.
+Longer visit
+and project pages show a scroll button that advances through the content and
+switches to “Back to top” at the bottom. Reduced motion keeps the cues and arrival highlight static.
 
 | | |
 |---|---|
-| Total length | ~400vh |
-| Per stop | 100vh (4 stops) |
+| Total section height | 1150svh with six stops, including the visible frame |
+| Per stage | 150svh of usable scroll (opening plus six stops) |
 | Camera | Single low tilted camera on 3D terrain, one mode throughout |
 | Camera path | Follows the uploaded track |
 | Camera speed | Varies with leg length — 6.8× swing, see risks |
@@ -97,16 +148,17 @@ pauses offscreen and when the document is hidden. Orbit headings carry into
 the departure leg, so scrolling away does not reset the camera heading.
 
 Visit opens `/stops/:id` as an editorial story page. The existing map contracts
-into a 240px-high card beside the title, stop number and discipline tags in
-500ms. The orbit pauses, the map stays sharp, and the opening story appears
-within the first screen. The map's bounds animate without scaling its labels;
-its canvas resizes throughout. On mobile, it becomes a 180px-high strip below
-the heading. Scrolling takes the card offscreen and returns it naturally.
+in 500ms into a small thumbnail beside a visible “Back to map” button, with
+“Continue the ride” beneath it. Sage tint and an outline distinguish the control
+from the story. The header stays visible while scrolling, including on mobile.
+The map thumbnail sits to the right of the two-line label. The thumbnail
+omits the info icon; attribution stays available on the full map. The control
+sizes to its content, with equal outer padding around the label and thumbnail.
+The map's bounds animate without scaling its labels; its canvas resizes throughout.
 
-Clicking anywhere on the compact map expands it in 350ms and returns to
-the saved route position. The map itself is keyboard accessible; there is no
-extra button overlaid on the map. A persistent Resume ride control also
-returns to the map. It skips nested project detail pages, while browser
+Clicking anywhere on the labeled map control expands it in 350ms and returns to
+the saved route position. The control is keyboard accessible. It skips nested
+project detail pages, while browser
 Back follows normal history (project → stop → ride). History entries retain
 the ride position through refresh. Direct links resume at the associated stop.
 Save the position **before** changing layout because a shorter document can
@@ -116,6 +168,9 @@ frame or heading animation; direct links open in the settled story layout.
 Projects open `/projects/:slug`; experience links open `/experiences/:id`.
 They use the same story layout and frame the associated stop, with existing
 descriptions, skills, images and external links in ordinary document flow.
+All interactive-demo covers sit at the center of their media frame. A translucent
+panel at 45% opacity with a light 6px blur lets the preview show through while
+keeping the title and action readable.
 The former StopPanel, ProjectPopover and ProjectModal were removed.
 
 ---
@@ -193,7 +248,7 @@ actually contains track points, and falls back to the committed copy otherwise.
 - **Route colours follow the basemap's lightness.** The casing and the
   route-ahead hint are read from the style's own background colour at load
   (`hsl`, hex and `rgb` are all parsed); on a dark basemap the near-black
-  originals were invisible. The orange trace itself works on both.
+  originals were invisible. The muted sage-green trace itself works on both.
 - **3D buildings are injected.** Dataviz is a 2D style with no
   `fill-extrusion`, and it fakes depth with a `fill-translate` offset on its
   "Building top" layer — an offset that is only correct on a north-up flat map
@@ -356,7 +411,7 @@ Recorded so these are not re-litigated.
 | Tiles | Self-hosted pmtiles on R2 | OpenFreeMap hosted; MapTiler free tier |
 | Extract | Southern Vancouver Island | Victoria only; all of Vancouver Island; all of BC |
 | Format | GPX | GeoJSON; accepting both |
-| Landing | Map with invitation over it | Dark screen + cursor reveal (built, then cut); keeping the existing Hero |
+| Landing | Large animated 2D GPX trace with invitation and balanced footer | Dark screen + cursor reveal (built, then cut); abstract itinerary curve; stop labels |
 | Text legibility | Opaque plate over the map | Reveal-excluded zone; text fades as map opens |
 | Chrome | Trace + stop counter | Full Strava chrome with elevation profile; none at all |
 | Pacing | Tight and even, ~400vh | Variable per stop; generous ~700-900vh |
@@ -382,10 +437,11 @@ Recorded so these are not re-litigated.
 ### Appearance and floating navigation
 
 The page uses `prefers-color-scheme` in CSS by default. An appearance icon inside the navigation bar opens
-a menu for Light, Dark or System. The ride menu opens above the bottom bar;
+a menu for Light or Dark. The trigger and selected option show the resolved
+theme, including when it follows the system by default. The ride menu opens above the bottom bar;
 the story menu opens below the top bar. It closes on selection, Escape or
-clicking outside. Explicit choices persist locally; System
-clears the override and follows the CSS media query. Semantic tokens cover content, overlays, labels and
+clicking outside. Explicit choices persist locally; visitors without a saved
+choice follow the system theme. Semantic tokens cover content, overlays, labels and
 controls. Dataviz/OpenFreeMap styles switch with the resolved appearance
 without recreating the map, resetting its camera or losing ride progress.
 Explicit custom map styles retain their authored palette.
@@ -397,13 +453,18 @@ link remains on the ride screen. Clicking the compact map also returns to the ri
 
 ### Cycling identity
 
-The intro explicitly introduces Kris as a gravel cyclist and product engineer,
-with centered intro copy and a “Start the ride” action.
-A compact orange bicycle marker follows the same GPX progress as the drawn
+The browser title identifies Kris as a product engineer and cyclist;
+the intro centers the route above suggested projects and a “Start the ride” action.
+A compact sage-green bicycle marker follows the same GPX progress as the drawn
 route, centered on the current location. Its outer pointer follows the route
 heading relative to the camera bearing, including during an orbit. The bike
-icon stays upright and readable. There is no decorative wheel animation.
+icon stays upright and readable. The bike's screen position updates on the map's
+render event, after the current camera and terrain elevations have been drawn,
+so fast legs and newly loaded terrain cannot leave it on the previous frame.
+There is no decorative wheel animation.
 
-Story skills and technology tags appear once in the heading. Back to top
-appears only when the story content extends beyond the viewport, and updates
-when the viewport or content size changes.
+Story skills and technology tags appear once in the heading. Long stories use
+one floating scroll control: it points down while content remains, then points
+up and returns to the top at the bottom. Short stories need no scroll control.
+There is no separate footer button. The control updates when the viewport or
+content size changes, and respects reduced motion when clicked.

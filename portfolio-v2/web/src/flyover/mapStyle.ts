@@ -57,7 +57,7 @@ export const ROUTE_CASING_LAYER = 'flyover-route-casing'
 export const ROUTE_LAYER = 'flyover-route-line'
 
 /** Reads on both a light and a dark basemap, so it never needs a variant. */
-export const ROUTE_COLOR = '#e4572e'
+export const ROUTE_COLOR = '#7f967e'
 
 /**
  * The casing and the route-ahead hint have to contrast with the basemap, not
@@ -388,10 +388,21 @@ export const setRouteProgress = (map: MapLibreMap, progress: number): void => {
     fade,
   ]
 
-  map.setPaintProperty(ROUTE_LAYER, 'line-gradient', gradient(ROUTE_COLOR, 'rgba(228, 87, 46, 0)'))
+  map.setPaintProperty(ROUTE_LAYER, 'line-gradient', gradient(ROUTE_COLOR, 'rgba(127, 150, 126, 0)'))
   map.setPaintProperty(
     ROUTE_CASING_LAYER,
     'line-gradient',
     gradient(theme.casing, theme.casingFade),
   )
+}
+
+/** Hand the opening SVG trace over to the real map without doubling it. */
+export const setRouteOpacity = (map: MapLibreMap, opacity: number): void => {
+  for (const layer of [ROUTE_AHEAD_LAYER, ROUTE_CASING_LAYER, ROUTE_LAYER]) {
+    if (!map.getLayer(layer)) continue
+    // This handoff is already eased by scroll; a second map paint transition
+    // would lag the SVG and break reversibility when scrolling backward.
+    map.setPaintProperty(layer, 'line-opacity-transition', {duration: 0, delay: 0})
+    map.setPaintProperty(layer, 'line-opacity', opacity)
+  }
 }

@@ -1,0 +1,15 @@
+.cycling-section + .cycling-section { margin-top: 3rem; }
+.cycling-section > h2 { margin: 0 0 1.25rem; font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 550; letter-spacing: -.04em; }
+.cycling-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+.cycling-card { min-width: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; }
+.cycling-card-photo { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.cycling-card-body { padding: clamp(1.25rem, 3vw, 2rem); }
+.cycling-card h3 { margin: 0; font-size: 1.35rem; font-weight: 550; letter-spacing: -.03em; overflow-wrap: anywhere; }
+.cycling-card-date, .cycling-card-stats { margin: 0 0 .75rem; color: var(--text-muted); font-size: .8rem; }
+.cycling-card-result { display: block; width: fit-content; margin: 1rem 0 0; padding: .4rem .65rem; border-radius: 5px; background: color-mix(in srgb, var(--route) 10%, var(--surface)); color: var(--accent-text); font-size: .85rem; }
+.cycling-card-stats { margin-top: 1rem; }
+.cycling-card-story { margin: 1rem 0 0; line-height: 1.8; white-space: pre-line; }
+.cycling-card-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 1rem; font-size: .85rem; text-decoration: none; }
+.cycling-card-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.cycling-card-link:focus-visible { outline: 2px solid var(--route); outline-offset: 4px; }
+@media (max-width: 700px) { .cycling-grid { grid-template-columns: 1fr; gap: 1rem; } }

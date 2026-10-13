@@ -20,10 +20,13 @@ export const projectPreviewLink = (value: string) => {
   return url.href
 }
 
+export type ProjectVideoMedia = {kind: 'video'; url: string; poster?: SanityImage; label: string}
+
 export type ProjectMedia =
-  | {kind: 'embed'; url: string; label: string}
+  | {kind: 'embed'; url: string; label: string; previewVideo?: ProjectVideoMedia}
   | {kind: 'preview'; url: string; label: string}
   | {kind: 'image'; image: SanityImage | string; label: string}
+  | ProjectVideoMedia
 
 export const projectMedia = (project: Project): ProjectMedia[] => {
   const embed = projectUrl(project.embedUrl)
@@ -35,10 +38,16 @@ export const projectMedia = (project: Project): ProjectMedia[] => {
     const href = projectUrl(url)
     return href ? [{kind: 'embed' as const, url: href, label: title}] : []
   })
-  if (embed) return [{kind: 'embed', url: embed, label: project.hasDemo ? 'Interactive demo' : 'Project preview'}, ...presentations, ...images]
-  if (presentations.length) return [...presentations, ...images]
+  const videos: ProjectVideoMedia[] = (project.videos ?? []).flatMap(({title, url, poster}) => {
+    const href = projectUrl(url)
+    return href ? [{kind: 'video' as const, url: href, poster: poster?.asset?._ref ? poster : undefined, label: title}] : []
+  })
+  const gallery = [...videos, ...images]
+  if (embed) return [{kind: 'embed', url: embed, label: project.hasDemo ? 'Interactive demo' : 'Project preview',
+    ...(project.hasDemo && videos[0] ? {previewVideo: videos[0]} : {})}, ...presentations, ...gallery]
+  if (presentations.length) return [...presentations, ...gallery]
   const preview = projectUrl(project.previewUrl)
-  return preview ? [{kind: 'preview', url: preview, label: 'Project preview'}, ...images] : images
+  return preview ? [{kind: 'preview', url: preview, label: 'Project preview'}, ...gallery] : gallery
 }
 
 export const projectLinks = (project: Project): {label: string; href: string}[] => {

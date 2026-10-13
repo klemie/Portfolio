@@ -68,6 +68,17 @@ export const projectType = defineType({
       ]}]
     }),
     defineField({
+      name: 'videos',
+      title: 'Gallery videos',
+      description: 'Upload short MP4 clips here. They are stored in Sanity alongside the project images and play directly in the gallery.',
+      type: 'array',
+      of: [{type: 'object', name: 'projectVideo', fields: [
+        defineField({name: 'title', title: 'Caption', type: 'string', validation: (rule) => rule.required()}),
+        defineField({name: 'file', title: 'Video', type: 'file', options: {accept: 'video/mp4'}, description: 'Use an MP4 with H.264 video and AAC audio for browser compatibility.', validation: (rule) => rule.required()}),
+        defineField({name: 'poster', title: 'Poster image', type: 'image', options: {hotspot: true}, description: 'Optional thumbnail shown before playback.'}),
+      ], preview: {select: {title: 'title', media: 'poster'}}}],
+    }),
+    defineField({
       name: 'hasDemo',
       type: 'boolean',
       initialValue: false,

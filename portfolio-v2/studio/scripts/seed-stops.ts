@@ -1,131 +1,101 @@
 /**
- * Seeds the four flyover ride stops and uploads the GPX route.
- *
- *   npx sanity exec scripts/seed-stops.ts --with-user-token
- *
- * Idempotent. Blurbs are intentionally left empty — Kris writes those; the
- * schema flags which stops are still unwritten. See docs/flyover-spec.md.
- *
- * Reference arrays are ordered chronologically within each stop, which is the
- * ordering rule in the spec: geographic between stops, chronological inside.
+ * Preview the six ride stops and route, preserving authored content.
+ *   pnpm exec sanity exec scripts/seed-stops.ts --with-user-token
+ * Set PORTFOLIO_APPLY_STOPS=1 to upload the route and commit the stop updates.
+ * An optional GPX path may be supplied as the first argument.
  */
 import fs from 'node:fs'
 import path from 'node:path'
+import os from 'node:os'
 import {getCliClient} from 'sanity/cli'
+import {cyclingRaceSeeds, rideStopSeeds} from '../../shared/rideStops'
+import {parseGpx} from '../../web/src/lib/gpx'
+import {buildRoute, placeWaypoints} from '../../web/src/lib/route'
 
-const client = getCliClient({apiVersion: '2025-09-06'})
-
-const GPX = process.argv[2] ?? path.join(process.env.HOME!, 'Downloads', 'Portfolio website map.gpx')
-
-const TABLETAPP = '87709030-86b7-4a84-a026-5225e33456d2'
-
-interface StopSeed {
-  id: string
-  title: string
-  waypointName: string
-  order: number
-  experiences: string[]
-  projects: string[]
+const client = getCliClient({apiVersion: '2025-09-06'}).withConfig({useCdn: false})
+const GPX = process.argv[2] ?? path.resolve('..', 'web', 'public', 'flyover-route.gpx')
+type Reference = {_key: string; _type: 'reference'; _ref: string}
+interface Document {
+  _id: string
+  _rev: string
+  _type: string
+  company?: string
+  experience?: {_ref: string}
+  experiences?: Reference[]
+  projects?: Reference[]
+  cycling?: {races?: {_key: string; title: string; url?: string}[]}
 }
-
-const stops: StopSeed[] = [
-  {
-    id: 'shift',
-    // Matches the GPX waypoint and the company name on the experience doc.
-    title: 'Shift Browser',
-    waypointName: 'Shift Browser',
-    order: 0,
-    experiences: ['experience-shift-product-engineer'],
-    projects: [],
-  },
-  {
-    id: 'helm-operations',
-    title: 'Helm Operations',
-    waypointName: 'Helm Operations',
-    order: 1,
-    experiences: [
-      'experience-helm-operations-full-stack-developer',
-      'experience-helm-operations-contract-software-engineer',
-    ],
-    projects: [],
-  },
-  {
-    id: 'island-temperature-controls',
-    title: 'Island Temperature Controls',
-    waypointName: 'Island Temperature Controls',
-    order: 2,
-    experiences: ['experience-island-temperature-controls-graphics-developer'],
-    projects: [],
-  },
-  {
-    id: 'uvic',
-    title: 'UVic',
-    // The route carries two UVic waypoints ~310 m apart; the ride ends at the
-    // second, which is the final point of the track. "UVic 1" is left unused
-    // and check:route reports it as an orphan.
-    waypointName: 'UVic 2',
-    order: 3,
-    experiences: [
-      'experience-uvic-rocketry-propulsion-member',
-      'experience-uvic-rocketry-media-lead',
-      'experience-uvic-rocketry-avionics-co-lead',
-      'experience-uvic-capstone',
-      'experience-uvic-rocketry-technical-coordinator',
-    ],
-    projects: [
-      'project-hybrid-controls-system',
-      'project-xenia-1-flight-computer',
-      'project-software-process',
-      'project-ground-support',
-      TABLETAPP,
-      'project-anduril-flight-computer',
-      'project-engine-monitoring-system',
-    ],
-  },
-]
-
-const refs = (ids: string[], prefix: string) =>
-  ids.map((id, index) => ({_key: `${prefix}${index}`, _type: 'reference' as const, _ref: id}))
+const refs = (ids: string[], prefix: string): Reference[] =>
+  [...new Set(ids)].map((id, index) => ({_key: `${prefix}${index}`, _type: 'reference', _ref: id}))
 
 async function seed() {
-  // Fail loudly rather than writing stops that point at nothing.
-  const allRefs = stops.flatMap((stop) => [...stop.experiences, ...stop.projects])
-  const found = await client.fetch<string[]>(`*[_id in $ids]._id`, {ids: allRefs})
-  const missing = allRefs.filter((id) => !found.includes(id))
-  if (missing.length > 0) throw new Error(`referenced documents not found:\n  ${missing.join('\n  ')}`)
-
-  for (const stop of stops) {
-    await client.createOrReplace({
-      _id: `stop-${stop.id}`,
-      _type: 'stop',
-      title: stop.title,
-      waypointName: stop.waypointName,
-      order: stop.order,
-      experiences: refs(stop.experiences, 'e'),
-      projects: refs(stop.projects, 'p'),
-    })
-    console.log(
-      `  ${stop.order}. ${stop.title} — ${stop.experiences.length} role(s), ${stop.projects.length} project(s)`,
-    )
+  const gpx = parseGpx(fs.readFileSync(GPX, 'utf8'))
+  if (gpx.track.length < 2) throw new Error('GPX needs at least two track points')
+  const route = buildRoute(gpx.track)
+  const placed = placeWaypoints(route, gpx.waypoints)
+  let previous = -1
+  for (const stop of rideStopSeeds) {
+    const matches = placed.filter((point) => point.name === stop.waypointName)
+    if (matches.length !== 1) throw new Error(`Expected one waypoint named "${stop.waypointName}"`)
+    const point = matches[0]
+    if (point.offTrack > 25) throw new Error(`${stop.title} is ${point.offTrack.toFixed(0)} m off the route`)
+    if (point.alongTrack <= previous) throw new Error(`${stop.title} does not follow the preceding stop on the route`)
+    previous = point.alongTrack
   }
+  console.log(`Route: ${path.basename(GPX)} — ${(route.totalDistance / 1000).toFixed(2)} km, ${placed.length} waypoints`)
 
-  if (fs.existsSync(GPX)) {
-    const asset = await client.assets.upload('file', fs.createReadStream(GPX), {
-      filename: 'flyover-route.gpx',
-      contentType: 'application/gpx+xml',
-    })
-    await client.patch('siteSettings').set({
-      routeGpx: {_type: 'file', asset: {_type: 'reference', _ref: asset._id}},
-    }).commit()
-    console.log(`\n  uploaded route ${path.basename(GPX)} -> ${asset._id}`)
-  } else {
-    console.log(`\n  no GPX at ${GPX} — skipped route upload`)
+  const documents = await client.fetch<Document[]>('*[(_type in ["stop", "experience", "project"] || _id == "siteSettings") && !(_id in path("drafts.**"))]')
+  const byId = new Map(documents.map((document) => [document._id, document]))
+  const settings = byId.get('siteSettings')
+  if (!settings) throw new Error('siteSettings not found')
+  const rocketryIds = new Set(documents.filter((document) => document._type === 'experience' && document.company === 'UVic Rocketry').map((document) => document._id))
+  const rocketryProjectIds = new Set(documents.filter((document) => document._type === 'project' && rocketryIds.has(document.experience?._ref ?? '')).map((document) => document._id))
+  const uvic = byId.get('stop-uvic')
+  const updates = rideStopSeeds.map((stop) => {
+    const existing = byId.get(`stop-${stop.id}`)
+    const experienceIds = [...stop.experiences, ...(existing?.experiences ?? []).map((ref) => ref._ref)]
+    const projectIds = [...stop.projects, ...(existing?.projects ?? []).map((ref) => ref._ref)]
+    if (stop.id === 'uvic-rocketry') {
+      experienceIds.push(...(uvic?.experiences ?? []).filter((ref) => rocketryIds.has(ref._ref)).map((ref) => ref._ref))
+      projectIds.push(...(uvic?.projects ?? []).filter((ref) => rocketryProjectIds.has(ref._ref)).map((ref) => ref._ref))
+    }
+    const fields: Record<string, unknown> = {
+      title: stop.title, waypointName: stop.waypointName, order: stop.order,
+      experiences: refs(experienceIds.filter((id) => stop.id !== 'uvic' || !rocketryIds.has(id)), 'e'),
+      projects: refs(projectIds.filter((id) => stop.id !== 'uvic' || !rocketryProjectIds.has(id)), 'p'),
+    }
+    const missing = [...fields.experiences as Reference[], ...fields.projects as Reference[]].filter((ref) => !byId.has(ref._ref))
+    if (missing.length) throw new Error(`Referenced documents not found: ${missing.map((ref) => ref._ref).join(', ')}`)
+    if (stop.id === 'fort-street-cycle') {
+      const races = [...(existing?.cycling?.races ?? [])]
+      for (const race of cyclingRaceSeeds) {
+        if (!races.some((entry) => entry._key === race._key || entry.url === race.url || entry.title === race.title)) races.push(race)
+      }
+      fields['cycling.races'] = races
+    }
+    console.log(`  ${stop.order}. ${stop.title} — ${(fields.experiences as Reference[]).length} role(s), ${(fields.projects as Reference[]).length} legacy project(s)${stop.id === 'fort-street-cycle' ? ', 2 race stories' : ''}`)
+    return {id: `stop-${stop.id}`, existing, fields}
+  })
+
+  if (process.env.PORTFOLIO_APPLY_STOPS !== '1') {
+    console.log('Preview only. Set PORTFOLIO_APPLY_STOPS=1 to apply.')
+    return
   }
-
-  console.log('\ndone')
+  const snapshot = path.join(os.tmpdir(), `portfolio-ride-before-${Date.now()}.json`)
+  fs.writeFileSync(snapshot, JSON.stringify(documents.filter((document) => document._type === 'stop' || document._id === 'siteSettings'), null, 2))
+  console.log(`Recovery snapshot: ${snapshot}`)
+  const asset = await client.assets.upload('file', fs.createReadStream(GPX), {filename: 'flyover-route.gpx', contentType: 'application/gpx+xml'})
+  let transaction = client.transaction()
+  for (const {id, existing, fields} of updates) {
+    if (existing) transaction = transaction.patch(id, (patch) => patch.ifRevisionId(existing._rev).set(fields))
+    else {
+      const {['cycling.races']: races, ...base} = fields
+      transaction = transaction.create({_id: id, _type: 'stop', ...base, ...(races ? {cycling: {_type: 'object', races}} : {})})
+    }
+  }
+  transaction = transaction.patch('siteSettings', (patch) => patch.ifRevisionId(settings._rev).set({routeGpx: {_type: 'file', asset: {_type: 'reference', _ref: asset._id}}}))
+  await transaction.commit()
+  console.log('Six stops and the GPX route published. Existing blurbs, media, and cycling stories preserved.')
 }
 
-seed().catch((error) => {
-  console.error(error.message ?? error)
-  process.exit(1)
-})
+seed().catch((error) => {console.error(error.message ?? error); process.exit(1)})

@@ -35,8 +35,10 @@ export const shiftProjectSeeds = [
     skillDescription: 'I owned the PDF funnel and built the replacement app from a BentoPDF fork through deployment. The MVP required parity with the previous app, verification that every tool worked correctly, consistent Shift theming and file handoff. That handoff used a Chromium API to let users edit files directly on their computer through the browser.\n\nCapping scope was the main challenge. I kept delivery focused on parity, tool reliability, theming and file handoff, deferring deeper browser integrations, including MCP. This kept the rebuild centered on the essential PDF workflow in a business-critical acquisition funnel.',
     skills: ['Product Ownership', 'Scope Management', 'UI/UX', 'Browser Integration'],
     technologies: ['BentoPDF', 'Chromium APIs'],
-    previewUrl: 'https://shift-pdf-neo.integrated-apps.tryshift.com/',
-    websiteLink: 'https://shift-pdf-neo.integrated-apps.tryshift.com/',
+    hasDemo: true,
+    embedUrl: 'https://kris-openpdf-demo.pages.dev',
+    demoLink: 'https://kris-openpdf-demo.pages.dev',
+    websiteLink: 'https://kris-openpdf-demo.pages.dev',
   },
   {
     ...sharedFields,

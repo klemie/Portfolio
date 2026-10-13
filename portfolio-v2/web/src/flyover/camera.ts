@@ -16,6 +16,7 @@
  * is bracketed by a slow departure and a slow arrival.
  */
 import {bearingBetween, positionAt, type Route} from '../lib/route'
+import {landingTransitionFor} from './landingTransition'
 
 export interface CameraState {
   center: [number, number]
@@ -196,9 +197,8 @@ export const rideStateFor = (
   // --- landing approach: establishing shot flies down into the first stop ---
   if (progress < landingShare) {
     const t = progress / landingShare
-    // Arrive a little before the zone ends so the first stop is settled by the
-    // time its own slice begins.
-    const eased = easeInOutCubic(clamp(t / 0.85, 0, 1))
+    // Hold the wide shot until the opening trace has landed on the map.
+    const eased = landingTransitionFor(t).cameraApproach
     return {
       camera: lerpCamera(establishing, cameraAtStop(route, anchors[0], bearings[0]), eased),
       stopIndex: 0,

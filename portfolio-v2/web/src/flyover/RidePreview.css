@@ -2,15 +2,23 @@
   position: absolute;
   inset: 0;
   color: var(--text);
-  background: linear-gradient(180deg, rgb(var(--overlay-rgb) / 55%), transparent 28%, rgb(var(--overlay-rgb) / 25%) 55%, rgb(var(--overlay-rgb) / 95%));
   pointer-events: none;
 }
+.ride-preview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(var(--overlay-rgb) / 55%), transparent 28%, rgb(var(--overlay-rgb) / 25%) 55%, rgb(var(--overlay-rgb) / 95%));
+}
+.ride-preview--intro::after { opacity: var(--intro-details-opacity, 0); }
 
-.ride-preview button {
+.ride-preview button, .ride-preview a {
   pointer-events: auto;
 }
 
 .ride-preview-top {
+  position: relative;
+  z-index: 3;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -41,6 +49,7 @@
 
 .ride-preview-title {
   position: absolute;
+  z-index: 3;
   inset: 28% 1.5rem auto;
   text-align: center;
   text-shadow: 0 2px 24px var(--hero-shadow);
@@ -61,6 +70,7 @@
 
 .ride-preview-footer {
   position: absolute;
+  z-index: 3;
   right: clamp(1.25rem, 3vw, 3rem);
   left: clamp(1.25rem, 3vw, 3rem);
   bottom: 8rem;
@@ -142,6 +152,7 @@
     gap: 1.5rem 1rem;
     bottom: 7rem;
   }
+  .ride-preview:not(.ride-preview--intro) .ride-preview-footer { bottom: 8rem; }
   .ride-preview-forward, .ride-preview-previous {
     font-size: 0.8rem;
   }
@@ -151,38 +162,152 @@
 }
 
 .ride-preview--intro .ride-preview-title {
-  inset: 40% 1.5rem auto;
+  inset: calc(50% - 2rem) 1.5rem auto;
   transform: translateY(-50%);
   text-align: center;
 }
-.ride-preview--intro .ride-preview-title h1 {
-  margin: 0 auto;
-  max-width: 18ch;
-  font-size: clamp(2.5rem, 5vw, 5.5rem);
+.ride-preview--intro .living-route-slot {
+  width: min(100%, 920px);
+  margin-top: 0;
+  height: auto;
+  aspect-ratio: 352 / 284;
+  max-height: clamp(180px, 52svh, 680px);
 }
-.ride-intro-description {
-  max-width: 34ch;
-  margin: 1.5rem auto 0;
-  font-size: clamp(.9rem, 1.2vw, 1.1rem);
+.ride-preview--intro { background: none; }
+.ride-preview--intro::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--surface);
+  opacity: calc(1 - var(--intro-map-reveal, 0));
+}
+.ride-preview--intro .ride-preview-top { position: relative; }
+.ride-preview--intro .ride-preview-title {
+  text-shadow: none;
+  opacity: var(--intro-copy-opacity, 1);
+}
+.ride-preview:not(.ride-preview--intro) .ride-preview-title { opacity: var(--first-stop-opacity, 1); }
+.ride-intro-projects {
+  width: min(100%, 580px);
+  margin: 1rem auto 0;
+  text-align: left;
+  opacity: var(--intro-projects-opacity, 1);
+}
+.ride-intro-projects h2 {
+  margin: 0 0 .55rem;
   color: var(--text-muted);
+  font-size: .65rem;
+  font-weight: 450;
+  letter-spacing: .1em;
+  text-transform: uppercase;
 }
-.ride-preview--intro .ride-preview-footer { grid-template-columns: 1fr; }
-.ride-preview--intro .ride-preview-forward {
-  justify-self: center;
-  text-align: center;
+.ride-intro-project-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.ride-intro-project-links a {
+  position: relative;
+  display: grid;
+  gap: .2rem;
+  padding: .65rem .8rem;
+  border: 1px solid var(--border);
+  border-radius: .65rem;
+  color: var(--text);
+  text-decoration: none;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
 }
-.ride-preview--intro .ride-preview-forward button { text-align: center; }
+.ride-intro-project-links a:hover, .ride-intro-project-links a[data-highlighted="true"] {
+  background: color-mix(in srgb, var(--route) 16%, var(--surface));
+  border-color: var(--route);
+  color: var(--accent-text);
+}
+.ride-intro-project-links a:hover .ride-intro-project-name > span,
+.ride-intro-project-links a[data-highlighted="true"] .ride-intro-project-name > span { color: var(--accent-text); }
+.ride-intro-project-links a::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(110deg, transparent 40%, color-mix(in srgb, var(--route-highlight) 80%, transparent) 50%, transparent 60%);
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+}
+.ride-intro-project-links .ride-intro-project--passing::after {
+  animation: project-route-shimmer 1.8s ease-in-out;
+  animation-play-state: var(--project-shimmer-state, running);
+}
+@keyframes project-route-shimmer {
+  0% { background-position: 100% 0; opacity: 0; }
+  25%, 75% { opacity: .85; }
+  100% { background-position: 0% 0; opacity: 0; }
+}
+.ride-intro-project-links a:focus-visible { outline: 2px solid var(--route); outline-offset: 3px; }
+.ride-intro-project-name { display: flex; justify-content: space-between; align-items: center; gap: .5rem; font-size: .8rem; font-weight: 550; }
+.ride-intro-project-name > span { color: var(--text-muted); }
+.ride-intro-project-description { font-size: .7rem; color: var(--text-muted); }
+.ride-preview--intro .ride-preview-footer {
+  grid-template-columns: minmax(0, 1fr) 20rem minmax(0, 1fr);
+  bottom: calc(60px - var(--ride-inset) + env(safe-area-inset-bottom));
+  min-height: 64px;
+  align-items: center;
+  gap: clamp(.75rem, 2vw, 2rem);
+  opacity: var(--intro-footer-opacity, 1);
+}
+.ride-intro-hint {
+  grid-column: 3;
+  justify-self: end;
+  width: auto;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.ride-intro-music { display: inline-flex; align-items: center; gap: .5rem; justify-self: start; max-width: 100%; color: var(--text-muted); font-size: .75rem; text-decoration: none; }
+.ride-intro-music .music-control { max-width: 100%; }
+.ride-intro-music:hover { color: var(--text); }
+.ride-intro-music:focus-visible { outline: 2px solid var(--route); outline-offset: 6px; }
 @media (max-width: 700px) {
-  .ride-preview--intro .ride-preview-title { inset: 40% 1.25rem auto; }
-  .ride-preview--intro .ride-preview-title h1 {
-    max-width: 16ch;
-    font-size: clamp(1.8rem, 7vw, 2.6rem);
-  }
-  .ride-preview--intro .ride-eyebrow { font-size: .65rem; }
-  .ride-intro-description { margin-top: .8rem; max-width: 32ch; }
+  .ride-preview--intro .ride-preview-footer { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); bottom: 7.5rem; min-height: 0; }
+  .ride-intro-hint { grid-column: 2; }
+}
+@media (max-width: 700px) {
+  .ride-preview--intro .ride-preview-title { inset: 46% 1rem auto; }
+  .ride-intro-music, .ride-intro-hint { font-size: .65rem; }
+  .ride-intro-projects { margin-top: .7rem; }
+  .ride-intro-project-links { gap: .5rem; }
+  .ride-intro-project-links a { padding: .55rem .6rem; }
+  .ride-intro-project-name { font-size: .7rem; gap: .25rem; }
+  .ride-intro-project-description { display: none; }
+}
+
+@media (max-height: 640px) {
+  .ride-preview--intro .ride-preview-title { top: 45%; }
+  .ride-preview--intro .ride-preview-top { padding: 1rem; gap: .75rem; }
+  .ride-preview--intro .ride-wordmark { font-size: .8rem; }
+  .ride-preview--intro .ride-preview-count { font-size: .65rem; }
+  .ride-preview--intro .living-route-slot { max-height: clamp(100px, calc(100svh - 360px), 240px); }
+}
+
+@media (max-height: 480px) and (min-width: 701px) {
+  .ride-preview--intro .ride-preview-title { top: 42%; }
+  .ride-intro-project-description { display: none; }
+}
+
+@media (max-height: 640px) and (max-width: 700px) {
+  .ride-preview--intro .ride-preview-title { top: calc(50% - 4rem); }
+}
+@media (max-width: 360px) {
+  .ride-intro-project-name > span { display: none; }
 }
 
 /* Reveal ride controls once the returning map has room for them. */
 .ride-preview { transition: opacity 160ms ease; }
 .ride-sticky[data-frame-transition="resume"] .ride-preview { opacity: 0; transition: none; }
-@media (prefers-reduced-motion: reduce) { .ride-preview { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .ride-preview, .ride-intro-project-links a { transition: none; }
+  .ride-intro-project-links .ride-intro-project--passing::after { animation: none; }
+}

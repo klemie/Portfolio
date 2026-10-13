@@ -1,6 +1,10 @@
 .ride-cyclist {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 56px;
   height: 56px;
+  will-change: transform;
   pointer-events: none;
 }
 .ride-cyclist[hidden] { display: none; }

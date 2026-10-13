@@ -8,7 +8,8 @@
   /* The ride's ink-on-paper palette. Also the page's accent, via --route. */
   --ink: #1f1e1d;
   --paper: #f4eee9;
-  --route: #e4572e;
+  --route: #7f967e;
+  --route-highlight: #548246;
   --rider-icon: #fff;
 
   /* The ride's frame geometry. It sits inset from the viewport edges rather
@@ -28,7 +29,7 @@
   --panel: rgb(255 252 248 / 92%);
   --overlay-rgb: 255 252 248;
   --hero-shadow: rgb(255 255 255 / 65%);
-  --accent-text: #a93614;
+  --accent-text: #4a654d;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -42,7 +43,8 @@
   --panel: rgb(31 29 27 / 92%);
   --overlay-rgb: 23 22 21;
   --hero-shadow: rgb(0 0 0 / 70%);
-  --accent-text: #ffb396;
+  --accent-text: #b4c9b4;
+  --route-highlight: #b4d99c;
   }
 }
 
@@ -56,5 +58,6 @@
   --panel: rgb(31 29 27 / 92%);
   --overlay-rgb: 23 22 21;
   --hero-shadow: rgb(0 0 0 / 70%);
-  --accent-text: #ffb396;
+  --accent-text: #b4c9b4;
+  --route-highlight: #b4d99c;
 }

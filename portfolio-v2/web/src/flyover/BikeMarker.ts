@@ -1,4 +1,4 @@
-import {Marker, type Map as MapLibreMap} from 'maplibre-gl'
+import type {Map as MapLibreMap} from 'maplibre-gl'
 import {positionAt, type Route} from '../lib/route'
 import './BikeMarker.css'
 
@@ -18,22 +18,25 @@ export const createBikeMarker = (map: MapLibreMap, route: Route) => {
       </svg>
     </div>`
   const heading = element.querySelector<HTMLElement>('.ride-cyclist-heading')!
-  const start = positionAt(route, 0)
-  const marker = new Marker({element, anchor: 'center', subpixelPositioning: true})
-    .setLngLat([start.lon, start.lat]).addTo(map)
-  let bearing = start.bearing
-  const orient = () => { heading.style.transform = `rotate(${bearing - map.getBearing()}deg)` }
-  // The route heading must also track the camera's slow orbit while stopped.
-  map.on('rotate', orient)
-  orient()
+  let position = positionAt(route, 0)
+  element.hidden = true
+  map.getCanvasContainer().appendChild(element)
+  const render = () => {
+    if (element.hidden) return
+    // Render fires after terrain elevation and the camera have been applied
+    // to the canvas. A move-event marker can use the previous terrain frame
+    // and appear detached from the line, especially on the faster legs.
+    const point = map.project([position.lon, position.lat])
+    element.style.transform = `translate(-50%, -50%) translate(${point.x}px, ${point.y}px)`
+    heading.style.transform = `rotate(${position.bearing - map.getBearing()}deg)`
+  }
+  map.on('render', render)
   return {
     update(progress: number, visible: boolean) {
-      const position = positionAt(route, progress * route.totalDistance)
-      marker.setLngLat([position.lon, position.lat])
+      position = positionAt(route, progress * route.totalDistance)
       element.hidden = !visible
-      bearing = position.bearing
-      orient()
+      map.triggerRepaint()
     },
-    remove() { map.off('rotate', orient); marker.remove() },
+    remove() { map.off('render', render); element.remove() },
   }
 }

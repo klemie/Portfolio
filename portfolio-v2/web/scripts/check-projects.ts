@@ -3,6 +3,7 @@ import {projectLinks, projectMedia, projectPreviewLink, projectUrl} from '../src
 import {previewProjectRelations} from '../src/lib/developmentContent'
 import {resolveVisit} from '../src/lib/visit'
 import type {Experience, Project, Stop} from '../src/lib/types'
+import {rideStopSeeds, cyclingRaceSeeds} from '../../shared/rideStops'
 
 const project = (slug: string, fields: Partial<Project> = {}): Project => ({
   _id: `project-${slug}`, slug, title: slug, overview: '', skillDescription: '', timeline: [], skills: [], technologies: [], hasDemo: false, ...fields,
@@ -18,6 +19,11 @@ const photosOnly = project('photos', {images: [image, image]})
 assert.deepEqual(projectMedia(photosOnly).map((item) => item.kind), ['image', 'image'])
 assert.deepEqual(projectMedia(project('demo', {embedUrl: 'https://example.com/demo', images: [image]})).map((item) => item.kind), ['embed', 'image'])
 assert.equal(projectMedia(project('invalid', {embedUrl: 'javascript:alert(1)'})).length, 0)
+const video = {title: 'Engine hotfire test', url: 'https://cdn.sanity.io/files/az7tzozl/production/example.mp4', poster: image}
+assert.deepEqual(projectMedia(project('video', {videos: [video]})), [{kind: 'video', label: video.title, url: video.url, poster: video.poster}])
+assert.deepEqual(projectMedia(project('mixed-gallery', {embedUrl: 'https://example.com/demo', videos: [video], images: [image]})).map((item) => item.kind), ['embed', 'video', 'image'])
+assert.equal(projectMedia(project('invalid-video', {videos: [{...video, url: 'javascript:alert(1)'}]})).length, 0)
+assert.equal(projectMedia(project('missing-video', {videos: [{...video, url: null}]})).length, 0)
 assert.deepEqual(projectLinks(project('links', {hasDemo: true, demoLink: 'https://example.com', websiteLink: 'https://example.com/', gitHubLink: 'javascript:alert(1)'})), [{label: 'View demo', href: 'https://example.com/'}])
 
 const externalPreview = project('external-preview', {previewUrl: 'https://example.com/app', localImages: [{src: '/images/app.jpg', alt: 'App screenshot'}]})
@@ -59,4 +65,18 @@ const publishedApps = project('shift-apps-directory', {title: 'Apps Directory', 
 const publishedPreview = previewProjectRelations([publishedApps], [shift], [shiftStop])
 assert.equal(publishedPreview.projects.length, 3, 'Published projects must not be duplicated by draft preview')
 assert.equal(publishedPreview.experiences[0].projects.find((item) => item._id === publishedApps._id), publishedApps, 'Authored project content must take priority')
-console.log('Project checks passed: role membership, capstone grouping, direct URLs, media ordering, safe URLs, link deduplication, and authored-content precedence.')
+const splitStops: Stop[] = rideStopSeeds.map((seed) => ({
+  ...seed, _id: `stop-${seed.id}`,
+  experiences: preview.experiences.filter((role) => seed.experiences.includes(role._id)),
+  projects: preview.projects.filter((item) => seed.experiences.includes(item.experienceId ?? '')),
+  ...(seed.id === 'fort-street-cycle' ? {cycling: {races: cyclingRaceSeeds}} : {}),
+}))
+for (const slug of ['ground-support', 'xenia-1-flight-computer', 'hybrid-controls-system']) {
+  assert.equal(resolveVisit({kind: 'projects', id: slug}, splitStops, preview.projects, preview.experiences)?.stop?._id, 'stop-uvic-rocketry', 'Rocketry project links return to the rocketry stop')
+}
+assert.equal(resolveVisit({kind: 'projects', id: 'tabletapp'}, splitStops, preview.projects, preview.experiences)?.stop?._id, 'stop-uvic', 'Capstone links return to campus')
+const cyclingVisit = resolveVisit({kind: 'stops', id: 'stop-fort-street-cycle'}, splitStops, preview.projects, preview.experiences)
+assert.equal(cyclingVisit?.title, 'Fort Street Cycle')
+assert.equal(cyclingVisit?.stop?.cycling?.races?.length, 2)
+assert.equal(cyclingVisit?.featuredExperience, undefined, 'Cycling is not presented as an employer')
+console.log('Project checks passed: separate campus/rocketry return stops, cycling visits, role membership, direct URLs, media ordering, safe URLs, link deduplication, and authored-content precedence.')

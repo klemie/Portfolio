@@ -1,5 +1,6 @@
 import {capstoneExperience, legacyProjectEmbeds, legacyProjectExperiences, legacyProjectOrder} from '../../../shared/projectExperienceMigration'
 import {shiftProjectSeeds} from '../../../shared/shiftProjects'
+import {portfolioDemos} from '../../../shared/portfolioDemos'
 import type {Experience, Project, Stop} from './types'
 
 const shiftEndDate = '2026-09-01'
@@ -20,11 +21,15 @@ export const previewProjectRelations = (projects: Project[], experiences: Experi
         : seed._id === 'project-shift-agent-toolkit-seminar' ? 'View presentation' : 'Explore directory',
       localImages: seed._id === 'project-shift-pdf-app' ? shiftPreviewImages['project-shift-pdf-app'] : undefined}))
   if (projects.every((project) => project.experienceId) && !pendingProjects.length && !experiences.some((role) => role._id === 'experience-shift-product-engineer')) return {projects, experiences, stops}
-  const linkedProjects = [...projects, ...pendingProjects].map((project) => project.experienceId ? project : {
+  const linkedProjects = [...projects, ...pendingProjects].map((project) => {
+    const demo = portfolioDemos[project.slug as keyof typeof portfolioDemos]
+    const linked = project.experienceId ? project : {
     ...project,
     experienceId: legacyProjectExperiences[project.slug] ?? null,
     embedUrl: project.embedUrl ?? legacyProjectEmbeds[project.slug] ?? null,
     viewerOrder: project.viewerOrder ?? legacyProjectOrder[project.slug] ?? 0,
+    }
+    return demo ? {...linked, hasDemo: true, embedUrl: demo.url, demoLink: demo.url, previewUrl: null} : linked
   }).sort((a, b) => (a.viewerOrder ?? 0) - (b.viewerOrder ?? 0))
   const roles = [...experiences]
   if (linkedProjects.some((project) => project.experienceId === capstoneExperience._id) && !roles.some((role) => role._id === capstoneExperience._id)) {

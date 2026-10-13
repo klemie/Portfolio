@@ -31,13 +31,15 @@ interface StopDoc {
   blurb: string | null
   projectCount: number
   experienceCount: number
+  raceCount: number
 }
 
 const main = async () => {
   const stops = await query<StopDoc[]>(
     `*[_type == "stop"] | order(order asc){
        title, waypointName, order, blurb,
-       "projectCount": count(projects), "experienceCount": count(experiences)
+       "projectCount": count(*[_type == "project" && experience._ref in ^.experiences[]._ref]),
+       "experienceCount": count(experiences), "raceCount": count(cycling.races)
      }`,
   )
 
@@ -85,7 +87,7 @@ const main = async () => {
     console.log(
       `  ok       ${stop.order}. ${stop.title.padEnd(28)} ` +
         `${(match.alongTrack / 1000).toFixed(2)} km  ${blurb}` +
-        `  ${stop.experienceCount}r/${stop.projectCount}p${off}`,
+        `  ${stop.experienceCount}r/${stop.projectCount}p${stop.raceCount ? `/${stop.raceCount} races` : ''}${off}`,
     )
   }
 

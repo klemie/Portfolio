@@ -1,0 +1,65 @@
+.music-control {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 44px;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: .75rem;
+  text-align: left;
+  cursor: pointer;
+}
+.music-control svg { flex-shrink: 0; }
+.music-wave rect {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scaleY(.15);
+  transition: transform 60ms linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .music-wave rect { transition: none; }
+  .music-wave--playing rect { transform: scaleY(.7); }
+}
+.music-control:hover { color: var(--text); }
+.music-control:focus-visible { outline: 2px solid var(--route); outline-offset: 4px; }
+.music-control--compact { position: relative; }
+.music-control-tooltip {
+  position: absolute;
+  bottom: calc(100% + 1rem);
+  right: -.5rem;
+  padding: .65rem .8rem;
+  border: 1px solid var(--border);
+  border-radius: .6rem;
+  background: var(--surface);
+  color: var(--text);
+  font-size: .75rem;
+  font-weight: 400;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 12%);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 120ms ease;
+  pointer-events: none;
+}
+.music-control--compact:hover .music-control-tooltip,
+.music-control--compact:focus-visible .music-control-tooltip { visibility: visible; opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .music-control-tooltip { transition: none; } }
+.story-soundtrack {
+  position: fixed;
+  z-index: 15;
+  left: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  max-width: calc(100% - 48px);
+  padding: 0 .8rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  backdrop-filter: blur(20px);
+}
+@media (max-width: 700px) {
+  .music-control { font-size: .65rem; }
+  .music-control-tooltip { right: -2.5rem; width: 14rem; white-space: normal; text-align: left; }
+}

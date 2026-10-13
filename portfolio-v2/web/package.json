@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "check:route": "vite-node scripts/check-route.ts",
+    "check:bike": "vite-node scripts/check-bike.ts",
     "check:visit": "vite-node scripts/check-visit.ts",
     "check:projects": "vite-node scripts/check-projects.ts"
   },

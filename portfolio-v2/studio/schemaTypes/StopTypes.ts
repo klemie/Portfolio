@@ -51,6 +51,16 @@ export const stopType = defineType({
       type: 'array',
       of: [{type: 'reference', to: [{type: 'experience'}]}],
     }),
+    defineField({
+      name: 'cycling',
+      title: 'Cycling',
+      description: 'Race stories and favourite rides for a cycling stop. Empty sections stay hidden on the site.',
+      type: 'object',
+      fields: [
+        defineField({name: 'races', title: 'Races', type: 'array', of: [{type: 'cyclingEntry'}]}),
+        defineField({name: 'routes', title: 'Favourite routes in Victoria', type: 'array', of: [{type: 'cyclingEntry'}]}),
+      ],
+    }),
     // Retained for the currently deployed site; the new queries derive projects
     // from experiences. No second membership list is exposed to editors.
     defineField({name: 'projects', type: 'array', hidden: true, readOnly: true, of: [{type: 'reference', to: [{type: 'project'}]}]}),
