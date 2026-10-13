@@ -67,7 +67,7 @@ export const App = () => {
         </Suspense>
       )}
       {visit && <div className="story-soundtrack"><MusicControl playing={soundtrack.playing} analyserRef={soundtrack.analyserRef} onToggle={soundtrack.toggle} /></div>}
-      {visit ? <VisitContent key={screen} visit={visit} /> : (
+      {visit ? <VisitContent key={screen} visit={visit} /> : !hasRide && (
         <main className="page">
           {settings.data && <Hero settings={settings.data} />}
           {settings.data && <Contact settings={settings.data} />}

@@ -4,8 +4,8 @@
  * Pure, so the pacing can be reasoned about and tested without a WebGL
  * context. Everything MapLibre-specific lives in Flyover.tsx.
  *
- * The page is divided into equal slices: one for the landing approach, then
- * one per stop. Each stop's slice is split into a travel phase and a dwell
+ * The opening gets an extended landing approach, followed by a first dwell.
+ * Later stops each get a slice split into a travel phase and a dwell
  * phase. The scroll camera holds its position through dwell; Flyover adds a
  * slow time-based orbit while the visitor previews a stop. Each accumulated
  * heading is carried into the next leg to keep departures continuous.
@@ -16,7 +16,8 @@
  * is bracketed by a slow departure and a slow arrival.
  */
 import {bearingBetween, positionAt, type Route} from '../lib/route'
-import {landingTransitionFor} from './landingTransition'
+import {LANDING_SCROLL_STAGES, landingTransitionFor} from './landingTransition'
+import {DWELL_SHARE, FINISH_SCROLL_STAGES, TRAVEL_SHARE, rideStagesFor, scrollStagesFor} from './rideTiming'
 
 export interface CameraState {
   center: [number, number]
@@ -40,10 +41,9 @@ export interface RideState {
   routeProgress: number
   /** True during the landing approach, before the ride proper. */
   landing: boolean
+  /** 0..1 through the final pullback; absent during stops and visits. */
+  finish?: number
 }
-
-/** Share of a stop's slice spent travelling; the rest is dwell. */
-const TRAVEL_SHARE = 0.6
 
 const DWELL_ZOOM = 15.6
 const DWELL_PITCH = 52
@@ -144,6 +144,8 @@ export interface RideOptions {
   reducedMotion?: boolean
   /** Accumulated orbit angle at each stop, carried through adjacent legs. */
   bearingOffsets?: number[]
+  /** Whole-route framing that leaves room for the finish-line biography. */
+  finishCamera?: CameraState
 }
 
 /**
@@ -164,11 +166,32 @@ export const rideStateFor = (
   }
 
   const progress = clamp(pageProgress, 0, 1)
-  const landingShare = 1 / (count + 1)
+  const scrollStages = scrollStagesFor(count)
+  const landingShare = LANDING_SCROLL_STAGES / scrollStages
+  const rideStage = Math.max(0, progress * scrollStages - LANDING_SCROLL_STAGES)
+  const afterFirstDwell = Math.max(0, rideStage - DWELL_SHARE)
+  const index = rideStage < DWELL_SHARE ? 0 : clamp(Math.floor(afterFirstDwell) + 1, 0, count - 1)
+  const t = clamp(index === 0 ? rideStage / DWELL_SHARE : afterFirstDwell - (index - 1), 0, 1)
   const bearings = stopBearings(route, anchors).map((bearing, index) =>
     bearing + (options.reducedMotion ? 0 : options.bearingOffsets?.[index] ?? 0),
   )
   const startProgress = anchors[0].alongTrack / route.totalDistance
+
+  const finish = clamp((progress * scrollStages - rideStagesFor(count)) / FINISH_SCROLL_STAGES, 0, 1)
+  if (finish > 0) {
+    const lastIndex = count - 1
+    const from = cameraAtStop(route, anchors[lastIndex], bearings[lastIndex])
+    return {
+      camera: options.reducedMotion
+        ? options.finishCamera ?? establishing
+        : lerpCamera(from, options.finishCamera ?? establishing, easeInOutCubic(finish)),
+      stopIndex: lastIndex,
+      dwell: 0,
+      routeProgress: lerp(anchors[lastIndex].alongTrack / route.totalDistance, 1, finish),
+      landing: false,
+      finish: options.reducedMotion ? 1 : finish,
+    }
+  }
 
   // --- reduced motion: cut between stops, never interpolate ----------------
   if (options.reducedMotion) {
@@ -181,8 +204,6 @@ export const rideStateFor = (
         landing: true,
       }
     }
-    const rideT = (progress - landingShare) / (1 - landingShare)
-    const index = clamp(Math.floor(rideT * count), 0, count - 1)
     return {
       camera: cameraAtStop(route, anchors[index], bearings[index]),
       stopIndex: index,
@@ -196,7 +217,7 @@ export const rideStateFor = (
 
   // --- landing approach: establishing shot flies down into the first stop ---
   if (progress < landingShare) {
-    const t = progress / landingShare
+    const t = progress * scrollStages
     // Hold the wide shot until the opening trace has landed on the map.
     const eased = landingTransitionFor(t).cameraApproach
     return {
@@ -207,11 +228,6 @@ export const rideStateFor = (
       landing: true,
     }
   }
-
-  const rideProgress = (progress - landingShare) / (1 - landingShare)
-  const slice = 1 / count
-  const index = clamp(Math.floor(rideProgress / slice), 0, count - 1)
-  const t = clamp((rideProgress - index * slice) / slice, 0, 1)
 
   // First stop has nothing to travel from; the landing zone did the approach.
   if (index === 0) {

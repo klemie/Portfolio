@@ -13,6 +13,7 @@ interface RidePreviewProps {
   count: number
   landing: boolean
   settled: boolean
+  finishing: boolean
   onNavigate: (index: number) => void
   musicControl: ReactNode
   suggestedProjects: Project[]
@@ -21,14 +22,17 @@ interface RidePreviewProps {
   onHighlightProject: (slug: string | null) => void
 }
 
-export const RidePreview = ({settings, stop, previous, next, index, count, landing, settled, onNavigate, musicControl, suggestedProjects, onProject, highlightedProject, onHighlightProject}: RidePreviewProps) => (
+export const RidePreview = ({settings, stop, previous, next, index, count, landing, settled, finishing, onNavigate, musicControl, suggestedProjects, onProject, highlightedProject, onHighlightProject}: RidePreviewProps) => (
   <div className={`ride-preview${landing ? ' ride-preview--intro' : ''}`}>
     <div className="ride-preview-top">
       <button type="button" className="ride-wordmark" onClick={() => onNavigate(-1)}>{settings.name}</button>
-      <span className="ride-preview-count">{landing ? 'Victoria, BC' : `${String(index + 1).padStart(2, '0')} / ${String(count).padStart(2, '0')}`}</span>
+      <div className="ride-preview-top-actions">
+        <span className="ride-preview-count">{landing || finishing ? 'Victoria, BC' : `${String(index + 1).padStart(2, '0')} / ${String(count).padStart(2, '0')}`}</span>
+        {!finishing && <a className="ride-hello" href={`mailto:${settings.email}`}>Say hello ↗</a>}
+      </div>
     </div>
 
-    <div className="ride-preview-title" aria-live="polite">
+    <div className="ride-preview-title" aria-live="polite" hidden={finishing}>
       {!landing && <>
         <p className="ride-eyebrow">{settled ? 'You’ve arrived' : 'On the way to'}</p>
         <h1>{stop?.title}</h1>
@@ -56,7 +60,7 @@ export const RidePreview = ({settings, stop, previous, next, index, count, landi
         </div>
       </section>}
     </div>
-    <div className="ride-preview-footer">
+    <div className="ride-preview-footer" hidden={finishing}>
       {!landing && (
         <button type="button" className="ride-preview-previous" onClick={() => onNavigate(index - 1)}>
           <span className="ride-eyebrow">Previous</span>

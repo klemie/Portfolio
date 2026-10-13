@@ -48,8 +48,10 @@ for reduced motion.
 The page uses the published Sanity headshot for its browser icon and square social preview thumbnail,
 with a browser title identifying Kris as a product engineer and cyclist.
 “20191229” by Mac DeMarco uses the user-provided MP3 hosted with the site. A quiet, looping soundtrack at 5% volume
-attempts autoplay on entry, with the first click or key press starting it if the
-browser blocks audible autoplay. One audio element survives
+attempts autoplay on entry and retries on the first pointer movement, scroll,
+wheel, touch movement, tap, click, or key press. Movement and scroll events get
+one attempt each; click, tap, and key listeners remain until playback starts,
+because browsers may still require those gestures to allow audible playback. One audio element survives
 in-app navigation, and an explicit pause remains respected. The music control
 uses five bars responding to the MP3's frequency bands through one shared Web
 Audio analyser. Fixed decibel ranges calibrated to the track keep quiet frequencies
@@ -68,12 +70,11 @@ switched off, so nothing has to be reasoned around later.
 
 The map stays mounted behind the opening. The first scroll freezes the idle
 trace. First, every SVG vertex moves to its projected position on the whole north-up
-map while the opening stays opaque. Placement occupies the first 68% of the
-scroll slice. Suggested projects fade out as the expanding route approaches
+map while the opening stays opaque. Placement occupies the first 102svh of scroll. Suggested projects fade out as the expanding route approaches
 their space, and return when scrolling backward. Once fully aligned, a fade
-over the next 12% reveals the map and hands over the drawing and dot. The preview
+over the next 18svh reveals the map and hands over the drawing and dot. The preview
 uses a 2px base stroke and a 2.5px live highlight. Only then does the camera zoom and tilt toward
-the first stop. Scrolling backward reverses these stages; at the top the idle
+the first stop over 90svh, roughly three times its previous scroll distance. Scrolling backward reverses these stages; at the top the idle
 trace resumes from its paused position. Reduced motion uses a fade and a camera
 cut instead of the route morph and flight. Hidden tabs pause the idle animation.
 
@@ -82,7 +83,9 @@ cut instead of the route morph and flight. Hidden tabs pause the idle animation.
 ## 2. The ride
 
 Scroll-driven scrub. The visitor sets the pace, can stop, and can scroll back.
-Each stage has 150svh of usable scroll distance, with another viewport reserved
+Every stop has 60svh of dwell. Later stops also get 90svh for the incoming leg,
+while the first stop uses the opening's approach rather than receiving an extra travel-sized pause.
+The opening has 210svh, with another viewport reserved
 for the visible map frame. The opening handoff, travel and dwell all get more
 room; navigation and returning from a story use the section's measured height.
 
@@ -98,8 +101,8 @@ switches to “Back to top” at the bottom. Reduced motion keeps the cues and a
 
 | | |
 |---|---|
-| Total section height | 1150svh with six stops, including the visible frame |
-| Per stage | 150svh of usable scroll (opening plus six stops) |
+| Total section height | 1300svh with six stops, including the visible frame and finish |
+| Per stage | 60svh dwell per stop; 90svh travel for later stops; 210svh opening; 180svh finish |
 | Camera | Single low tilted camera on 3D terrain, one mode throughout |
 | Camera path | Follows the uploaded track |
 | Camera speed | Varies with leg length — 6.8× swing, see risks |
@@ -172,6 +175,24 @@ All interactive-demo covers sit at the center of their media frame. A translucen
 panel at 45% opacity with a light 6px blur lets the preview show through while
 keeping the title and action readable.
 The former StopPanel, ProjectPopover and ProjectModal were removed.
+
+### Finish line
+
+After the last stop's full dwell, another 180svh of scroll gradually pulls the
+camera back to the complete north-up route. The last orbit heading carries into
+the pullback, then holds still in the overview. Scrolling backward reverses it.
+About and contact appear directly on the map, using the approved short bio and
+the Sanity name, headshot and contact links. There is no panel or section below
+the map. Desktop frames the route to the right of the copy; portrait screens
+frame it underneath. A soft map gradient keeps the text readable in both themes.
+Pins and the bike fade out as the biography appears.
+
+The final next control opens this scene, and the navigation becomes **Ride again**
+with **Say hello** beside it. Ride again returns to the opening. Email is also
+available throughout the ride in the map header. The soundtrack keeps playing,
+with its full labeled control at the finish. Reduced motion cuts to the overview
+and reveals the copy without a camera flight. Map failures retain accessible
+About and Contact content.
 
 ---
 
@@ -341,9 +362,8 @@ All seven projects hang off the UVic stop as cards.
    builder when convenient; until then re-exporting from Strava will drop it.
 3. **Four blurbs**, ~60 words each. The ride renders without them and the
    panel says so explicitly.
-4. **Bio and headshot placement.** Called, not confirmed: they land after the
-   ride, before Contact. Now the only arrangement, since there is no second
-   layout to keep the Hero up top.
+4. **Bio and headshot placement.** Confirmed as the finish-line scene, directly
+   on the map rather than in a section underneath the ride.
 5. **Camera constants want tuning by eye.** `camera.ts` — `DWELL_ZOOM`,
    `DWELL_PITCH`, `TRAVEL_PITCH`, `TRAVEL_SHARE`, `LOOKAHEAD`. In dev the map
    instance is on `window.__flyoverMap`.

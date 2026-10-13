@@ -4,7 +4,11 @@ const ramp = (progress: number, from: number, to: number) => {
   return t * t * (3 - 2 * t)
 }
 
-/** One scroll slice: place the route, crossfade, then approach the stop. */
+// Keep placement and crossfade at their existing scroll distances, then
+// reserve 0.6 stages (90svh) for the camera approach instead of 0.19.
+export const LANDING_SCROLL_STAGES = 1.4
+
+/** Scroll stages from the top: place the route, crossfade, then approach. */
 export const landingTransitionFor = (progress: number) => {
   const alignment = ramp(progress, 0, 0.68)
   const fade = ramp(progress, 0.68, 0.80)
@@ -15,7 +19,7 @@ export const landingTransitionFor = (progress: number) => {
     routeOpacity: 1 - fade,
     mapRouteOpacity: fade,
     detailsOpacity: ramp(progress, 0.80, 0.96),
-    cameraApproach: ramp(progress, 0.80, 0.99),
+    cameraApproach: ramp(progress, 0.80, LANDING_SCROLL_STAGES),
   }
 }
 

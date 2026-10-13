@@ -34,7 +34,9 @@ export const useSoundtrack = () => {
   const play = useCallback(() => {
     prepareAudio()
     const audio = ref.current
-    if (audio && audio.paused) void audio.play().catch(() => setPlaying(false))
+    if (audio && audio.paused) void audio.play().catch(() => {
+      if (audio.paused) setPlaying(false)
+    })
   }, [prepareAudio])
   const start = useCallback(() => {
     if (preference.current !== 'pause') play()
@@ -70,19 +72,25 @@ export const useSoundtrack = () => {
   }, [start])
 
   useEffect(() => {
-    // Audible autoplay depends on browser policy. Retry during an actual user
-    // gesture, after a music button's own handler has set their preference.
+    if (playing || preference.current === 'pause') return
+    // Try every kind of first interaction. Movement and scrolling may still
+    // be blocked, so keep listening for a browser-approved click/tap/key.
+    const gestures = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown']
+    const movement = ['pointermove', 'touchmove', 'wheel', 'scroll']
+    const interactions = [...gestures, ...movement]
     const onInteraction = (event: Event) => {
+      if (!event.isTrusted) return
       if (event.target instanceof Element && event.target.closest('.music-control')) return
       start()
     }
-    document.addEventListener('click', onInteraction)
-    document.addEventListener('keydown', onInteraction)
+    gestures.forEach((event) => document.addEventListener(event, onInteraction, {passive: true}))
+    // One attempt per movement type avoids repeatedly requesting audio on
+    // every animation frame while the browser requires a stronger gesture.
+    movement.forEach((event) => document.addEventListener(event, onInteraction, {passive: true, once: true}))
     return () => {
-      document.removeEventListener('click', onInteraction)
-      document.removeEventListener('keydown', onInteraction)
+      interactions.forEach((event) => document.removeEventListener(event, onInteraction))
     }
-  }, [start])
+  }, [start, playing])
 
   useEffect(() => {
     const updateVolume = () => {
