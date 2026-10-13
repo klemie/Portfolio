@@ -2,6 +2,7 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 
 const backgroundVolume = 0.05
 const videoVolume = 0.01
+const tabIsFocused = () => !document.hidden && document.hasFocus()
 
 /** One audio element survives route changes; a visitor's pause always wins. */
 export const useSoundtrack = () => {
@@ -32,11 +33,17 @@ export const useSoundtrack = () => {
     } catch { /* The ordinary audio control still works without analysis. */ }
   }, [])
   const play = useCallback(() => {
+    if (!tabIsFocused()) return
     prepareAudio()
     const audio = ref.current
-    if (audio && audio.paused) void audio.play().catch(() => {
-      if (audio.paused) setPlaying(false)
-    })
+    if (audio && audio.paused) void audio.play()
+      .then(() => {
+        // Focus can change while the browser is resolving the play request.
+        if (!tabIsFocused() || preference.current === 'pause') audio.pause()
+      })
+      .catch(() => {
+        if (audio.paused) setPlaying(false)
+      })
   }, [prepareAudio])
   const start = useCallback(() => {
     if (preference.current !== 'pause') play()
@@ -69,6 +76,23 @@ export const useSoundtrack = () => {
     }
     audio.volume = backgroundVolume
     start()
+  }, [start])
+
+  useEffect(() => {
+    const pause = () => ref.current?.pause()
+    const syncFocus = () => {
+      if (tabIsFocused()) start()
+      else pause()
+    }
+    window.addEventListener('focus', syncFocus)
+    window.addEventListener('blur', pause)
+    document.addEventListener('visibilitychange', syncFocus)
+    syncFocus()
+    return () => {
+      window.removeEventListener('focus', syncFocus)
+      window.removeEventListener('blur', pause)
+      document.removeEventListener('visibilitychange', syncFocus)
+    }
   }, [start])
 
   useEffect(() => {
@@ -111,5 +135,12 @@ export const useSoundtrack = () => {
     }
   }, [])
 
-  return {ref: attach, analyserRef, playing, start, toggle, onPlay: () => setPlaying(true), onPause: () => setPlaying(false)}
+  const onPlay = () => {
+    if (!tabIsFocused() || preference.current === 'pause') {
+      ref.current?.pause()
+      setPlaying(false)
+    } else setPlaying(true)
+  }
+
+  return {ref: attach, analyserRef, playing, start, toggle, onPlay, onPause: () => setPlaying(false)}
 }

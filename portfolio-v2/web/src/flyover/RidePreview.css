@@ -42,15 +42,8 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.ride-preview-top-actions { display: flex; align-items: center; gap: 1.5rem; }
-.ride-hello { color: var(--accent-text); font-size: .75rem; text-decoration: none; white-space: nowrap; }
-.ride-hello:hover { text-decoration: underline; }
 .ride-preview [hidden] { display: none; }
 .ride--finishing .ride-preview::after { opacity: var(--finish-markers-opacity, 0); }
-@media (max-width: 700px) {
-  .ride-preview-top-actions { align-items: end; flex-direction: column; gap: .4rem; }
-  .ride-hello { font-size: .65rem; }
-}
 
 .ride-eyebrow {
   opacity: 0.75;

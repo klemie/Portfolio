@@ -533,7 +533,6 @@ export const Flyover = ({theme, themeControl, settings, stops, projects, gpx, vi
         visitLabel={phase.finishing ? 'Ride again' : phase.landing ? 'Start the ride' : 'Visit stop'}
         visitReady={ready && !phase.landing && !phase.finishing && phase.dwell > 0}
         scrollHint={phase.landing || phase.finishing ? undefined : phase.dwell > 0 ? 'Visit this stop or keep scrolling' : 'Keep scrolling to the next stop'}
-        contactUrl={phase.finishing ? `mailto:${settings.email}` : undefined}
         resumeUrl={settings.resumeUrl} themeControl={themeControl}
         musicControl={!phase.landing && !phase.finishing && <MusicControl playing={musicPlaying} analyserRef={musicAnalyserRef} onToggle={onToggleMusic} compact />} />}
       <div className="ride-map-slot">

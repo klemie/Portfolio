@@ -26,10 +26,7 @@ export const RidePreview = ({settings, stop, previous, next, index, count, landi
   <div className={`ride-preview${landing ? ' ride-preview--intro' : ''}`}>
     <div className="ride-preview-top">
       <button type="button" className="ride-wordmark" onClick={() => onNavigate(-1)}>{settings.name}</button>
-      <div className="ride-preview-top-actions">
-        <span className="ride-preview-count">{landing || finishing ? 'Victoria, BC' : `${String(index + 1).padStart(2, '0')} / ${String(count).padStart(2, '0')}`}</span>
-        {!finishing && <a className="ride-hello" href={`mailto:${settings.email}`}>Say hello ↗</a>}
-      </div>
+      <span className="ride-preview-count">{landing || finishing ? 'Victoria, BC' : `${String(index + 1).padStart(2, '0')} / ${String(count).padStart(2, '0')}`}</span>
     </div>
 
     <div className="ride-preview-title" aria-live="polite" hidden={finishing}>

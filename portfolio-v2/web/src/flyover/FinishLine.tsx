@@ -16,7 +16,7 @@ export const FinishLine = ({settings, count, active, musicControl}: {settings: S
       <p>I build human–machine interfaces that make complex systems intuitive and keep people coming back.<span className="ride-finish-bio-detail"> From browser experiences at Shift to telemetry systems for UVic Rocketry.</span></p>
       <p className="ride-finish-note">Based in Victoria. Usually building something or out on a bike.</p>
       <div className="ride-finish-links">
-        <a href={`mailto:${settings.email}`}>Say hello ↗</a>
+        <a href={`mailto:${settings.email}`}>Email ↗</a>
         {settings.linkedInLink && <a href={settings.linkedInLink} target="_blank" rel="noreferrer">LinkedIn ↗</a>}
         {settings.gitHubLink && <a href={settings.gitHubLink} target="_blank" rel="noreferrer">GitHub ↗</a>}
       </div>

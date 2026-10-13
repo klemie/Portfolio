@@ -52,7 +52,11 @@ attempts autoplay on entry and retries on the first pointer movement, scroll,
 wheel, touch movement, tap, click, or key press. Movement and scroll events get
 one attempt each; click, tap, and key listeners remain until playback starts,
 because browsers may still require those gestures to allow audible playback. One audio element survives
-in-app navigation, and an explicit pause remains respected. The music control
+in-app navigation, and an explicit pause remains respected. Playback pauses
+when its tab is hidden or loses focus, including switching to
+another window. Returning to the focused tab resumes playback unless the visitor
+paused it manually. Pending play requests also check focus before continuing.
+The music control
 uses five bars responding to the MP3's frequency bands through one shared Web
 Audio analyser. Fixed decibel ranges calibrated to the track keep quiet frequencies
 visible and leave room for peaks, without constantly scaling each band to full height.
@@ -188,8 +192,8 @@ frame it underneath. A soft map gradient keeps the text readable in both themes.
 Pins and the bike fade out as the biography appears.
 
 The final next control opens this scene, and the navigation becomes **Ride again**
-with **Say hello** beside it. Ride again returns to the opening. Email is also
-available throughout the ride in the map header. The soundtrack keeps playing,
+with the résumé link beside it. Ride again returns to the opening. Email is
+available in the finish-line contact links. The soundtrack keeps playing,
 with its full labeled control at the finish. Reduced motion cuts to the overview
 and reveals the copy without a camera flight. Map failures retain accessible
 About and Contact content.
