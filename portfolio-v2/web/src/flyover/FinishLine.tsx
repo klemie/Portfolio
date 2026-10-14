@@ -5,7 +5,7 @@ import './FinishLine.css'
 
 export const FinishLine = ({settings, count, active, musicControl}: {settings: SiteSettings; count: number; active: boolean; musicControl: ReactNode}) => (
   <section className="ride-finish" aria-label="About and contact" aria-hidden={!active} inert={!active}>
-    <div className="ride-finish-copy">
+    <div className="ride-finish-copy" tabIndex={0}>
       <p className="ride-eyebrow">The end of the ride</p>
       <h1>Thanks for<br />coming along.</h1>
       <div className="ride-finish-person">
@@ -13,7 +13,8 @@ export const FinishLine = ({settings, count, active, musicControl}: {settings: S
           alt={settings.headshot.alt ?? settings.name} width={64} height={64} />}
         <p>{settings.name}<span>Product engineer &amp; cyclist</span></p>
       </div>
-      <p>I build human–machine interfaces that make complex systems intuitive and keep people coming back.<span className="ride-finish-bio-detail"> From browser experiences at Shift to telemetry systems for UVic Rocketry.</span></p>
+      <p>What do you get from Kris Lemieux? You get somebody who is authentically themself, extremely passionate, and pretty frank—someone who challenges assumptions even when it’s not the popular thing to do.</p>
+      <p>I’m an engineer, a product manager, and a highly collaborative person who thrives with a little chaos and the freedom and scope to play. I perform best working closely with equally passionate people, all aligned on one goal.</p>
       <p className="ride-finish-note">Based in Victoria. Usually building something or out on a bike.</p>
       <div className="ride-finish-links">
         <a href={`mailto:${settings.email}`}>Email ↗</a>

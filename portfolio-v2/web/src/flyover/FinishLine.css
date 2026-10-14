@@ -11,9 +11,12 @@
 .ride--finishing .ride-finish { visibility: visible; }
 .ride-finish-copy {
   position: absolute;
-  top: clamp(100px, 18%, 180px);
+  top: clamp(85px, 12%, 120px);
+  bottom: calc(140px - var(--ride-inset) + env(safe-area-inset-bottom));
   left: 6%;
   width: min(35%, 350px);
+  overflow-y: auto;
+  pointer-events: auto;
 }
 .ride-finish h1 {
   margin: .8rem 0 1.5rem;
@@ -36,7 +39,7 @@
 .ride--finishing .ride-pin, .ride--finishing .ride-cyclist { opacity: var(--finish-markers-opacity, 1) !important; }
 @media (max-width: 700px) {
   .ride-finish { background: linear-gradient(180deg, rgb(var(--overlay-rgb) / 95%), rgb(var(--overlay-rgb) / 82%) 42%, transparent 68%, rgb(var(--overlay-rgb) / 55%)); }
-  .ride-finish-copy { top: 85px; left: 24px; width: calc(100% - 48px); max-width: 420px; }
+  .ride-finish-copy { top: 85px; bottom: calc(9rem + env(safe-area-inset-bottom)); left: 24px; width: calc(100% - 48px); max-width: 420px; }
   .ride-finish h1 { font-size: clamp(1.8rem, 7vw, 2.25rem); margin: .65rem 0 1rem; }
   .ride-finish-copy > p:not(.ride-eyebrow) { font-size: .8rem; margin: .75rem 0; }
   .ride-finish-person { margin-bottom: .8rem; }
@@ -50,9 +53,6 @@
   .ride-finish-copy { top: 85px; }
   .ride-finish-note { display: none; }
   .ride-finish h1 { font-size: 2rem; }
-}
-@media (max-height: 740px) and (max-width: 700px) {
-  .ride-finish-bio-detail { display: none; }
 }
 @media (max-height: 500px) and (min-width: 701px) {
   .ride-finish-copy { top: 65px; width: 44%; max-width: 440px; }
