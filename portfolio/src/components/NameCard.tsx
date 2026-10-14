@@ -93,7 +93,7 @@ const NameCard: React.FC<NameCardProps> = (props: NameCardProps) => {
                                         variants={titleAnimationVariants}
                                     >
                                         {!info && <Heading fontSize={!info ? isMobile ? '6xl' : '9xl' : '7xl'} color={'#F4EEE9'} as={'b'} >
-                                            Kristopher Lemieux
+                                            Kris Lemieux
                                         </Heading>}
                                     </motion.div>
                                     <motion.div 

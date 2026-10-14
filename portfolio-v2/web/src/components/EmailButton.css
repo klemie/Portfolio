@@ -1,0 +1,13 @@
+.email-button {
+  min-width: 6ch;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.email-button:hover { text-decoration: underline; text-underline-offset: .25em; }
+.email-button:focus-visible { outline: 2px solid var(--route); outline-offset: 4px; }

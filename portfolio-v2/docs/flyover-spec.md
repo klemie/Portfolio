@@ -48,10 +48,13 @@ for reduced motion.
 The page uses the published Sanity headshot for its browser icon and square social preview thumbnail,
 with a browser title identifying Kris as a product engineer and cyclist.
 “20191229” by Mac DeMarco uses the user-provided MP3 hosted with the site. A quiet, looping soundtrack at 5% volume
-attempts autoplay on entry and retries on the first pointer movement, scroll,
-wheel, touch movement, tap, click, or key press. Movement and scroll events get
-one attempt each; click, tap, and key listeners remain until playback starts,
-because browsers may still require those gestures to allow audible playback. One audio element survives
+attempts autoplay on entry and retries on pointer movement, scroll,
+wheel, touch movement, tap, click, or key press. Movement and scroll retries are
+limited to one per second and include nested scrolling; clicks, taps, and keys
+retry immediately. Listeners remain until playback starts. Audible autoplay on
+load or scroll depends on the browser's permission for the site: scrolling and
+pointer movement do not unlock audio in browsers such as Chrome, so a first-time
+visitor may need a click, tap, or key press. One audio element survives
 in-app navigation, and an explicit pause remains respected. Playback pauses
 when its tab is hidden or loses focus, including switching to
 another window. Returning to the focused tab resumes playback unless the visitor
@@ -60,7 +63,11 @@ The music control
 uses five bars responding to the MP3's frequency bands through one shared Web
 Audio analyser. Fixed decibel ranges calibrated to the track keep quiet frequencies
 visible and leave room for peaks, without constantly scaling each band to full height.
-The wave is still when paused. Reduced motion keeps the bars static. It
+When stopped or paused, the control shows a play triangle. Playback
+transitions it into the frequency-responsive waveform, including five
+short bars during silence. This feedback appears in every music control,
+including compact navigation, without a separate status label. Reduced motion
+switches states instantly and keeps the playing bars static. It
 stays available on the ride and story screens, with a hover/focus tooltip on its
 compact navigation button; audible gallery videos lower
 the soundtrack volume while they play.
@@ -193,7 +200,10 @@ Pins and the bike fade out as the biography appears.
 
 The final next control opens this scene, and the navigation becomes **Ride again**
 with the résumé link beside it. Ride again returns to the opening. Email is
-available in the finish-line contact links. The soundtrack keeps playing,
+available in the finish-line contact links. Clicking Email copies the address
+and shows Copied for two seconds before returning to Email. The fallback
+Contact section uses the same control. Failed copies show Copy failed rather
+than a success message. The soundtrack keeps playing,
 with its full labeled control at the finish. Reduced motion cuts to the overview
 and reveals the copy without a camera flight. Map failures retain accessible
 About and Contact content.

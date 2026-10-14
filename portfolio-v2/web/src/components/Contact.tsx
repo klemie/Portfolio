@@ -1,11 +1,12 @@
 import type {SiteSettings} from '../lib/types'
+import {EmailButton} from './EmailButton'
 
 export const Contact = ({settings}: {settings: SiteSettings}) => (
   <section className="section" id="contact">
     <h2>Contact</h2>
     <ul className="links">
       <li>
-        <a href={`mailto:${settings.email}`}>Email</a>
+        <EmailButton email={settings.email} />
       </li>
       {settings.gitHubLink && (
         <li>

@@ -267,7 +267,7 @@ async function migrate() {
   await client.createOrReplace({
     _id: 'siteSettings',
     _type: 'siteSettings',
-    name: 'Kristopher Lemieux',
+    name: 'Kris Lemieux',
     tagline: 'Product Engineer at Shift Browser',
     bio: [
       `Hello, my name is Kris. I am an avid gravel cyclist, artist, and slightly illiterate software engineer. Growing up with dyslexia my outlet was to express myself visually any way I could, from traditional painting to graphic design. That came to a head in high school when I was introduced to website development and became obsessed.`,

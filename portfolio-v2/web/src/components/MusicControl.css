@@ -17,10 +17,22 @@
   transform-box: fill-box;
   transform-origin: center;
   transform: scaleY(.15);
-  transition: transform 60ms linear;
+  opacity: 0;
+  transition: transform 60ms linear, opacity 160ms ease;
+}
+.music-wave--playing rect {
+  opacity: 1;
+}
+.music-wave .music-play {
+  transform-origin: center;
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+.music-wave--playing .music-play {
+  transform: scale(.8);
+  opacity: 0;
 }
 @media (prefers-reduced-motion: reduce) {
-  .music-wave rect { transition: none; }
+  .music-wave rect, .music-wave .music-play { transition: none; }
   .music-wave--playing rect { transform: scaleY(.7); }
 }
 .music-control:hover { color: var(--text); }

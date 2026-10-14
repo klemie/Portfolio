@@ -30,11 +30,9 @@
 .ride-finish-person img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; }
 .ride-finish-person p { margin: 0; font-size: .8rem; }
 .ride-finish-person span { display: block; color: var(--text-muted); }
-.ride-finish-note, .ride-finish-caption { color: var(--text-muted); }
 .ride-finish-links { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-top: 1.5rem; font-size: .8rem; }
-.ride-finish-links a { color: var(--accent-text); text-decoration: none; pointer-events: auto; }
+.ride-finish-links a, .ride-finish-links .email-button { color: var(--accent-text); text-decoration: none; pointer-events: auto; }
 .ride-finish-links a:hover { text-decoration: underline; text-underline-offset: .25em; }
-.ride-finish-caption { position: absolute; right: 20%; bottom: 8.5rem; margin: 0; font-size: .75rem; }
 .ride-finish-music { position: absolute; left: clamp(1.25rem, 3vw, 3rem); bottom: calc(60px - var(--ride-inset) + env(safe-area-inset-bottom)); min-height: 64px; display: flex; align-items: center; pointer-events: auto; }
 .ride--finishing .ride-pin, .ride--finishing .ride-cyclist { opacity: var(--finish-markers-opacity, 1) !important; }
 @media (max-width: 700px) {
@@ -45,13 +43,10 @@
   .ride-finish-person { margin-bottom: .8rem; }
   .ride-finish-person img { width: 48px; height: 48px; }
   .ride-finish-links { gap: 1rem; margin-top: 1rem; }
-  .ride-finish-caption { right: 24px; bottom: 6.75rem; font-size: .65rem; }
   .ride-finish-music { left: 24px; bottom: 6rem; min-height: 32px; }
-  .ride-finish-caption { display: none; }
 }
 @media (max-height: 740px) {
   .ride-finish-copy { top: 85px; }
-  .ride-finish-note { display: none; }
   .ride-finish h1 { font-size: 2rem; }
 }
 @media (max-height: 500px) and (min-width: 701px) {

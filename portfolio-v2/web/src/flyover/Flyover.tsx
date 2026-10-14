@@ -545,7 +545,7 @@ export const Flyover = ({theme, themeControl, settings, stops, projects, gpx, vi
             index={phase.index} count={anchors.length} landing={phase.landing} finishing={phase.finishing}
             settled={phase.dwell > 0} onNavigate={navigate}
             musicControl={<MusicControl playing={musicPlaying} analyserRef={musicAnalyserRef} onToggle={onToggleMusic} />} />}
-          {!visit && <FinishLine settings={settings} count={anchors.length} active={phase.finishing}
+          {!visit && <FinishLine settings={settings} active={phase.finishing}
             musicControl={phase.finishing && <MusicControl playing={musicPlaying} analyserRef={musicAnalyserRef} onToggle={onToggleMusic} />} />}
           {!visit && <LivingRoute ref={livingRouteRef} route={route} frameRef={frameNodeRef} reducedMotion={reducedMotion} projectCues={suggestedProjectCues}
             highlightedProject={highlightedProject} onHighlightProject={setHighlightedProject} onProject={onProject} />}

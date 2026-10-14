@@ -97,22 +97,29 @@ export const useSoundtrack = () => {
 
   useEffect(() => {
     if (playing || preference.current === 'pause') return
-    // Try every kind of first interaction. Movement and scrolling may still
+    // Retry on interactions. Movement and scrolling may still
     // be blocked, so keep listening for a browser-approved click/tap/key.
     const gestures = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown']
     const movement = ['pointermove', 'touchmove', 'wheel', 'scroll']
     const interactions = [...gestures, ...movement]
+    let lastMovementAttempt = -Infinity
     const onInteraction = (event: Event) => {
       if (!event.isTrusted) return
       if (event.target instanceof Element && event.target.closest('.music-control')) return
+      if (!ref.current || !tabIsFocused() || preference.current === 'pause') return
+      if (movement.includes(event.type)) {
+        const now = performance.now()
+        if (now - lastMovementAttempt < 1000) return
+        lastMovementAttempt = now
+      }
       start()
     }
-    gestures.forEach((event) => document.addEventListener(event, onInteraction, {passive: true}))
-    // One attempt per movement type avoids repeatedly requesting audio on
-    // every animation frame while the browser requires a stronger gesture.
-    movement.forEach((event) => document.addEventListener(event, onInteraction, {passive: true, once: true}))
+    // Capture nested scrolling and input before a component can stop propagation.
+    // Keep movement retries available, throttled to one per second. Gestures
+    // always retry immediately, even after a recent blocked scroll attempt.
+    interactions.forEach((event) => window.addEventListener(event, onInteraction, {passive: true, capture: true}))
     return () => {
-      interactions.forEach((event) => document.removeEventListener(event, onInteraction))
+      interactions.forEach((event) => window.removeEventListener(event, onInteraction, true))
     }
   }, [start, playing])
 

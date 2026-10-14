@@ -56,6 +56,7 @@ export const MusicControl = ({playing, onToggle, analyserRef, compact = false}: 
     onClick={onToggle} aria-label={`${playing ? 'Pause' : 'Play'} background music: 20191229 by Mac DeMarco`}
     title={compact ? undefined : `${playing ? 'Pause' : 'Play'} 20191229 — Mac DeMarco`}>
     <svg ref={waveRef} className={`music-wave${playing ? ' music-wave--playing' : ''}`} viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" fill="currentColor">
+      <path className="music-play" d="M5 3 16 10 5 17Z" />
       {[1, 5, 9, 13, 17].map((x) => <rect key={x} x={x} y="2" width="2" height="16" rx="1" />)}
     </svg>
     {!compact && <span>20191229 · Mac DeMarco</span>}
