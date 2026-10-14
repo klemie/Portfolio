@@ -60,6 +60,10 @@ export const stopsQuery = `*[_type == "stop"] | order(order asc){
   waypointName,
   order,
   blurb,
+  education{
+    degree, startYear, endYear, specializations,
+    awards[]{_key, title, year, description}
+  },
   cycling{
     races[]{_key, title, date, result, description, distanceKm, elevationM, url, image},
     routes[]{_key, title, date, result, description, distanceKm, elevationM, url, image}

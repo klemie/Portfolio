@@ -46,6 +46,12 @@ export const stopType = defineType({
         }),
     }),
     defineField({
+      name: 'education',
+      title: 'Education',
+      description: 'Degree, study years, specializations, and awards for an education stop. Leave empty for other stops.',
+      type: 'education',
+    }),
+    defineField({
       name: 'experiences',
       description: 'Oldest first, newest last. Projects are pulled from each experience automatically.',
       type: 'array',

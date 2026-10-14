@@ -77,9 +77,18 @@ export interface Stop {
   order: number
   /** Null until written. The ride renders the stop regardless. */
   blurb?: string | null
+  education?: Education | null
   experiences: Experience[]
   projects: Project[]
   cycling?: {races?: CyclingEntry[] | null; routes?: CyclingEntry[] | null} | null
+}
+
+export interface Education {
+  degree: string
+  startYear: number
+  endYear?: number | null
+  specializations?: string[] | null
+  awards?: {_key: string; title: string; year?: number | null; description?: string | null}[] | null
 }
 
 export interface CyclingEntry {

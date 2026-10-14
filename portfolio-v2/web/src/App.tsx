@@ -13,7 +13,7 @@ import {useSanityQuery} from './hooks/useSanityQuery'
 import {resolveVisit, visitPath} from './lib/visit'
 import {experiencesQuery, projectsQuery, siteSettingsQuery, stopsQuery} from './lib/queries'
 import type {Experience, Project, SiteSettings, Stop} from './lib/types'
-import {previewProjectRelations} from './lib/developmentContent'
+import {previewProjectRelations, previewStopIntroductions} from './lib/developmentContent'
 
 const Flyover = lazy(() => import('./flyover/Flyover'))
 
@@ -28,9 +28,12 @@ export const App = () => {
   const route = useRouteGpx(settings.data?.routeGpxUrl)
   const previousScreenRef = useRef<string | null>(null)
   const screen = target ? visitPath(target) : null
-  const content = useMemo(() => import.meta.env.DEV
-    ? previewProjectRelations(projects.data ?? [], experiences.data ?? [], stops.data ?? [])
-    : {projects: projects.data ?? [], experiences: experiences.data ?? [], stops: stops.data ?? []},
+  const content = useMemo(() => {
+    const published = {projects: projects.data ?? [], experiences: experiences.data ?? [], stops: stops.data ?? []}
+    if (!import.meta.env.DEV) return published
+    const preview = previewProjectRelations(published.projects, published.experiences, published.stops)
+    return {...preview, stops: previewStopIntroductions(preview.stops)}
+  },
   [projects.data, experiences.data, stops.data])
   const visit = useMemo(() => resolveVisit(target, content.stops, content.projects, content.experiences), [target, content])
 

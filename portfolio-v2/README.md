@@ -68,7 +68,25 @@ Defined in `studio/schemaTypes/`:
   `<wpt><name>`), order, blurb, and experience references, oldest first and
   newest last. Projects are derived from those experiences. The former project
   list is hidden and retained only for the currently deployed site's old query.
-  No coordinates — those come from the GPX.
+  Optional `education` holds the degree, study years, specializations and awards
+  for UVic. No coordinates — those come from the GPX.
+
+Stop introductions and UVic education were collected in an October 2026 interview
+and are stored in `shared/stopIntroductions.ts`. Development previews fill missing
+Sanity content from that file; published content takes precedence. The education
+section appears above the capstone experience on the UVic stop.
+
+Preview or publish the interviewed content from `studio`:
+
+```sh
+pnpm exec sanity exec scripts/update-stop-introductions.ts --with-user-token
+PORTFOLIO_APPLY_INTRODUCTIONS=1 pnpm exec sanity exec scripts/update-stop-introductions.ts --with-user-token
+```
+
+The script patches only stop blurbs and UVic education, saves a recovery snapshot,
+guards document revisions, and verifies the saved fields. Existing drafts receive
+the same selected fields without publishing their other changes. Later edits can
+be made directly in Sanity; award years and descriptions are optional.
 
 The October 12, 2026 route (`A ride with me - website (2).gpx`) has six stops:
 Shift Browser, Helm Operations, Island Temperature Controls, UVic Rocketry,

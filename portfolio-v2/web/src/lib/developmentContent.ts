@@ -1,9 +1,16 @@
 import {capstoneExperience, legacyProjectEmbeds, legacyProjectExperiences, legacyProjectOrder} from '../../../shared/projectExperienceMigration'
 import {shiftProjectSeeds} from '../../../shared/shiftProjects'
 import {portfolioDemos} from '../../../shared/portfolioDemos'
+import {stopIntroductionUpdates} from '../../../shared/stopIntroductions'
 import type {Experience, Project, Stop} from './types'
 
 const shiftEndDate = '2026-09-01'
+
+/** Preview unwritten stop introductions and education before publishing them. */
+export const previewStopIntroductions = (stops: Stop[]): Stop[] => stops.map((stop) => {
+  const update = stopIntroductionUpdates[stop._id]
+  return update ? {...stop, blurb: stop.blurb ?? update.blurb, education: stop.education ?? update.education ?? null} : stop
+})
 const shiftPreviewImages = {
   'project-shift-pdf-app': [
     {src: '/images/shift-pdf/my-pdfs-desktop.jpg', alt: 'My PDFs — upload, select a file and choose a tool'},
