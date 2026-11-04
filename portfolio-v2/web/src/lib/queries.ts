@@ -44,6 +44,7 @@ const experienceFields = `
   startDate,
   endDate,
   about,
+  images,
   skills,
   "projects": *[_type == "project" && experience._ref == ^._id] | order(coalesce(viewerOrder, 0) asc, _createdAt asc){${projectFields}}
 `

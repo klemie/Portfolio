@@ -62,6 +62,7 @@ export interface Experience {
   /** Absent means current role */
   endDate?: string | null
   about: string
+  images?: SanityImage[] | null
   skills: string[]
   projects: Project[]
 }

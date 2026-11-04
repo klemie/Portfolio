@@ -30,6 +30,14 @@ export const experienceType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'images',
+      title: 'Photos and screenshots',
+      type: 'array',
+      of: [{type: 'image', options: {hotspot: true}, fields: [
+        defineField({name: 'alt', title: 'Image description', type: 'string', validation: (rule) => rule.required()}),
+      ]}],
+    }),
+    defineField({
       name: 'skills',
       type: 'array',
       of: [{type: 'string'}],
