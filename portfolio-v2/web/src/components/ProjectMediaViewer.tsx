@@ -1,5 +1,6 @@
 import {useLayoutEffect, useRef, useState} from 'react'
-import type {Project, SanityImage} from '../lib/types'
+import type {SanityImage} from '../lib/types'
+import type {ProjectMediaSource} from '../lib/projectMedia'
 import {projectMedia, projectPreviewLink} from '../lib/projectMedia'
 import {urlFor} from '../lib/sanity'
 import './ProjectMediaViewer.css'
@@ -10,7 +11,7 @@ const imageSource = (image: SanityImage | string, thumbnail = false) => typeof i
 
 const demoHosts = ['kris-openpdf-demo.pages.dev', 'kris-ground-support-demo.pages.dev', 'kris-pdp-demo.pages.dev']
 
-export const ProjectMediaViewer = ({project}: {project: Project}) => {
+export const ProjectMediaViewer = ({project}: {project: ProjectMediaSource}) => {
   const [index, setIndex] = useState(0)
   const [active, setActive] = useState(false)
   const [embedFailed, setEmbedFailed] = useState(false)

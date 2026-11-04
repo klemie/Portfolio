@@ -69,8 +69,8 @@ Defined in `studio/schemaTypes/`:
   project title switches between its projects; the viewer cycles through the
   embedded preview and photos. Without an embed URL it shows photos and links.
 - **`experience`** — company, position, startDate, endDate, about, skills.
-  Optional photos and screenshots appear in a horizontal gallery on the role
-  and stop pages; each image opens at a larger size.
+  Optional photos and screenshots use the shared project media viewer on role
+  and stop pages, with a framed preview, captions, thumbnails and navigation.
 - **`stop`** — a flyover stop: title, `waypointName` (must match a GPX
   `<wpt><name>`), order, blurb, and experience references, oldest first and
   newest last. Projects are derived from those experiences. The former project

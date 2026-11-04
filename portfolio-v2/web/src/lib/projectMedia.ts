@@ -28,7 +28,11 @@ export type ProjectMedia =
   | {kind: 'image'; image: SanityImage | string; label: string}
   | ProjectVideoMedia
 
-export const projectMedia = (project: Project): ProjectMedia[] => {
+/** Media fields shared by project screens and experience work samples. */
+export type ProjectMediaSource = Pick<Project,
+  'title' | 'hasDemo' | 'images' | 'localImages' | 'videos' | 'presentations' | 'embedUrl' | 'previewUrl'>
+
+export const projectMedia = (project: ProjectMediaSource): ProjectMedia[] => {
   const embed = projectUrl(project.embedUrl)
   const images: ProjectMedia[] = (project.images ?? [])
     .filter((image) => image?.asset?._ref)
