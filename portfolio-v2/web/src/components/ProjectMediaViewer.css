@@ -75,12 +75,15 @@
 }
 .project-media button:disabled { opacity: .35; cursor: default; }
 .project-media-navigation button:not(:disabled):hover, .project-media-thumbnails button:hover { background: var(--surface-raised); }
-.project-media-thumbnails { display: flex; flex-wrap: wrap; gap: .5rem; }
+.project-media-thumbnails { display: flex; gap: .5rem; overflow-x: auto; overscroll-behavior-x: contain; padding: 4px; scrollbar-width: thin; }
 .project-media-thumbnails button {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: .5rem;
+  width: clamp(160px, 24vw, 240px);
   max-width: 100%;
+  min-width: 0;
   min-height: 44px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -96,7 +99,7 @@
 .project-media-thumbnails img { flex: none; width: 48px; height: 32px; object-fit: cover; border-radius: 4px; }
 .project-media-video-thumbnail { position: relative; flex: none; width: 48px; height: 32px; }
 .project-media-video-thumbnail > span { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; background: #0005; border-radius: 4px; font-size: 1.2rem; }
-.project-media-thumbnails button > span:last-child { overflow-wrap: anywhere; }
+.project-media-thumbnails button > span:last-child { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .project-media-embed-icon { display: grid; place-items: center; flex: none; width: 48px; height: 32px; font-size: 1.2rem; }
 .project-media-toolbar, .project-media-alternatives { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .75rem; margin-bottom: .75rem; font-size: .8rem; }
 .project-media-alternatives { justify-content: start; margin-bottom: 1rem; }

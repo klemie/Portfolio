@@ -102,7 +102,7 @@ export const ProjectMediaViewer = ({project}: {project: ProjectMediaSource}) => 
             : undefined
           return (
           <button type="button" key={item.kind !== 'image' ? item.url : typeof item.image === 'string' ? item.image : item.image._key ?? `${item.image.asset._ref}-${mediaIndex}`}
-            aria-label={item.label} aria-pressed={selectedIndex === mediaIndex} onClick={() => choose(mediaIndex)}>
+            aria-label={item.label} title={item.label} aria-pressed={selectedIndex === mediaIndex} onClick={() => choose(mediaIndex)}>
             {item.kind === 'image' ? <img src={imageSource(item.image, true)} alt="" loading="lazy" />
               : previewPoster ? <span className="project-media-video-thumbnail" aria-hidden="true">
                 <img src={imageSource(previewPoster, true)} alt="" loading="lazy" /><span>▷</span>
