@@ -13,3 +13,15 @@
 .cycling-card-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 .cycling-card-link:focus-visible { outline: 2px solid var(--route); outline-offset: 4px; }
 @media (max-width: 700px) { .cycling-grid { grid-template-columns: 1fr; gap: 1rem; } }
+
+.race-gallery-list { display: grid; gap: 2rem; }
+.race-card-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; padding: 1.25rem; }
+.race-card-heading .cycling-card-result { margin: 0; }
+.race-gallery { display: grid; grid-auto-flow: column; grid-auto-columns: clamp(240px, 38vw, 360px); gap: 1rem; overflow-x: auto; overscroll-behavior-x: contain; padding: 0 1.25rem 1rem; scroll-padding-inline: 1.25rem; scrollbar-width: thin; scrollbar-color: var(--text-muted) var(--surface); }
+.race-gallery:focus-visible { outline: 2px solid var(--route); outline-offset: -2px; }
+.race-gallery-tile { min-width: 0; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 8px; background: #111; }
+.race-gallery-tile a { display: block; width: 100%; height: 100%; }
+.race-gallery-tile img, .race-gallery-tile video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.race-gallery-tile video { object-fit: contain; }
+.race-gallery-tile a:focus-visible { outline: 3px solid var(--route); outline-offset: -3px; }
+.race-card-link { margin: 0 1.25rem .75rem; }

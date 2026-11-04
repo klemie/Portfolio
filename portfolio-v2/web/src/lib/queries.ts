@@ -65,7 +65,9 @@ export const stopsQuery = `*[_type == "stop"] | order(order asc){
     awards[]{_key, title, year, description}
   },
   cycling{
-    races[]{_key, title, date, result, description, distanceKm, elevationM, url, image},
+    races[]{_key, title, date, result, description, distanceKm, elevationM, url, image,
+      gallery[]{_key, _type, asset, alt, title, "url": file.asset->url, poster}
+    },
     routes[]{_key, title, date, result, description, distanceKm, elevationM, url, image}
   },
   "experiences": experiences[]->{${experienceFields}},

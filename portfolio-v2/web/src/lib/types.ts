@@ -101,4 +101,8 @@ export interface CyclingEntry {
   elevationM?: number | null
   url?: string | null
   image?: SanityImage | null
+  gallery?: (
+    | (SanityImage & {_key: string; _type: 'image'})
+    | {_key: string; _type: 'raceVideo'; title: string; url?: string | null; poster?: SanityImage | null}
+  )[] | null
 }

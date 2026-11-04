@@ -6,8 +6,9 @@ export const sanityClient = createClient({
   projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
   dataset: import.meta.env.VITE_SANITY_DATASET,
   apiVersion: import.meta.env.VITE_SANITY_API_VERSION,
-  // Public dataset, so no token. useCdn serves cached responses from the edge.
-  useCdn: true,
+  // Preview edits immediately in development; use the edge cache in production.
+  // The dataset is public, so neither mode needs a token.
+  useCdn: !import.meta.env.DEV,
 })
 
 const builder = imageUrlBuilder(sanityClient)

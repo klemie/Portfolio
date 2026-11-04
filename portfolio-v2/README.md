@@ -26,6 +26,11 @@ pnpm dev      # site at http://localhost:5173
 pnpm studio   # Sanity Studio at http://localhost:3333
 ```
 
+Open the web preview at `http://localhost:5173`, including deep links such as
+`http://localhost:5173/stops/stop-fort-street-cycle`. Sanity's CORS allowlist
+permits this origin; `http://127.0.0.1:5173` is a different origin and returns
+`403 CORS Origin not allowed`.
+
 `web/.env` holds the Sanity identifiers. They are read-only and the dataset is
 public, so there is no token and nothing secret in the bundle. `web/.env.example`
 documents the same values.
@@ -97,7 +102,20 @@ Fort Street Cycle matches the GPX waypoint `Fort Street Cycles` and has optional
 story can include a result, notes, date, distance, climbing, photo and Strava
 link. Only populated sections appear on the site. Its initial races are BWR BC
 Wafer (1st in Kris's age category) and BWR AZ Wafer; the third race and favourite
-routes are deferred.
+routes are deferred in the CMS.
+
+The Fort Street stop also displays three Strava route embeds supplied by Kris,
+configured in `shared/cyclingRoutes.ts`. These use Strava's official script in
+isolated frames, with metric units, 3D terrain, and the supplied map views.
+Each viewer has a direct Strava link as a fallback. These routes ship with the
+frontend and do not require a Sanity content update.
+
+Race entries have an ordered **Race photos and videos** gallery in Studio.
+Mix photos and uploaded videos in the desired playback order. The site shows
+a single horizontally scrollable row of equally sized media tiles, native video playback, the race
+name, result, and Strava link. Older single-photo entries still display their
+photo until a gallery is added. Race story prose stays in the CMS but is not
+shown in this gallery layout.
 
 To preview or apply the six-stop route update:
 

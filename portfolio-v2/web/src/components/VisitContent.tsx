@@ -3,6 +3,7 @@ import type {Visit} from '../lib/visit'
 import {ExperienceSummary} from './ExperienceSummary'
 import {ProjectShowcase} from './ProjectShowcase'
 import {CyclingStories} from './CyclingStories'
+import {StravaRoutes} from './StravaRoutes'
 import {EducationBackground} from './EducationBackground'
 import {ScrollHint} from './ScrollHint'
 import './VisitContent.css'
@@ -50,6 +51,7 @@ export const VisitContent = ({visit}: {visit: Visit}) => {
             {!visit.experience && visit.stop?.blurb && <p className="visit-stop-intro">{visit.stop.blurb}</p>}
             {!visit.experience && visit.stop?.education && <EducationBackground education={visit.stop.education} />}
             {!visit.experience && visit.stop?.cycling && <CyclingStories cycling={visit.stop.cycling} />}
+            {!visit.experience && visit.stop?._id === 'stop-fort-street-cycle' && <StravaRoutes />}
             {visit.featuredExperience && <section className="visit-featured-experience" aria-label={`${visit.featuredExperience.company} — ${visit.featuredExperience.position}`}>
               <ExperienceSummary experience={visit.featuredExperience} />
               <ProjectShowcase projects={visit.featuredExperience.projects} />
