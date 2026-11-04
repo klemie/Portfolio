@@ -1,11 +1,20 @@
 import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react'
 
+// Match public/_headers so third-party embeds are tested under production isolation.
+const isolationHeaders = {
+  'Cross-Origin-Opener-Policy': 'same-origin',
+  'Cross-Origin-Embedder-Policy': 'credentialless',
+  'X-Content-Type-Options': 'nosniff',
+}
+
 export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    headers: isolationHeaders,
   },
+  preview: {headers: isolationHeaders},
   optimizeDeps: {
     /**
      * MapLibre must be pre-bundled or the flyover's basemap silently fails in

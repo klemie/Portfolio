@@ -35,6 +35,8 @@ export const StravaRoutes = () => {
             <iframe
               title={`Favourite cycling route ${index + 1} — Strava map and elevation`}
               srcDoc={routeDocument(route)}
+              // The deployed page uses COEP; nested Strava frames inherit this mode.
+              {...{credentialless: ''}}
               loading="lazy"
               allow="fullscreen"
               allowFullScreen

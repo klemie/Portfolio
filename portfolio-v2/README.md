@@ -111,6 +111,9 @@ configured in `shared/cyclingRoutes.ts`. These use Strava's official script in
 isolated frames, with metric units, 3D terrain, and the supplied map views.
 Each viewer has a direct Strava link as a fallback. These routes ship with the
 frontend and do not require a Sanity content update.
+Strava frames use credentialless embedding to work with the site's cross-origin
+isolation headers. Vite development and preview servers use those same headers,
+so local embed checks reproduce the deployed browser policy.
 
 Race entries have an ordered **Race photos and videos** gallery in Studio.
 Mix photos and uploaded videos in the desired playback order. The site shows
