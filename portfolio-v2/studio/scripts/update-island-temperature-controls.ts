@@ -10,7 +10,7 @@ const client = getCliClient({apiVersion: '2025-09-06'}).withConfig({useCdn: fals
 const id = 'experience-island-temperature-controls-graphics-developer'
 const about = `During my co-op with Island Temperature Controls, I worked with a small team on web interfaces for building heating, ventilation, and air conditioning systems at Canadian Forces Base Esquimalt. The work focused on graphics for direct digital control (DDC): making equipment and building information understandable to the technicians using the system.
 
-The work samples show a building floor-plan overview and detailed equipment screens. These bring together room temperatures, setpoints, equipment states, and airflow diagrams so technicians can relate the interface to the physical systems they work with.
+I used electrical floor plans and HVAC mechanical drawings to inform my UI designs, translating the physical systems into clear interface layouts. The work samples show a building floor-plan overview and detailed equipment screens. These bring together room temperatures, setpoints, equipment states, and airflow diagrams so technicians can relate the interface to the physical systems they work with.
 
 I gathered requirements from other teams and reviewed designs directly with HVAC technicians, refining both the accuracy of the graphics and the user experience. This meant translating technical information into clear visual layouts and checking that the screens reflected the equipment and workflows they supported.`
 const photos = [
